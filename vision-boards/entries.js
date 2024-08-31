@@ -14,7 +14,7 @@ class VisionBoardEntries extends HTMLElement {
       <div class="flex-1">
         <ul class="">
           <li class="flex pb-4 mb-4">
-            <a href="/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
+            <a href="/app/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
               <div>
                 <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
                   <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
@@ -28,7 +28,7 @@ class VisionBoardEntries extends HTMLElement {
             </a>
           </li>
           <li class="flex pb-4 mb-4">
-            <a href="/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
+            <a href="/app/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
             <div>
               <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
                 <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
@@ -42,7 +42,7 @@ class VisionBoardEntries extends HTMLElement {
             </a>
           </li>
           <li class="flex pb-4 mb-4">
-            <a href="/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
+            <a href="/app/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
             <div>
               <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
                 <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">

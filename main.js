@@ -1,6 +1,7 @@
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
+import '/styles.css';
 import '/tarot/index.js';
 import '/tarot/settings.js';
 import '/tarot/entries.js';
@@ -20,7 +21,7 @@ function navigateTo(path) {
   const app = document.querySelector('#app');
   const tabDock = document.createElement('tab-dock');
   const spacer = document.createElement('div');
-  tabDock.classList.add('flex', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2');
+  tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2');
   spacer.classList.add('h-[136px]');
   app.innerHTML = '';
 

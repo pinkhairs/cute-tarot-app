@@ -4,17 +4,17 @@ class TitleBar extends HTMLElement {
     this.subtitle = this.getAttribute('subtitle');
     this.title = this.getAttribute('title');
     this.root = this.getAttribute('root') || false;
-    this.subDirLink = '/tarot';
+    this.subDirLink = '/app/tarot';
 
-    if (window.location.pathname === '/' || window.location.pathname.startsWith('/tarot/')) {
-      this.subDirLink = '/tarot';
-    } else if (window.location.pathname.startsWith('/vision-boards')) {
-      this.subDirLink = '/vision-boards';
-    } else if (window.location.pathname.startsWith('/you')) {
-      this.subDirLink = '/you';
+    if (window.location.pathname === '/' || window.location.pathname.startsWith('/app/tarot/')) {
+      this.subDirLink = '/app/tarot';
+    } else if (window.location.pathname.startsWith('/app/vision-boards')) {
+      this.subDirLink = '/app/vision-boards';
+    } else if (window.location.pathname.startsWith('/app/you')) {
+      this.subDirLink = '/app/you';
     }
 
-    this.backLink = this.subDirLink+'.html' === '/tarot.html' ? '/' : this.subDirLink+'.html';
+    this.backLink = this.subDirLink+'.html' === '/app/tarot.html' ? '/app/' : this.subDirLink+'.html';
   }
 
   connectedCallback() {

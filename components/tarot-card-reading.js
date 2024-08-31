@@ -56,7 +56,7 @@ class TarotCardReading extends HTMLElement {
             <p>Try a new adventure.</p>
           </div>
           <div id="set-intention-button" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
-            <a href="/tarot/set-intention.html" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-4 py-3">Set Intention</a>
+            <a href="/app/tarot/set-intention.html" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-4 py-3">Set Intention</a>
           </div>
         </div>
       </div>

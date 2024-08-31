@@ -2,6 +2,7 @@ export default {
   content: [
     './index.html',
     './**/*.{html,js}',
+    '!./node_modules/**/*'
   ],
   theme: {
     colors: {

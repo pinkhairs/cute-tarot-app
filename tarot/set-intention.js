@@ -25,7 +25,7 @@ class SetIntention extends HTMLElement {
             <label class="label opacity-80 font-serif">Today's intention</label>
             <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2"></textarea>
           </div>
-          <a href="/tarot/today-intention.html" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-4 py-3">Save Intention</a>
+          <a href="/app/tarot/today-intention.html" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-4 py-3">Save Intention</a>
         </form>
       </div>
     `;

@@ -25,7 +25,7 @@ class ManifestedIntention extends HTMLElement {
             <label class="label opacity-80 font-serif">Today's intention</label>
             <p class="text-lg">Welp. Here it is.</p>
           </div>
-          <a href="/tarot/manifested.html" class="transition-opacity origin-top duration-1000 bg-accent text-lg font-serif text-black rounded-xl px-4 py-3 inline-flex items-center gap-2"><img class="h-4" src="/assets/star.svg" alt="Star"> I Manifested This</a>
+          <a href="/app/tarot/manifested.html" class="transition-opacity origin-top duration-1000 bg-accent text-lg font-serif text-black rounded-xl px-4 py-3 inline-flex items-center gap-2"><img class="h-4" src="/assets/star.svg" alt="Star"> I Manifested This</a>
         </form>
       </div>
     `;
