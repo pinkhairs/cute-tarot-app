@@ -17,7 +17,19 @@ import '/you/index.js';
 import '/you/entries.js';
 import '/you/settings.js';
 
-function navigateTo(path) {
+const checkIfLoggedIn = async () => {
+  const response = await fetch(`/pwa.php?action=check_logged_in`);
+  if (response.ok) {
+    return await response.json();
+  }
+};
+
+// Define the function to get the nonce value
+const getLoggedIn = async () => {
+  return await checkIfLoggedIn();
+};
+
+const navigateTo = async (path) => {
   const app = document.querySelector('#app');
   const tabDock = document.createElement('tab-dock');
   const spacer = document.createElement('div');
@@ -27,7 +39,25 @@ function navigateTo(path) {
 
   switch (path) {
     case '/app/':
-      app.appendChild(document.createElement('tarot-index'));
+      const todayReading = async () => {
+        const response = await fetch(`/pwa.php?action=today_card`);
+        if (response.ok) {
+          return await response.json();
+        }
+      };
+
+      const getTodayReading = async () => {
+        return await todayReading();
+      };
+
+      const data = await getTodayReading();
+
+      if (data == 0) {
+        app.appendChild(document.createElement('tarot-index'));
+      } else {
+        app.appendChild(document.createElement('today-intention'));
+      }
+
       break;
     case '/app/tarot/settings.html':
       app.appendChild(document.createElement('tarot-settings'));
@@ -98,4 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-navigateTo(window.location.pathname);
+
+// Usage example
+getLoggedIn().then(data => {
+  if (data) {
+    navigateTo(window.location.pathname);
+  } else {
+    window.location.href = '/log-in';
+  }
+});

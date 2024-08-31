@@ -1,6 +1,7 @@
 class TarotIndex extends HTMLElement {
   constructor() {
     super();
+    this.reading = null;
   }
 
   connectedCallback() {
@@ -8,13 +9,16 @@ class TarotIndex extends HTMLElement {
   }
 
   render() {
+    const todayDate = new Date().toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
     this.innerHTML = `
-    <title-bar root="true" class="w-full pb-6 short:pb-2" title="Today" subtitle="August 29, 2024"></title-bar>
-    <div class="w-full px-4 flex-1 flex items-start justify-center">
-      <div class="flex-1">
-        <tarot-card-reading class="flex items-start justify-center"></tarot-card-reading>
+      <title-bar root="true" class="w-full pb-6 short:pb-2" title="Today" subtitle="${todayDate}"></title-bar>
+      <div class="w-full px-4 flex-1 flex items-start justify-center">
+        <tarot-card-reading class="flex flex-1 items-start justify-center"></tarot-card-reading>
       </div>
-    </div>
     `;
   }
 }

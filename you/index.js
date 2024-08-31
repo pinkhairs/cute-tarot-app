@@ -19,23 +19,23 @@ class YouPage extends HTMLElement {
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Style (emoji work well here)</label>
-        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2"></textarea>
+        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2 bg-transparent"></textarea>
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Style (emoji work well here)</label>
-        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2"></textarea>
+        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2 bg-transparent"></textarea>
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Style (emoji work well here)</label>
-        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2"></textarea>
+        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2 bg-transparent"></textarea>
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Style (emoji work well here)</label>
-        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2"></textarea>
+        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2 bg-transparent"></textarea>
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Style (emoji work well here)</label>
-        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2"></textarea>
+        <textarea placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2 bg-transparent"></textarea>
       </div>
     </form>
     `;
