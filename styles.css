@@ -7,12 +7,15 @@ p, h1, h2, h3, h4, h5, h6, ol, ul, nav, div {
 }
 
 h1 {
-  @apply text-black text-4xl lg:text-5xl font-serif leading-[1.1];
+  @apply text-4xl lg:text-5xl font-serif leading-[1.1];
 }
 
 h2 {
   font: 28px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
-  @apply text-black;
+}
+
+h3 {
+  font: 20px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
 }
 
 .card-container {
@@ -47,5 +50,10 @@ h2 {
 }
 
 .card-back {
-  transform: rotateY(180deg); /* Rotates the back side 180 degrees */
+  transform: rotateY(180deg);
+}
+
+.bg-rainbow {
+  background: url(/assets/you-bg.png) no-repeat top center;
+  background-size: 100% auto;
 }

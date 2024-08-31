@@ -1,12 +1,16 @@
-/** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{html,js}'],
+  content: [
+    './index.html',
+    './**/*.{html,js}',
+  ],
   theme: {
     colors: {
       black: '#667289',
-      white: '#FFFFFF',
+      white: '#fff',
       brand: '#BA9AF0',
       neutral: '#EEF4FF',
+      accent: '#E9E1FF',
+      translucent: 'rgba(255, 255, 255, 0.75)',
     },
     extend: {
       screens: {
@@ -18,5 +22,4 @@ export default {
       },
     },
   },
-  plugins: [],
 }

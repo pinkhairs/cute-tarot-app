@@ -4,7 +4,17 @@ class TitleBar extends HTMLElement {
     this.subtitle = this.getAttribute('subtitle');
     this.title = this.getAttribute('title');
     this.root = this.getAttribute('root') || false;
-    this.backLink = this.getAttribute('back-link') || '';
+    this.subDirLink = '/tarot';
+
+    if (window.location.pathname === '/' || window.location.pathname.startsWith('/tarot/')) {
+      this.subDirLink = '/tarot';
+    } else if (window.location.pathname.startsWith('/vision-boards')) {
+      this.subDirLink = '/vision-boards';
+    } else if (window.location.pathname.startsWith('/you')) {
+      this.subDirLink = '/you';
+    }
+
+    this.backLink = this.subDirLink+'.html' === '/tarot.html' ? '/' : this.subDirLink+'.html';
   }
 
   connectedCallback() {
@@ -16,24 +26,24 @@ class TitleBar extends HTMLElement {
     <div class="flex flex-col gap-2 pb-6 md:pb-6 lg:pb-6">
       <header class="pt-6 px-4">
         <div class="flex items-center justify-center">
-          <div class="flex-1">
+          <div class="w-8">
             ${this.root ? `<div>
-              <button type="button" hx-push-url="true" hx-get="/tarot/entries.html" hx-target="#main" hx-trigger="click">
+              <a href="${this.subDirLink}/entries.html">
                 <img src="/assets/entries-icon.svg" alt="Entries" class="w-5 h-5">
-              </button>
+              </a>
             </div>` : ''}
           </div>
-          <div class="flex-1 text-center">
+          <div class="flex-grow text-center">
             <h1>${this.title}</h1>
           </div>
-          <div class="flex-1 flex items-center justify-end">
+          <div class="flex items-center justify-end w-8">
             ${this.root ? `
             <div>
-              <button type="button" hx-push-url="true" hx-get="/tarot/settings.html" hx-target="#main" hx-trigger="click">
+              <a href="${this.subDirLink}/settings.html">
                 <img src="/assets/settings-icon.svg" alt="Settings" class="w-8 h-8">
-              </button>
+              </a>
             </div>` : `<div>
-              <div hx-push-url="true" hx-get="/" hx-target="#main" hx-trigger="click">
+              <a href="${this.backLink}">
                 <img src="/assets/close-icon.svg" alt="Back" class="w-4 h-4">  
               </a>
             </div>`}
