@@ -79,7 +79,7 @@ class TodayIntention extends HTMLElement {
         </div>
         <a id="set-intention-button" href="/app/tarot/set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-4 py-3">Set Intention</a>
 
-        <div id="set-intention" class="hidden max-w-80 flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
+        <div id="set-intention" class="hidden max-w-80 flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl text-center">
         <a href="/app/tarot/set-intention.html" class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
           <label class="label opacity-80 font-serif">Today's intention</label>
           <p class="text-lg" id="intention-text"></p>

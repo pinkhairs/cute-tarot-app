@@ -37,8 +37,33 @@ const navigateTo = async (path) => {
   spacer.classList.add('h-[136px]');
   app.innerHTML = '';
 
+  const mat = async () => {
+    const response = await fetch(`/pwa.php?action=get_mat`);
+    if (response.ok) {
+      return await response.json();
+    }
+  }
+
+  const getMat = async () => {
+    return await mat();
+  }
+
+  const matData = await getMat();
+  let matJson;
+  let textColor
+  if (!matData) {
+    matJson = '';
+    textColor = 'black';
+  } else {
+    matJson = JSON.parse(matData).mat;
+    textColor = JSON.parse(matData).color;
+  }
+
   switch (path) {
     case '/app/':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
+
       const todayReading = async () => {
         const response = await fetch(`/pwa.php?action=today_card`);
         if (response.ok) {
@@ -60,21 +85,33 @@ const navigateTo = async (path) => {
 
       break;
     case '/app/tarot/settings.html':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
       app.appendChild(document.createElement('tarot-settings'));
       break;
     case '/app/tarot/entries.html':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
       app.appendChild(document.createElement('tarot-entries'));
       break;
     case '/app/tarot/set-intention.html':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
       app.appendChild(document.createElement('set-intention'));
       break;
     case '/app/tarot/today-intention.html':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
       app.appendChild(document.createElement('today-intention'));
       break;
     case '/app/tarot/entry.html':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
       app.appendChild(document.createElement('entry-reading'));
       break;
     case '/app/tarot/manifested.html':
+      app.style.backgroundImage = `url(${matJson})`;
+      document.documentElement.classList.add('text-'+textColor);
       app.appendChild(document.createElement('manifested-intention'));
       break;
     case '/app/vision-boards.html':

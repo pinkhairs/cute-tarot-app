@@ -11,7 +11,7 @@ export default {
       brand: '#BA9AF0',
       neutral: '#EEF4FF',
       accent: '#E9E1FF',
-      translucent: 'rgba(255, 255, 255, 0.75)',
+      translucent: 'rgba(255, 255, 255, 0.93)',
     },
     extend: {
       screens: {

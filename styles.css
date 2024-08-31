@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-p, h1, h2, h3, h4, h5, h6, ol, ul, nav, div {
-  @apply text-black;
-}
-
 h1 {
   @apply text-4xl lg:text-5xl font-serif leading-[1.1];
 }
@@ -57,6 +53,13 @@ h3 {
   background: url(/assets/you-bg.png) no-repeat top center;
   background-size: 100% auto;
 }
+
+#app {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
 
 #app > *:not(tab-dock) {
   @apply flex flex-col lg:max-w-2xl mx-auto;
