@@ -57,3 +57,7 @@ h3 {
   background: url(/assets/you-bg.png) no-repeat top center;
   background-size: 100% auto;
 }
+
+#app > *:not(tab-dock) {
+  @apply lg:max-w-2xl mx-auto;
+}

@@ -1,7 +1,6 @@
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
-import '/styles.css';
 import '/tarot/index.js';
 import '/tarot/settings.js';
 import '/tarot/entries.js';
@@ -21,51 +20,51 @@ function navigateTo(path) {
   const app = document.querySelector('#app');
   const tabDock = document.createElement('tab-dock');
   const spacer = document.createElement('div');
-  tabDock.classList.add('w-full', 'flex', 'justify-center', 'fixed', 'bottom-5');
+  tabDock.classList.add('flex', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2');
   spacer.classList.add('h-[136px]');
   app.innerHTML = '';
 
   switch (path) {
-    case '/':
+    case '/app/':
       app.appendChild(document.createElement('tarot-index'));
       break;
-    case '/tarot/settings.html':
+    case '/app/tarot/settings.html':
       app.appendChild(document.createElement('tarot-settings'));
       break;
-    case '/tarot/entries.html':
+    case '/app/tarot/entries.html':
       app.appendChild(document.createElement('tarot-entries'));
       break;
-    case '/tarot/set-intention.html':
+    case '/app/tarot/set-intention.html':
       app.appendChild(document.createElement('set-intention'));
       break;
-    case '/tarot/today-intention.html':
+    case '/app/tarot/today-intention.html':
       app.appendChild(document.createElement('today-intention'));
       break;
-    case '/tarot/entry.html':
+    case '/app/tarot/entry.html':
       app.appendChild(document.createElement('entry-reading'));
       break;
-    case '/tarot/manifested.html':
+    case '/app/tarot/manifested.html':
       app.appendChild(document.createElement('manifested-intention'));
       break;
-    case '/vision-boards.html':
+    case '/app/vision-boards.html':
       app.appendChild(document.createElement('vision-boards-index'));
       break;
-    case '/vision-boards/entries.html':
+    case '/app/vision-boards/entries.html':
       app.appendChild(document.createElement('vision-board-entries'));
       break;
-    case '/vision-boards/settings.html':
+    case '/app/vision-boards/settings.html':
       app.appendChild(document.createElement('vision-board-settings'));
       break;
-    case '/vision-boards/entry.html':
+    case '/app/vision-boards/entry.html':
       app.appendChild(document.createElement('vision-board-entry'));
       break;
-    case '/you.html':
+    case '/app/you.html':
       app.appendChild(document.createElement('you-page'));
       break;
-    case '/you/entries.html':
+    case '/app/you/entries.html':
       app.appendChild(document.createElement('you-entries'));
       break;
-    case '/you/settings.html':
+    case '/app/you/settings.html':
       app.appendChild(document.createElement('you-settings'));
       break;
     default:
@@ -75,7 +74,7 @@ function navigateTo(path) {
   
   app.appendChild(spacer);
   app.appendChild(tabDock);
-  app.classList.add(window.location.pathname.startsWith('/you') ? 'bg-rainbow' : 'bg-neutral');
+  app.classList.add(window.location.pathname.startsWith('/app/you') ? 'bg-rainbow' : 'bg-neutral');
 
   window.history.pushState({ path }, '', path+(window.location.search ? '?' : '')+`${new URLSearchParams(window.location.search).toString()}`);
 }
