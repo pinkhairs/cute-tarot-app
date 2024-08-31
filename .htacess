@@ -1,0 +1,12 @@
+# Ensure directory listing is disabled
+Options -Indexes
+
+# Handle SPA routing by rewriting all requests to index.html
+RewriteEngine On
+
+# Don't rewrite files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirect all other requests to index.html
+RewriteRule ^ index.html [L]

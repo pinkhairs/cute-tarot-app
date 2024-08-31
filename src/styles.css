@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+p, h1, h2, h3, h4, h5, h6, ol, ul, nav, div {
+  @apply text-black;
+}
+
+h1 {
+  @apply text-black text-4xl lg:text-5xl font-serif leading-[1.1];
+}
+
+h2 {
+  font: 28px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
+  @apply text-black;
+}
+
+.card-container {
+  perspective: 1000px; /* Adds a 3D effect */
+  @apply w-full flex justify-center items-center;
+}
+
+.card {
+  @apply flex w-full;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 2.22s;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  backface-visibility: hidden;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back {
+  transform: rotateY(180deg); /* Rotates the back side 180 degrees */
+}
