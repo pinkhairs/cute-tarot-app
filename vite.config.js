@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       // Adjust alias to point to a specific folder
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './'),
     }
   },
   build: {

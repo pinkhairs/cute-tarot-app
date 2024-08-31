@@ -1,3 +1,5 @@
+import card from '@/assets/kt-back.png';
+
 class TarotCardReading extends HTMLElement {
   constructor() {
     super();
@@ -39,10 +41,10 @@ class TarotCardReading extends HTMLElement {
       <div class="card-container h-64 md:h-80 short:h-56 lg:h-64">
         <div id="card" class="card transition-all duration-1000 h-64 md:h-80 short:h-56 lg:h-64">
             <div class="card-face card-front">
-                <img src="/assets/kt-back.png" class="rounded-3xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-64 md:h-80 short:h-56 lg:h-64" alt="Kawaii Tarot">
+                <img src="${card}" class="rounded-3xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-64 md:h-80 short:h-56 lg:h-64" alt="Kawaii Tarot">
             </div>
             <div class="card-face card-back">
-                <img src="/assets/kt-back.png" class="rounded-3xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-64 md:h-80 short:h-56 lg:h-64" alt="Kawaii Tarot">
+                <img src="${card}" class="rounded-3xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-64 md:h-80 short:h-56 lg:h-64" alt="Kawaii Tarot">
             </div>
         </div>
       </div>

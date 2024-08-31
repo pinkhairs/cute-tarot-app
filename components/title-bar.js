@@ -1,3 +1,7 @@
+import entries from '@/assets/entries-icon.svg';
+import settings from '@/assets/settings-icon.svg';
+import close from '@/assets/close-icon.svg';
+
 class TitleBar extends HTMLElement {
   constructor() {
     super();
@@ -29,7 +33,7 @@ class TitleBar extends HTMLElement {
           <div class="w-8">
             ${this.root ? `<div>
               <a href="${this.subDirLink}/entries.html">
-                <img src="/assets/entries-icon.svg" alt="Entries" class="w-5 h-5">
+                <img src="${entries}" alt="Entries" class="w-5 h-5">
               </a>
             </div>` : ''}
           </div>
@@ -40,11 +44,11 @@ class TitleBar extends HTMLElement {
             ${this.root ? `
             <div>
               <a href="${this.subDirLink}/settings.html">
-                <img src="/assets/settings-icon.svg" alt="Settings" class="w-8 h-8">
+                <img src="${settings}" alt="Settings" class="w-8 h-8">
               </a>
             </div>` : `<div>
               <a href="${this.backLink}">
-                <img src="/assets/close-icon.svg" alt="Back" class="w-4 h-4">  
+                <img src="${close}" alt="Back" class="w-4 h-4">  
               </a>
             </div>`}
           </div>

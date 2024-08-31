@@ -1,3 +1,5 @@
+import card from '@/assets/kt-back.png';
+
 class VisionBoardEntries extends HTMLElement {
   constructor() {
     super();
@@ -17,7 +19,7 @@ class VisionBoardEntries extends HTMLElement {
             <a href="/app/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
               <div>
                 <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
-                  <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
+                  <img src="${card}" alt="Tarot Card" class="h-[53px] rounded-md">
                 </div>
               </div>
               <div class="flex-grow pl-4">
@@ -31,7 +33,7 @@ class VisionBoardEntries extends HTMLElement {
             <a href="/app/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
             <div>
               <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
-                <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
+                <img src="${card}" alt="Tarot Card" class="h-[53px] rounded-md">
               </div>
               <p class="w-20 mt-2 text-center opacity-80 text-sm">The Fool</p>
             </div>
@@ -45,7 +47,7 @@ class VisionBoardEntries extends HTMLElement {
             <a href="/app/vision-boards/entry.html?title=High-rise+Dreams" class="flex">
             <div>
               <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
-                <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
+                <img src="${card}" alt="Tarot Card" class="h-[53px] rounded-md">
               </div>
               <p class="w-20 mt-2 text-center opacity-80 text-sm">The Fool</p>
             </div>

@@ -98,5 +98,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Initial navigation to the current path
 navigateTo(window.location.pathname);

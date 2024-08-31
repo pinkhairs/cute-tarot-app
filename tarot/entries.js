@@ -1,3 +1,5 @@
+import star from '@/assets/star.svg';
+import card from '@/assets/kt-back.png';
 class TarotEntries extends HTMLElement {
   constructor() {
     super();
@@ -17,14 +19,14 @@ class TarotEntries extends HTMLElement {
             <a href="/app/tarot/entry.html" class="flex">
               <div>
                 <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
-                  <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
+                  <img src="${card}" alt="Tarot Card" class="h-[53px] rounded-md">
                 </div>
                 <p class="w-20 mt-2 text-center opacity-80 text-sm">The High Priestess</p>
               </div>
               <div class="flex-grow pl-4">
                 <h3 class="mb-2">August 20, 2024</h3>
                 <p class="leading-loose">Start a new project <span class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm">
-                    <img class="h-4" src="/assets/star.svg" alt="Manifested"> Manifested
+                    <img class="h-4" src="${star}" alt="Manifested"> Manifested
                   </span>
                 </p>
               </div>
@@ -34,7 +36,7 @@ class TarotEntries extends HTMLElement {
             <a href="/app/tarot/entry.html" class="flex">
             <div>
               <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
-                <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
+                <img src="${card}" alt="Tarot Card" class="h-[53px] rounded-md">
               </div>
               <p class="w-20 mt-2 text-center opacity-80 text-sm">The Fool</p>
             </div>
@@ -48,7 +50,7 @@ class TarotEntries extends HTMLElement {
             <a href="/app/tarot/entry.html" class="flex">
             <div>
               <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-white">
-                <img src="/assets/kt-back.png" alt="Tarot Card" class="h-[53px] rounded-md">
+                <img src="${card}" alt="Tarot Card" class="h-[53px] rounded-md">
               </div>
               <p class="w-20 mt-2 text-center opacity-80 text-sm">The Fool</p>
             </div>
