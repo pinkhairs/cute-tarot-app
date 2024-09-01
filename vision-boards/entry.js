@@ -45,7 +45,7 @@ class VisionBoardEntry extends HTMLElement {
     
     this.innerHTML = `
     <title-bar class="w-full pb-6 short:pb-2" title="Vision Board"></title-bar>
-    <form method="post" enctype="multipart/form-data" action="/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full max-w-80 mx-auto flex-col px-4 flex-1 flex items-center justify-start gap-6">
+    <form method="post" enctype="multipart/form-data" action="/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col px-4 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl">
         <label for="vision-board-title" class="label opacity-80 font-serif">Name</label>
         <textarea placeholder="Type here" id="vision-board-title" name="title" class="w-full text-center bg-transparent focus:bg-white px-4 py-2 rounded-lg">${title}</textarea>

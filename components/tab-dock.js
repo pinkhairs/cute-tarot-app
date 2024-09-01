@@ -5,10 +5,21 @@ import you from '/assets/avatar-example.jpg';
 class TabDock extends HTMLElement {
   constructor() {
     super();
+    this.avatar = '';
+  }
+
+  async getAvatar() {
+    const response = await fetch('/pwa.php?action=get_avatar');
+    const avatar = await response.json();
+    return avatar;
   }
 
   connectedCallback() {
-    this.render();
+    this.getAvatar().then(data => {
+      const json = JSON.parse(data);
+      this.avatar = json.avatar;
+      this.render();
+    });
   }
 
   render() {
@@ -26,7 +37,7 @@ class TabDock extends HTMLElement {
         </div>
         <div class="flex items-center">
           <a href="/app/you.html">
-            <img src="${you}" alt="You" class="rounded-xl h-16">
+            <img src="${this.avatar}" id="avatar" alt="You" class="rounded-xl w-16 h-16">
           </a>
         </div>
       </div>

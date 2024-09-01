@@ -1,3 +1,5 @@
+import star from '@/assets/star.svg';
+
 class TitleBar extends HTMLElement {
   constructor() {
     super();
@@ -5,12 +7,15 @@ class TitleBar extends HTMLElement {
     this.title = this.getAttribute('title');
     this.root = this.getAttribute('root') || false;
     this.subDirLink = '/app/tarot';
+    this.entries = true;
+    this.settings = true;
 
     if (window.location.pathname === '/' || window.location.pathname.startsWith('/app/tarot/')) {
       this.subDirLink = '/app/tarot';
     } else if (window.location.pathname.startsWith('/app/vision-boards')) {
       this.subDirLink = '/app/vision-boards';
     } else if (window.location.pathname.startsWith('/app/you')) {
+      this.entries = false;
       this.subDirLink = '/app/you';
     }
 
@@ -27,7 +32,7 @@ class TitleBar extends HTMLElement {
       <header class="pt-6 px-4">
         <div class="flex items-center justify-center">
           <div class="w-8">
-            ${this.root ? `<div>
+            ${this.root && this.entries ? `<div>
               <a href="${this.subDirLink}/entries.html">
                 <svg fill="currentColor" class="w-5 h-5" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.5" y="0.5" width="20" height="3" rx="1.5" />
@@ -41,7 +46,7 @@ class TitleBar extends HTMLElement {
             <h1>${this.title}</h1>
           </div>
           <div class="flex items-center justify-end w-8">
-            ${this.root ? `
+            ${this.root && this.settings ? `
             <div>
               <a href="${this.subDirLink}/settings.html">
                 <svg width="30" height="29" viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">

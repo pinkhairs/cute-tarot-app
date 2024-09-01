@@ -70,7 +70,7 @@ h3 {
 }
 
 #background.white-text::before {
-  background: rgba(102, 114, 137, .55);
+  background: rgba(102, 114, 137, .6);
 }
 
 #background.black-text::before {
@@ -84,4 +84,8 @@ h3 {
 
 .bg-transparent {
   background-color: rgba(0,0,0,0);
+}
+
+label.border-dashed, form div.border-dashed {
+  @apply w-full;
 }

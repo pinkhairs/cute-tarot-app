@@ -47,7 +47,7 @@ class SetIntention extends HTMLElement {
         <div class="text-center items-center justify-center">
           <p id="card-content"></p>
         </div>
-        <form class="max-w-80 flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl text-center">
+        <form class=" flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl text-center">
           <div class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
             <textarea id="intention-text" placeholder="Type here" class="text-center focus:outline-none focus:bg-white w-full rounded-xl p-2 bg-transparent"></textarea>
