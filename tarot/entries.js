@@ -1,5 +1,4 @@
 import star from '@/assets/star.svg';
-import card from '@/assets/kt-back.png';
 
 class TarotEntries extends HTMLElement {
   constructor() {

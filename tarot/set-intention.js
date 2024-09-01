@@ -50,7 +50,7 @@ class SetIntention extends HTMLElement {
         <form class="max-w-80 flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl text-center">
           <div class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
-            <textarea id="intention-text" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral w-full rounded-xl p-2 bg-transparent"></textarea>
+            <textarea id="intention-text" placeholder="Type here" class="text-center focus:outline-none focus:bg-white w-full rounded-xl p-2 bg-transparent"></textarea>
           </div>
           <button id="save_intention" type="button" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-4 py-3">Save Intention</a>
         </form>

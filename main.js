@@ -13,9 +13,11 @@ import '/vision-boards/index.js';
 import '/vision-boards/entries.js';
 import '/vision-boards/settings.js';
 import '/vision-boards/entry.js';
+import '/vision-boards/new.js';
 import '/you/index.js';
 import '/you/entries.js';
 import '/you/settings.js';
+import youBg from '@/assets/you-bg.png';
 
 const checkIfLoggedIn = async () => {
   const response = await fetch(`/pwa.php?action=check_logged_in`);
@@ -31,6 +33,7 @@ const getLoggedIn = async () => {
 
 const navigateTo = async (path) => {
   const app = document.querySelector('#app');
+  const background = document.querySelector('#background');
   const tabDock = document.createElement('tab-dock');
   const spacer = document.createElement('div');
   tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2');
@@ -61,8 +64,9 @@ const navigateTo = async (path) => {
 
   switch (path) {
     case '/app/':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
 
       const todayReading = async () => {
         const response = await fetch(`/pwa.php?action=today_card`);
@@ -85,54 +89,75 @@ const navigateTo = async (path) => {
 
       break;
     case '/app/tarot/settings.html':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
+
       app.appendChild(document.createElement('tarot-settings'));
       break;
     case '/app/tarot/entries.html':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
       app.appendChild(document.createElement('tarot-entries'));
       break;
     case '/app/tarot/set-intention.html':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
       app.appendChild(document.createElement('set-intention'));
       break;
     case '/app/tarot/today-intention.html':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
       app.appendChild(document.createElement('today-intention'));
       break;
     case '/app/tarot/entry.html':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
       app.appendChild(document.createElement('entry-reading'));
       break;
     case '/app/tarot/manifested.html':
-      app.style.backgroundImage = `url(${matJson})`;
+      background.style.backgroundImage = `url(${matJson})`;
       document.documentElement.classList.add('text-'+textColor);
+      background.classList.add(textColor+'-text');
       app.appendChild(document.createElement('manifested-intention'));
       break;
     case '/app/vision-boards.html':
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('vision-boards-index'));
       break;
     case '/app/vision-boards/entries.html':
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('vision-board-entries'));
       break;
     case '/app/vision-boards/settings.html':
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('vision-board-settings'));
       break;
     case '/app/vision-boards/entry.html':
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('vision-board-entry'));
       break;
+    case '/app/vision-boards/new.html':
+      document.documentElement.classList.add('text-black');
+      app.appendChild(document.createElement('new-vision-board'));
+      break;
     case '/app/you.html':
+      background.style.backgroundImage = `url(${youBg})`;
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('you-page'));
       break;
     case '/app/you/entries.html':
+      background.style.backgroundImage = `url(${youBg})`;
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('you-entries'));
       break;
     case '/app/you/settings.html':
+      background.style.backgroundImage = `url(${youBg})`;
+      document.documentElement.classList.add('text-black');
       app.appendChild(document.createElement('you-settings'));
       break;
     default:
@@ -142,7 +167,6 @@ const navigateTo = async (path) => {
   
   app.appendChild(spacer);
   app.appendChild(tabDock);
-  app.classList.add(window.location.pathname.startsWith('/app/you') ? 'bg-rainbow' : 'bg-neutral');
 
   window.history.pushState({ path }, '', path+(window.location.search ? '?' : '')+`${new URLSearchParams(window.location.search).toString()}`);
 }

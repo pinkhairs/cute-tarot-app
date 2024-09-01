@@ -35,7 +35,6 @@ class TarotSettings extends HTMLElement {
         <label class="border-dashed border-2 rounded-lg border-black p-4">
           Upload <input type="file" id="mat-file" name="background" class="hidden">
         </label>
-        <p>Clear Current Mat</p>
       </div>
     </form>
     `;

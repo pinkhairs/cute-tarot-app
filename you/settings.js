@@ -23,7 +23,6 @@ class YouSettings extends HTMLElement {
         <div class="border-dashed border-2 rounded-lg border-black p-4">
           Upload
         </div>
-        <p>Clear Current Mat</p>
       </div>
     </form>
     `;

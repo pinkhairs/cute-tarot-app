@@ -60,6 +60,23 @@ h3 {
   background-attachment: fixed;
 }
 
+#background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#background.white-text::before {
+  background: rgba(102, 114, 137, .55);
+}
+
+#background.black-text::before {
+  background: rgba(238, 244, 255, .75);
+}
+
 
 #app > *:not(tab-dock) {
   @apply flex flex-col lg:max-w-2xl mx-auto;
