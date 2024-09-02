@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cute Tarot</string>
+    <string name="title_activity_main">Cute Tarot</string>
+    <string name="package_name">com.cutetarot.app</string>
+    <string name="custom_url_scheme">com.cutetarot.app</string>
+</resources>

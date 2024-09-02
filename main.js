@@ -21,8 +21,8 @@ import youBg from '@/assets/you-bg.png';
 async function getPath(requestPath) {
   const response = await fetch(`/pwa.php?action=check_logged_in`);
   const data = await response.text();
-  if (!data || data <= 0) {
-    return '/app/login.html';
+  if (!data) {
+    return '/app/login-page.html';
   }
 
   if (requestPath === '/app/') {
