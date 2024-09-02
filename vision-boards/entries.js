@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 class VisionBoardEntries extends HTMLElement {
   constructor() {
     super();
@@ -23,7 +25,7 @@ class VisionBoardEntries extends HTMLElement {
   render() {
     const entriesHtml = this.entries.map(entry => `
       <li class="flex break-all pb-4 mb-4">
-        <a href="/app/vision-boards/entry.html?id=${entry.slug}" class="flex items-center">
+        <button type="button" hx-target="#content" hx-get="/app/vision-boards-entry.html" data-slug="${entry.slug}" class="load-entry flex text-left items-center">
           <div>
             <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-neutral bg-cover bg-no-repeat bg-center" style="background-image: ${entry.icon.includes('//') ? `url(${entry.icon})` : `${entry.icon}`}">
             ${entry.icon.includes('//') ? '' : entry.firstCharacter}
@@ -34,12 +36,12 @@ class VisionBoardEntries extends HTMLElement {
             <p class="leading-relaxed">${entry.imageCount} images</p>
             <p class="leading-relaxed opacity-80 text-sm">Created ${entry.created}</p>
           </div>
-        </a>
+        </button>
       </li>
     `).join('');
 
     this.innerHTML = `
-    <title-bar class="w-full" title="Entries"></title-bar>
+    <title-bar data-back-link="/app/vision-boards-index.html" class="w-full" title="Entries"></title-bar>
     <div class="w-full px-6 flex-1 flex items-start justify-center">
       <div class="flex-1">
         <ul class="">
@@ -48,6 +50,14 @@ class VisionBoardEntries extends HTMLElement {
       </div>
     </div>
     `;
+
+    htmx.process(this);
+
+    document.querySelectorAll('.load-entry').forEach(button => {
+      button.addEventListener('click', () => {
+        Cookies.set('board-slug', button.getAttribute('data-slug'));
+      });
+    });
   }
 }
 

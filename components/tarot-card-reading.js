@@ -16,7 +16,7 @@ class TarotCardReading extends HTMLElement {
     }
 
     deck().then(data => {
-      if (JSON.parse(data).deck === 'Spoopy Tarot') {
+      if (data === 'Spoopy Tarot') {
         this.card = 'https://cutetarot.com/wp-content/uploads/2024/08/spoopy-79.png';
       } else {
         this.card =' https://cutetarot.com/wp-content/uploads/2024/08/kawaii-79.png';
@@ -98,7 +98,7 @@ class TarotCardReading extends HTMLElement {
             <p id="card-content">Try a new adventure.</p>
           </div>
           <div id="set-intention-button" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
-            <a href="/app/tarot/set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</a>
+            <button type="button" hx-target="#content" hx-get="/app/tarot-set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
           </div>
         </div>
       </div>

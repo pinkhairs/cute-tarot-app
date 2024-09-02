@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import star from '@/assets/star.svg';
 
 class TarotEntries extends HTMLElement {
@@ -5,7 +6,7 @@ class TarotEntries extends HTMLElement {
     super();
     this.entries = [];
   }
-
+  
   connectedCallback() {
     this.fetchEntries();
   }
@@ -25,7 +26,7 @@ class TarotEntries extends HTMLElement {
   render() {
     const entriesHtml = this.entries.map(entry => `
       <li class="flex pb-4 mb-4">
-        <a href="/app/tarot/entry.html?id=${entry.slug}" class="flex">
+        <button type="button" hx-target="#content" hx-get="/app/tarot-entry.html" class="load-entry text-left flex" data-slug="${entry.slug}">
           <div>
             <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-translucent">
               <img src="${entry.card_image}" alt="" class="h-[53px] rounded-md">
@@ -37,12 +38,12 @@ class TarotEntries extends HTMLElement {
             <p class="leading-loose">${entry.intention} ${entry.manifested ? `<span class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"><img class="h-4" src="${star}" alt=""> Manifested</span>` : ''}
             </p>
           </div>
-        </a>
+        </button>
       </li>
     `).join('');
 
     this.innerHTML = `
-    <title-bar class="w-full" title="Entries"></title-bar>
+    <title-bar class="w-full" title="Entries" data-back-link="/app/tarot-index.html"></title-bar>
     <div class="w-full px-6 flex-1 flex items-start justify-center">
       <div class="flex-1">
         <ul class="">
@@ -51,6 +52,14 @@ class TarotEntries extends HTMLElement {
       </div>
     </div>
     `;
+
+    htmx.process(this);
+
+    document.querySelectorAll('.load-entry').forEach(button => {
+      button.addEventListener('click', () => {
+        Cookies.set('tarot-slug', button.getAttribute('data-slug'));
+      });
+    });
   }
 }
 

@@ -7,13 +7,12 @@ class TarotSettings extends HTMLElement {
   connectedCallback() {
     const deck = async () => {
       const response = await fetch(`/pwa.php?action=get_deck`);
-      return await response.json();
+      return await response.text();
     }
 
     deck().then(data => {
-      const json = JSON.parse(data);
-      this.deck = json.deck;
-      if (this.deck !== 'Spoopy Tarot') this.deck = 'Kawaii Tarot';
+      this.deck = data.includes('Spoopy Tarot') ? 'Spoopy Tarot' : 'Kawaii Tarot';
+
       this.options = `<option value="Kawaii Tarot" ${this.deck === 'Kawaii Tarot' ? 'selected' : ''}>Kawaii Tarot</option>`;
       this.options += `<option value="Spoopy Tarot" ${this.deck === 'Spoopy Tarot' ? 'selected' : ''}>Spoopy Tarot</option>`;
       this.render();
@@ -23,7 +22,7 @@ class TarotSettings extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
+    <title-bar class="w-full" title="Settings" data-back-link="/app/tarot-index.html" subtitle="Changes will save automatically"></title-bar>
     <form enctype="multipart/form-data" action="/pwa.php?action=save_reading_settings" id="tarot-settings-form" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Deck</label>

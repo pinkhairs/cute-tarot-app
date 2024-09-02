@@ -14,10 +14,6 @@ constructor() {
     }
 
     todayCard().then(card => {
-      if (!card) {
-        window.location.href = '/app/';
-        return;
-      }
       document.getElementById('card-title-text').textContent = card.card_title;
       document.getElementById('card-content').textContent = card.card_content;
       document.getElementById('card').setAttribute('src', card.card_image);
@@ -47,7 +43,7 @@ constructor() {
 
     todayIntention().then(data => {
       const json = JSON.parse(data);
-      if (json.intention == '') {
+      if (!json.intention) {
         document.getElementById('set-intention-button').classList.remove('hidden');
         document.getElementById('set-intention-button').classList.add('flex');
         document.getElementById('set-intention').classList.add('hidden');
@@ -71,7 +67,7 @@ constructor() {
     });
 
     this.innerHTML = `
-      <title-bar root="true" class="w-full" title="Today" subtitle="${todayDate}"></title-bar>
+      <title-bar data-entries-link="/app/tarot-entries.html" data-settings-link="/app/tarot-settings.html" root="true" class="w-full" title="Today" subtitle="${todayDate}"></title-bar>
       <div class="w-full px-6 flex items-start justify-center">
         <img id="card" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-32 lg:h-48" alt="">
       </div>
@@ -82,10 +78,10 @@ constructor() {
         <div class="text-center items-center justify-center">
           <p id="card-content"></p>
         </div>
-        <a id="set-intention-button" href="/app/tarot/set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</a>
+        <button id="set-intention-button" type="button" hx-target="#content" hx-get="/app/tarot-set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
 
         <div id="set-intention" class="hidden  flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
-        <a href="/app/tarot/set-intention.html" class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
+        <a hx-target="#content" hx-get="/app/tarot-set-intention.html" class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
           <label class="label opacity-80 font-serif">Today's intention</label>
           <p class="text-lg" id="intention-text"></p>
         </a>
@@ -96,7 +92,7 @@ constructor() {
     `;
     document.getElementById('record-manifestation').addEventListener('click', async () => {
       recordManifestation().then(() => {
-        window.location.href = '/app/tarot/today.html';
+        window.location.href = '/app/tarot-index.html';
       });
     });
   }

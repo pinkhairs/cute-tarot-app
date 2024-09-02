@@ -1,4 +1,4 @@
-class YouIndex extends HTMLElement {
+class LoginPage extends HTMLElement {
   constructor() {
     super();
     this.debounceTimeout = null;
@@ -28,7 +28,7 @@ class YouIndex extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full" data-settings-link="/app/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
+    <title-bar class="w-full" root="true" title="You" subtitle="Personalize your experience" data-settings-link="/app/you-settings.html"></title-bar>
     <form action="/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl text-center">
         <div class="label opacity-80 font-serif">Avatar</div>
@@ -113,4 +113,4 @@ class YouIndex extends HTMLElement {
   }
 }
 
-customElements.define('you-index', YouIndex);
+customElements.define('login-page', LoginPage);

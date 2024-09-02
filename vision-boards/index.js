@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 class VisionBoardsIndex extends HTMLElement {
   constructor() {
     super();
@@ -30,31 +32,39 @@ class VisionBoardsIndex extends HTMLElement {
 
   render() {
     const entriesHtml = this.entries.map(entry => `
-      <a href="/app/vision-boards/entry.html?id=${entry.slug}" class="flex flex-col items-center">
+      <button type="button" hx-target="#content" hx-get="/app/vision-boards-entry.html" data-slug="${entry.slug}" class="load-entry flex flex-col items-center">
         <div class="text-2xl w-[72px] h-[72px] lg:w-[96px] lg:h-[96px] flex-shrink-0 flex items-center justify-center rounded-xl bg-neutral text-black bg-cover bg-no-repeat bg-center" style="background-image: ${entry.icon.includes('//') ? `url(${entry.icon})` : `${entry.icon}`}">
         ${entry.icon.includes('//') ? '' : entry.firstCharacter}
         </div>
         <p class="w-[72px] lg:w-[96px] mt-2 text-center opacity-80 text-sm break-all">${entry.title}</p>
-      </a>
+      </button>
     `).join('');
     this.innerHTML = `
-    <title-bar root="true" class="w-full" title="Vision Boards"></title-bar>
+    <title-bar data-entries-link="/app/vision-boards-entries.html" data-settings-link="/app/vision-boards-settings.html" root="true" class="w-full" title="Vision Boards"></title-bar>
     <div class="grid grid-cols-4 px-6 gap-x-2 gap-y-4">
-      ${this.placeCreateNew === 'first' ? `<a href="/app/vision-boards/new.html" class="flex flex-col items-center">
+      ${this.placeCreateNew === 'first' ? `<button type="button" hx-target="#content" hx-get="/app/vision-boards-new.html" class="flex flex-col items-center">
         <div class="text-xl w-[72px] h-[72px] lg:w-[96px] lg:h-[96px] flex-shrink-0 flex items-center justify-center rounded-xl bg-brand text-white font-serif">
         New
         </div>
         <p class="w-[72px] lg:w-[96px] mt-2 text-center opacity-80 text-sm break-words">Create New</p>
-      </a>` : ''}
+      </button>` : ''}
       ${entriesHtml}
-      ${this.placeCreateNew === 'last' ? `<a href="/app/vision-boards/new.html" class="flex flex-col items-center">
+      ${this.placeCreateNew === 'last' ? `<a hx-target="#content" hx-get="/app/vision-boards-new.html" class="flex flex-col items-center">
         <div class="text-2xl w-[72px] h-[72px] lg:w-[96px] lg:h-[96px] flex-shrink-0 flex items-center justify-center rounded-xl bg-brand text-white font-serif">
         New
         </div>
         <p class="w-[72px] lg:w-[96px] mt-2 text-center opacity-80 text-sm break-all">Create New</p>
-      </a>` : ''}
-    </div>
+      </button>` : ''}
+    </a>
     `;
+
+    htmx.process(this);
+    
+    document.querySelectorAll('.load-entry').forEach(button => {
+      button.addEventListener('click', () => {
+        Cookies.set('board-slug', button.getAttribute('data-slug'));
+      });
+    });
   }
 }
 

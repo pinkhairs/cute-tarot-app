@@ -1,26 +1,15 @@
+import Cookies from 'js-cookie'
+
 class TarotEntry extends HTMLElement {
   constructor() {
     super();
-    this.slug = null; // To store the slug extracted from the URL
+    this.slug = Cookies.get('tarot-slug'); // To store the slug extracted from the URL
     this.entry = null; // To store the fetched entry data
   }
 
   connectedCallback() {
-    this.extractSlugFromURL(); // Extract the slug from the current URL
     if (this.slug) {
       this.fetchPostBySlug(this.slug); // Fetch the post data using the slug
-    }
-  }
-
-  extractSlugFromURL() {
-    // Get the current URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const slugParam = urlParams.get('id'); // In your URL, 'id' is used to pass the slug
-
-    if (slugParam) {
-      this.slug = slugParam;
-    } else {
-      console.error('No slug found in the URL');
     }
   }
 
@@ -60,7 +49,7 @@ class TarotEntry extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar class="w-full" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
+      <title-bar data-back-link="/app/tarot-entries.html" class="w-full" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
       <div class="w-full px-6 flex items-start justify-center">
         <img src="${this.entry.card_image}" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-24 lg:h-48" alt="">
       </div>

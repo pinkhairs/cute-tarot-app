@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-class VisionBoardsEntry extends HTMLElement {
+class VisionBoardSettings extends HTMLElement {
   constructor() {
     super();
     this.slug = Cookies.get('board-slug'); // To store the slug extracted from the URL
@@ -27,11 +27,6 @@ class VisionBoardsEntry extends HTMLElement {
 
   render() {
     const title = this.entry.title;
-    const images = this.entry.inspiration;
-    const imagesHtml = images.map(image => `
-      <img src="${image}" class="w-full rounded-xl h-auto" alt="">
-    `).join('');
-
     const settings = `
     <form method="post" enctype="multipart/form-data" action="/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
@@ -54,12 +49,31 @@ class VisionBoardsEntry extends HTMLElement {
     </form>`;
     
     this.innerHTML = `
-    <title-bar data-back-link="/app/vision-boards-index.html" data-settings-link="/app/vision-board-settings.html" class="w-full" title="${title}"></title-bar>
-    <div class="px-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      ${imagesHtml}
-    </div><div class="h-4"></div>
+    <title-bar data-back-link="/app/vision-boards-entry.html" class="w-full" title="Settings"></title-bar>
+    <div class="px-6">
+      ${settings}
+    </div>
+    <div class="h-4"></div>
     `;
+
+    document.getElementById('vision-board-title').addEventListener('change', (event) => {
+      const formData = new FormData();
+      formData.append('title', event.target.value);
+      formData.append('id', this.slug);
+      fetch('/pwa.php?action=set_board_title', {
+        method: 'POST',
+        body: formData
+      });
+    });
+    document.getElementById('inspiration').addEventListener('change', (event) => {
+      showLoadingScreen();
+      document.getElementById('new').submit();
+    });
+    document.getElementById('icon').addEventListener('change', (event) => {
+      showLoadingScreen();
+      document.getElementById('new').submit();
+    });
   }
 }
 
-customElements.define('vision-boards-entry', VisionBoardsEntry);
+customElements.define('vision-board-settings', VisionBoardSettings);

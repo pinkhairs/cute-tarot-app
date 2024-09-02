@@ -50,7 +50,7 @@ class SetIntention extends HTMLElement {
     }
 
     this.innerHTML = `
-      <title-bar class="w-full" title="Set Intention"></title-bar>
+      <title-bar class="w-full" data-back-link="/app/tarot-index.html" title="Set Intention"></title-bar>
       <div class="w-full px-6 flex items-start justify-center">
         <img id="card" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-32 lg:h-48" alt="">
       </div>

@@ -23,7 +23,7 @@ class YouSettings extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full" title="Settings" subtitle="Remember to save changes"></title-bar>
+    <title-bar data-back-link="/app/you-index.html" class="w-full" title="Settings" subtitle="Remember to save changes"></title-bar>
     <form method="post" action="/pwa.php?action=save_account_info" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl">
         <label for="first_name" class="label opacity-80 font-serif">First name</label>
