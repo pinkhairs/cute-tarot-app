@@ -22,10 +22,22 @@ class VisionBoardsNew extends HTMLElement {
           Upload images <input type="file" id="inspiration" name="files[]" class="hidden" multiple accept="image/*">
         </label>
       </div>
+      <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
+        <div class="label opacity-80 font-serif">Icon</div>
+        <label for="icon" class="border-dashed border-2 rounded-lg border-black p-4">
+          Upload <input type="file" id="icon" name="icon" class="hidden" accept="image/*">
+        </label>
+      </div>
     </form>
     `;
 
     document.getElementById('inspiration').addEventListener('change', (event) => {
+      showLoadingScreen();
+      document.getElementById('new').submit();
+    });
+
+    document.getElementById('icon').addEventListener('change', (event) => {
+      showLoadingScreen();
       document.getElementById('new').submit();
     });
   }

@@ -122,6 +122,7 @@ document.addEventListener('htmx:afterRequest', (event) => {
     } if (window.location.pathname.startsWith('/app/you')) {
       document.documentElement.className = 'text-black';
       background.style.backgroundImage = `url(${youBg})`;
+      background.classList.remove(`black-text`, 'white-text');
     }
   }
 });

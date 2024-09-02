@@ -96,11 +96,11 @@ html {
 }
 
 html.text-black .bg-translucent {
-  background: rgba(238, 244, 255, 0.88);
+  background: rgba(238, 244, 255, 0.94);
 }
 
 html.text-white .bg-translucent {
-  background: rgba(102, 114, 137, .88);
+  background: rgba(102, 114, 137, .94);
 }
 
 html.text-white .bg-translucent .border-dashed {

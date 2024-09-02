@@ -25,6 +25,11 @@ class TitleBar extends HTMLElement {
       this.subDirLink = '/app/you';
     }
 
+    if (window.location.search.includes('settings=true')) {
+      this.entrySettings = false;
+      this.settings = false;
+    }
+
     this.backLink = this.subDirLink === '/app/tarot' ? '/app/tarot-index.html' : this.subDirLink+'-index.html';
     this.backLinkDisplay = this.subDirLink === '/app/tarot' ? '/app/' : this.subDirLink+'.html';
   }
@@ -70,7 +75,9 @@ class TitleBar extends HTMLElement {
 </svg>
 
               </a>
-            </div>` : `<div>
+            </div>` : ``}
+            ${!window.location.search.includes('settings=true') && !(this.root || this.settings) ? `
+              <div>
               <button type="button" hx-get="${this.backLink}" hx-target="#content" hx-push-url="${this.backLinkDisplay}">
                 <svg class="w-4 h-4"" width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="0.430771" y="14.1667" width="20" height="3" rx="1.5" transform="rotate(-45 0.430771 14.1667)" fill="currentColor"/>
@@ -78,7 +85,8 @@ class TitleBar extends HTMLElement {
 </svg>
 
               </button>
-            </div>`}
+            </div>
+            ` : ''}
           </div>
         </div>
       </header>

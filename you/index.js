@@ -70,6 +70,7 @@ class YouIndex extends HTMLElement {
     `;
 
     document.getElementById('avatar').addEventListener('change', async (event) => {
+      showLoadingScreen();
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('file', file);
@@ -77,8 +78,8 @@ class YouIndex extends HTMLElement {
         method: 'POST',
         body: formData,
       });
-      const data = await response.json();
-      console.log('Avatar uploaded successfully:', data);
+      await response.json();
+      window.location.reload();
     });
   }
 

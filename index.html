@@ -9,6 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Copse&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@2.0.2"></script>
     <script>
+      const showLoadingScreen = () => {
+        setTimeout(() => {
+          document.getElementById('loading-screen').classList.remove('opacity-0');
+          document.getElementById('loading-screen').classList.add('flex');
+          document.getElementById('loading-screen').classList.remove('hidden');
+        }, 0);
+      }
       const hideLoadingScreen = () => {
         setTimeout(() => {
           document.getElementById('loading-screen').classList.add('opacity-0');

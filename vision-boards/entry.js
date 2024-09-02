@@ -58,25 +58,39 @@ class VisionBoardsEntry extends HTMLElement {
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
         <div class="label opacity-80 font-serif">Icon</div>
+        ${this.entry.icon ? `<p class="mb-4"><img src="${this.entry.icon}" class="w-16 h-16 rounded-lg" alt=""></p>` : ''}
         <label for="icon" class="border-dashed border-2 rounded-lg border-black p-4">
-          Upload <input type="file" id="icon" name="file" class="hidden" multiple accept="image/*">
+          Upload <input type="file" id="icon" name="icon" class="hidden" accept="image/*">
         </label>
       </div>
     </form>`;
     
     this.innerHTML = `
     <title-bar class="w-full" title="${window.location.search.includes('settings=true') ? 'Settings' : title}"></title-bar>
-    <div class="px-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div class="px-6 ${window.location.search.includes('settings=true') ? '' : 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}">
     ${window.location.search.includes('settings=true') ? settings : imagesHtml}
     
     </div>
     `;
 
     if (window.location.search.includes('settings=true')) {
+      
+      document.getElementById('vision-board-title').addEventListener('change', (event) => {
+        const formData = new FormData();
+        formData.append('title', event.target.value);
+        formData.append('id', this.slug);
+        fetch('/pwa.php?action=set_board_title', {
+          method: 'POST',
+          body: formData
+        });
+      });
       document.getElementById('inspiration').addEventListener('change', (event) => {
-        event.preventDefault();
+        showLoadingScreen();
         document.getElementById('new').submit();
-        event.stopPropagation();
+      });
+      document.getElementById('icon').addEventListener('change', (event) => {
+        showLoadingScreen();
+        document.getElementById('new').submit();
       });
     }
   }

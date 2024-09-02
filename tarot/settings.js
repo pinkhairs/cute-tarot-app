@@ -34,7 +34,7 @@ class TarotSettings extends HTMLElement {
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
         <label class="label opacity-80 font-serif">Mat</label>
         <label class="border-dashed border-2 rounded-lg border-black p-4">
-          Upload <input type="file" id="mat-file" name="background" class="hidden">
+          Upload <input type="file" id="mat-file" name="background" class="hidden" accept="image/*">
         </label>
       </div>
     </form>
@@ -46,9 +46,10 @@ class TarotSettings extends HTMLElement {
     });
 
     document.getElementById('mat-file').addEventListener('change', async () => {
+      showLoadingScreen();
       const formData = new FormData();
       formData.append('background', document.getElementById('mat-file').files[0]);
-      await fetch('/pwa.php?action=save_reading_settings', {
+      await fetch('/pwa.php?action=set_mat', {
         method: 'POST',
         body: formData
       });
