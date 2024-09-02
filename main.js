@@ -64,12 +64,23 @@ const loadingState = document.getElementById("loading-screen");
 content.setAttribute('hx-get', path);
 content.setAttribute('hx-trigger', 'load');
 
+if (window.location.pathname === '/app/') {
+  const todayReadingCheck = async () => await fetch(`/pwa.php?action=check_if_today_reading_exists`)
+  .then(async response => {
+    const data = await response.text();
+    if (data != null) {
+      window.location.href = '/app/tarot/today.html';
+    }
+  });
+  todayReadingCheck();
+}
+
 document.addEventListener('htmx:beforeRequest', (event) => {
   if (event.detail.pathInfo.requestPath === '/app/tarot-index.html') {
     const todayReadingCheck = async () => await fetch(`/pwa.php?action=check_if_today_reading_exists`)
     .then(async response => {
       const data = await response.text();
-      if (data) {
+      if (data != null) {
         window.location.href = '/app/tarot/today.html';
       }
     });
