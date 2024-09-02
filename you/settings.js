@@ -46,7 +46,7 @@ class YouSettings extends HTMLElement {
       </div>
       <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Save Information</button>
     </form>
-    <form action="/pwa.php?account=log_out" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <form method="post" action="/pwa.php?action=log_out" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <button class="text-brand font-bold text-lg" type="submit">Log out</button>
     </form>
     <div class="h-4"></div>

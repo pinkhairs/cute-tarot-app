@@ -61,20 +61,21 @@ app.appendChild(bottomSpacer);
 document.body.appendChild(tabDock);
 
 const loadingState = document.getElementById("loading-screen");
-if (window.location.pathname === '/app/') {
-  const todayReadingCheck = async () => await fetch(`/pwa.php?action=check_if_today_reading_exists`)
-  .then(async response => {
-    const data = await response.text();
-    if (data) {
-      window.location.href = '/app/tarot/today.html';
-    }
-  });
-  todayReadingCheck();
-}
 content.setAttribute('hx-get', path);
 content.setAttribute('hx-trigger', 'load');
 
 document.addEventListener('htmx:beforeRequest', (event) => {
+  if (event.detail.pathInfo.requestPath === '/app/tarot-index.html') {
+    const todayReadingCheck = async () => await fetch(`/pwa.php?action=check_if_today_reading_exists`)
+    .then(async response => {
+      const data = await response.text();
+      if (data) {
+        window.location.href = '/app/tarot/today.html';
+      }
+    });
+    todayReadingCheck();
+  }
+
   if (event.detail.target === content) {
     loadingState.classList.remove('hidden');
     loadingState.classList.add('flex');
@@ -94,7 +95,7 @@ document.addEventListener('htmx:afterRequest', (event) => {
       }
     }
     
-    if (event.detail.pathInfo.requestPath.includes('-index.html')) {
+    if (event.detail.pathInfo.requestPath.includes('-index.html') || event.detail.pathInfo.requestPath.includes('tarot-today-intention.html')) {
       tabDock.classList.remove('translate-y-[150%]');
       bottomSpacer.classList.add('h-[132px]', 'flex-shrink-0');
     } else {
