@@ -30,7 +30,7 @@ class TarotEntries extends HTMLElement {
             <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-translucent">
               <img src="${entry.card_image}" alt="" class="h-[53px] rounded-md">
             </div>
-            <p class="w-20 mt-2 text-center opacity-80 text-sm">${entry.card_title}</p>
+            <p class="w-20 mt-2 text-center opacity-80 text-sm break-words">${entry.card_title}</p>
           </div>
           <div class="flex-grow pl-4">
             <h3 class="mb-2">${entry.title}</h3>

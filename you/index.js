@@ -106,7 +106,6 @@ class YouIndex extends HTMLElement {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Form submitted successfully:', data);
     })
     .catch(error => {
       console.error('Error submitting form:', error);

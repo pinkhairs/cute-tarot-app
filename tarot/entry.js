@@ -61,7 +61,7 @@ class TarotEntry extends HTMLElement {
   render() {
     this.innerHTML = `
       <title-bar class="w-full" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
-      <div class="w-full px-6 flex-1 flex items-start justify-center">
+      <div class="w-full px-6 flex items-start justify-center">
         <img src="${this.entry.card_image}" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-24 lg:h-48" alt="">
       </div>
       <div class="px-6 mt-8 short:mt-4 flex items-center justify-center gap-4 flex-col">

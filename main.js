@@ -8,7 +8,6 @@ import '/tarot/entries.js';
 import '/tarot/set-intention.js';
 import '/tarot/today-intention.js';
 import '/tarot/entry.js';
-import '/tarot/manifested.js';
 import '/vision-boards/index.js';
 import '/vision-boards/entries.js';
 import '/vision-boards/settings.js';
@@ -32,10 +31,11 @@ const getLoggedIn = async () => {
 
 const paths = {
   '/app/': '/app/tarot-index.html',
-  '/app/today.html': '/app/tarot-today-intention.html',
+  '/app/tarot/today.html': '/app/tarot-today-intention.html',
   '/app/tarot/entries.html': '/app/tarot-entries.html',
   '/app/tarot/settings.html': '/app/tarot-settings.html',
   '/app/tarot/entry.html': '/app/tarot-entry.html',
+  '/app/tarot/set-intention.html': '/app/tarot-set-intention.html',
   
   '/app/vision-boards.html': '/app/vision-boards-index.html',
   '/app/vision-boards/entries.html': '/app/vision-boards-entries.html',
@@ -61,7 +61,16 @@ app.appendChild(bottomSpacer);
 document.body.appendChild(tabDock);
 
 const loadingState = document.getElementById("loading-screen");
-
+if (window.location.pathname === '/app/') {
+  const todayReadingCheck = async () => await fetch(`/pwa.php?action=check_if_today_reading_exists`)
+  .then(async response => {
+    const data = await response.text();
+    if (data) {
+      window.location.href = '/app/tarot/today.html';
+    }
+  });
+  todayReadingCheck();
+}
 content.setAttribute('hx-get', path);
 content.setAttribute('hx-trigger', 'load');
 

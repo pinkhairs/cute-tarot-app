@@ -31,7 +31,6 @@ class VisionBoardsEntry extends HTMLElement {
     }
 
     const posts = await response.json();
-    console.log(posts);
     this.entry = JSON.parse(posts);
     this.render();
     hideLoadingScreen();
@@ -48,7 +47,7 @@ class VisionBoardsEntry extends HTMLElement {
     <form method="post" enctype="multipart/form-data" action="/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="vision-board-title" class="label opacity-80 font-serif">Name</label>
-        <textarea placeholder="Type here" id="vision-board-title" name="title" class="w-full text-center bg-transparent focus:bg-white px-6 py-2 rounded-lg">${title}</textarea>
+        <textarea placeholder="Type here" id="vision-board-title" name="title" class="w-full text-center bg-transparent focus:text-black focus:bg-white px-6 py-2 rounded-lg">${title}</textarea>
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
         <div class="label opacity-80 font-serif">New inspiration</div>
@@ -58,7 +57,7 @@ class VisionBoardsEntry extends HTMLElement {
       </div>
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
         <div class="label opacity-80 font-serif">Icon</div>
-        ${this.entry.icon ? `<p class="mb-4"><img src="${this.entry.icon}" class="w-16 h-16 rounded-lg" alt=""></p>` : ''}
+        ${this.entry.icon ? `<p class="mb-2"><img src="${this.entry.icon}" class="w-16 h-16 rounded-lg" alt=""></p>` : ''}
         <label for="icon" class="border-dashed border-2 rounded-lg border-black p-4">
           Upload <input type="file" id="icon" name="icon" class="hidden" accept="image/*">
         </label>
@@ -70,7 +69,7 @@ class VisionBoardsEntry extends HTMLElement {
     <div class="px-6 ${window.location.search.includes('settings=true') ? '' : 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}">
     ${window.location.search.includes('settings=true') ? settings : imagesHtml}
     
-    </div>
+    </div><div class="h-4"></div>
     `;
 
     if (window.location.search.includes('settings=true')) {
