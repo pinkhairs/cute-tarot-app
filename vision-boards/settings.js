@@ -1,4 +1,4 @@
-class VisionBoardSettings extends HTMLElement {
+class VisionBoardsSettings extends HTMLElement {
   constructor() {
     super();
   }
@@ -10,6 +10,7 @@ class VisionBoardSettings extends HTMLElement {
       const json = JSON.parse(jsonData);
       this.placeCreateNew = json.place;
       this.render();
+      hideLoadingScreen();
     });
   }
 
@@ -25,11 +26,11 @@ class VisionBoardSettings extends HTMLElement {
       <option value="last" ${this.placeCreateNew === 'last' ? 'selected' : ''}>Last</option>
     `;
     this.innerHTML = `
-    <title-bar class="w-full pb-6 short:pb-2" title="Settings" subtitle="Changes will save automatically"></title-bar>
-    <form class="w-full  mx-auto flex-col px-4 flex-1 flex items-center justify-start gap-6">
-      <div class="field flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl">
+    <title-bar class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
+    <form class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+      <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Place "Create New"</label>
-        <select id="deck" class="bg-white px-4 py-2 rounded-lg text-xl">
+        <select id="deck" class="bg-white px-6 py-2 rounded-lg text-xl">
           ${options}
         </select>
       </div>
@@ -43,4 +44,4 @@ class VisionBoardSettings extends HTMLElement {
   }
 }
 
-customElements.define('vision-board-settings', VisionBoardSettings);
+customElements.define('vision-boards-settings', VisionBoardsSettings);

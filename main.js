@@ -15,7 +15,6 @@ import '/vision-boards/settings.js';
 import '/vision-boards/entry.js';
 import '/vision-boards/new.js';
 import '/you/index.js';
-import '/you/entries.js';
 import '/you/settings.js';
 import youBg from '@/assets/you-bg.png';
 
@@ -31,170 +30,104 @@ const getLoggedIn = async () => {
   return await checkIfLoggedIn();
 };
 
-const navigateTo = async (path) => {
-  const app = document.querySelector('#app');
-  const background = document.querySelector('#background');
-  const tabDock = document.createElement('tab-dock');
-  const spacer = document.createElement('div');
-  tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2');
-  spacer.classList.add('h-[136px]');
-  app.innerHTML = '';
-
-  const mat = async () => {
-    const response = await fetch(`/pwa.php?action=get_mat`);
-    if (response.ok) {
-      return await response.json();
-    }
-  }
-
-  const getMat = async () => {
-    return await mat();
-  }
-
-  const matData = await getMat();
-  let matJson;
-  let textColor
-  if (!matData) {
-    matJson = '';
-    textColor = 'black';
-  } else {
-    matJson = JSON.parse(matData).mat;
-    textColor = JSON.parse(matData).color;
-  }
-
-  switch (path) {
-    case '/app/':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-
-      const todayReading = async () => {
-        const response = await fetch(`/pwa.php?action=today_card`);
-        if (response.ok) {
-          return await response.json();
-        }
-      };
-
-      const getTodayReading = async () => {
-        return await todayReading();
-      };
-
-      const data = await getTodayReading();
-
-      if (data == 0) {
-        app.appendChild(document.createElement('tarot-index'));
-      } else {
-        app.appendChild(document.createElement('today-intention'));
-      }
-
-      break;
-    case '/app/tarot/settings.html':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-
-      app.appendChild(document.createElement('tarot-settings'));
-      break;
-    case '/app/tarot/entries.html':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-      app.appendChild(document.createElement('tarot-entries'));
-      break;
-    case '/app/tarot/set-intention.html':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-      app.appendChild(document.createElement('set-intention'));
-      break;
-    case '/app/tarot/today-intention.html':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-      app.appendChild(document.createElement('today-intention'));
-      break;
-    case '/app/tarot/entry.html':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-      app.appendChild(document.createElement('entry-reading'));
-      break;
-    case '/app/tarot/manifested.html':
-      background.style.backgroundImage = `url(${matJson})`;
-      document.documentElement.classList.add('text-'+textColor);
-      background.classList.add(textColor+'-text');
-      app.appendChild(document.createElement('manifested-intention'));
-      break;
-    case '/app/vision-boards.html':
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('vision-boards-index'));
-      break;
-    case '/app/vision-boards/entries.html':
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('vision-board-entries'));
-      break;
-    case '/app/vision-boards/settings.html':
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('vision-board-settings'));
-      break;
-    case '/app/vision-boards/entry.html':
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('vision-board-entry'));
-      break;
-    case '/app/vision-boards/new.html':
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('new-vision-board'));
-      break;
-    case '/app/you.html':
-      background.style.backgroundImage = `url(${youBg})`;
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('you-page'));
-      break;
-    case '/app/you/entries.html':
-      background.style.backgroundImage = `url(${youBg})`;
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('you-entries'));
-      break;
-    case '/app/you/settings.html':
-      background.style.backgroundImage = `url(${youBg})`;
-      document.documentElement.classList.add('text-black');
-      app.appendChild(document.createElement('you-settings'));
-      break;
-    default:
-      app.innerHTML = '<h1>404 Not Found</h1>'; // Handle unknown paths
-      break;
-  }
+const paths = {
+  '/app/': '/app/tarot-index.html',
+  '/app/today.html': '/app/tarot-today-intention.html',
+  '/app/tarot/entries.html': '/app/tarot-entries.html',
+  '/app/tarot/settings.html': '/app/tarot-settings.html',
+  '/app/tarot/entry.html': '/app/tarot-entry.html',
   
-  app.appendChild(spacer);
-  app.appendChild(tabDock);
+  '/app/vision-boards.html': '/app/vision-boards-index.html',
+  '/app/vision-boards/entries.html': '/app/vision-boards-entries.html',
+  '/app/vision-boards/settings.html': '/app/vision-boards-settings.html',
+  '/app/vision-boards/entry.html': '/app/vision-boards-entry.html',
+  '/app/vision-boards/new.html': '/app/vision-boards-new.html',
 
-  window.history.pushState({ path }, '', path+(window.location.search ? '?' : '')+`${new URLSearchParams(window.location.search).toString()}`);
+  '/app/you.html': '/app/you-index.html',
+  '/app/you/settings.html': '/app/you-settings.html',
 }
 
-// Set up event listeners for navigation
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('a[data-link]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent the link from causing a page reload
-      const path = link.getAttribute('href');
-      navigateTo(path);
-    });
-  });
+const app = document.querySelector('#app');
+const path = paths[window.location.pathname];
+const background = document.querySelector('#background');
+const content = document.querySelector('#content');
+const tabDock = document.createElement('tab-dock');
+tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2', 'translate-y-[150%]', 'transition-transform', 'duration-1000', 'z-50');
+const topSpacer = document.createElement('div');
+topSpacer.classList.add('h-6', 'lg:h-8', 'flex-shrink-0');
+app.prepend(topSpacer);
+const bottomSpacer = document.createElement('div');
+app.appendChild(bottomSpacer);
+document.body.appendChild(tabDock);
 
-  // Handle browser back and forward buttons
-  window.addEventListener('popstate', (e) => {
-    if (e.state?.path) {
-      navigateTo(e.state.path);
-    }
-  });
+const loadingState = document.getElementById("loading-screen");
+
+content.setAttribute('hx-get', path);
+content.setAttribute('hx-trigger', 'load');
+
+document.addEventListener('htmx:beforeRequest', (event) => {
+  if (event.detail.target === content) {
+    loadingState.classList.remove('hidden');
+    loadingState.classList.add('flex');
+    setTimeout(() => {
+      loadingState.classList.remove('opacity-0');
+    }, 0);
+  }
 });
 
+document.addEventListener('htmx:afterRequest', (event) => {
+    document.documentElement.className = 'text-white';
+    if (event.detail.target === content) {
+    const mat = async () => {
+      const response = await fetch(`/pwa.php?action=get_mat`);
+      if (response.ok) {
+        return await response.json();
+      }
+    }
+    
+    if (event.detail.pathInfo.requestPath.includes('-index.html')) {
+      tabDock.classList.remove('translate-y-[150%]');
+      bottomSpacer.classList.add('h-[132px]', 'flex-shrink-0');
+    } else {
+      tabDock.classList.add('translate-y-[150%]');
+      bottomSpacer.classList.remove('h-[132px]', 'flex-shrink-0');
+    }
 
-// Usage example
+    const getMat = async () => {
+      return await mat();
+    }
+
+    const matData = getMat();
+
+    if (window.location.pathname.startsWith('/app/tarot') || window.location.pathname === '/app/') {
+      matData.then(async data => {
+        let matJson;
+        let textColor
+        if (!matData) {
+          matJson = '';
+          textColor = 'black';
+        } else {
+          matJson = JSON.parse(data).mat;
+          textColor = JSON.parse(data).color;
+        }
+
+        background.style.backgroundImage = `url(${matJson})`;
+        document.documentElement.className = `text-${textColor}`;
+        background.classList.add(`${textColor}-text`);
+      })
+    } if (window.location.pathname.startsWith('/app/vision-boards')) {
+      document.documentElement.className = 'text-black';
+      background.style.backgroundImage = '';
+      background.classList.remove(`black-text`, 'white-text');
+    } if (window.location.pathname.startsWith('/app/you')) {
+      document.documentElement.className = 'text-black';
+      background.style.backgroundImage = `url(${youBg})`;
+    }
+  }
+});
+
 getLoggedIn().then(data => {
-  if (data) {
-    navigateTo(window.location.pathname);
-  } else {
+  if (!data) {
     window.location.href = '/log-in';
   }
 });

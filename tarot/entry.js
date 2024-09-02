@@ -1,6 +1,4 @@
-import card from '@/assets/kt-back.png';
-
-class EntryReading extends HTMLElement {
+class TarotEntry extends HTMLElement {
   constructor() {
     super();
     this.slug = null; // To store the slug extracted from the URL
@@ -35,6 +33,7 @@ class EntryReading extends HTMLElement {
     const posts = await response.json();
     this.entry = JSON.parse(posts)[0];
     this.render();
+    hideLoadingScreen();
   }
 
   getRelativeTime(dateString) {
@@ -61,18 +60,18 @@ class EntryReading extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar class="w-full pb-6 short:pb-0" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
-      <div class="w-full px-4 flex-1 flex items-start justify-center">
-        <img src="${this.entry.card_image}" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-32 lg:h-48" alt="">
+      <title-bar class="w-full" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
+      <div class="w-full px-6 flex-1 flex items-start justify-center">
+        <img src="${this.entry.card_image}" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-24 lg:h-48" alt="">
       </div>
-      <div class="px-4 mt-8 short:mt-4 flex items-center justify-center gap-4 flex-col">
+      <div class="px-6 mt-8 short:mt-4 flex items-center justify-center gap-4 flex-col">
         <div class="text-center items-center justify-center">
           <h2>${this.entry.card_title}</h2>
         </div>
         <div class="text-center items-center justify-center">
           <p>${this.entry.card_content}</p>
         </div>
-        <form class=" flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl text-center">
+        <form class="flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
           <div class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
             <p class="text-lg">${this.entry.intention ? this.entry.intention : '<span class="italic">None this day</span>'}</p>
@@ -83,4 +82,4 @@ class EntryReading extends HTMLElement {
   }
 }
 
-customElements.define('entry-reading', EntryReading);
+customElements.define('tarot-entry', TarotEntry);

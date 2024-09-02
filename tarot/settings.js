@@ -17,20 +17,21 @@ class TarotSettings extends HTMLElement {
       this.options = `<option value="Kawaii Tarot" ${this.deck === 'Kawaii Tarot' ? 'selected' : ''}>Kawaii Tarot</option>`;
       this.options += `<option value="Spoopy Tarot" ${this.deck === 'Spoopy Tarot' ? 'selected' : ''}>Spoopy Tarot</option>`;
       this.render();
+      hideLoadingScreen();
     });
   }
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full pb-6 short:pb-2" title="Settings" subtitle="Changes will save automatically"></title-bar>
-    <form enctype="multipart/form-data" action="/pwa.php?action=save_reading_settings" id="tarot-settings-form" class="w-full  mx-auto flex-col px-4 flex-1 flex items-center justify-start gap-6">
-      <div class="field flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl">
+    <title-bar class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
+    <form enctype="multipart/form-data" action="/pwa.php?action=save_reading_settings" id="tarot-settings-form" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+      <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Deck</label>
-        <select id="deck" class="bg-neutral px-4 py-2 rounded-lg text-xl">
+        <select id="deck" class="bg-neutral px-6 py-2 rounded-lg text-xl">
           ${this.options}
         </select>
       </div>
-      <div class="field flex flex-col items-center justify-between p-4 text-black bg-translucent gap-4 w-full rounded-2xl text-center">
+      <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
         <label class="label opacity-80 font-serif">Mat</label>
         <label class="border-dashed border-2 rounded-lg border-black p-4">
           Upload <input type="file" id="mat-file" name="background" class="hidden">

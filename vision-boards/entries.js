@@ -1,5 +1,3 @@
-import card from '@/assets/kt-back.png';
-
 class VisionBoardEntries extends HTMLElement {
   constructor() {
     super();
@@ -19,6 +17,7 @@ class VisionBoardEntries extends HTMLElement {
     const json = await response.json();
     this.entries = JSON.parse(json);
     this.render();
+    hideLoadingScreen();
   }
 
   render() {
@@ -40,8 +39,8 @@ class VisionBoardEntries extends HTMLElement {
     `).join('');
 
     this.innerHTML = `
-    <title-bar class="w-full pb-6 short:pb-2" title="Entries"></title-bar>
-    <div class="w-full px-4 flex-1 flex items-start justify-center">
+    <title-bar class="w-full" title="Entries"></title-bar>
+    <div class="w-full px-6 flex-1 flex items-start justify-center">
       <div class="flex-1">
         <ul class="">
           ${entriesHtml}
