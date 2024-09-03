@@ -14,7 +14,7 @@ class VisionBoardSettings extends HTMLElement {
   }
 
   async fetchPostBySlug(slug) {
-    const response = await fetch(`/pwa.php?action=vision_board&slug=${slug}`);
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board&slug=${slug}`);
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }
@@ -28,7 +28,7 @@ class VisionBoardSettings extends HTMLElement {
   render() {
     const title = this.entry.title;
     const settings = `
-    <form method="post" enctype="multipart/form-data" action="/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col flex-1 flex items-center justify-start gap-6">
+    <form method="post" enctype="multipart/form-data" action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="vision-board-title" class="label opacity-80 font-serif">Name</label>
         <textarea placeholder="Type here" id="vision-board-title" name="title" class="w-full text-center bg-transparent focus:text-black focus:bg-white px-6 py-2 rounded-lg">${title}</textarea>
@@ -49,7 +49,7 @@ class VisionBoardSettings extends HTMLElement {
     </form>`;
     
     this.innerHTML = `
-    <title-bar data-back-link="/app/vision-boards-entry.html" class="w-full" title="Settings"></title-bar>
+    <title-bar data-back-link="/vision-boards-entry.html" class="w-full" title="Settings"></title-bar>
     <div class="px-6">
       ${settings}
     </div>
@@ -60,7 +60,7 @@ class VisionBoardSettings extends HTMLElement {
       const formData = new FormData();
       formData.append('title', event.target.value);
       formData.append('id', this.slug);
-      fetch('/pwa.php?action=set_board_title', {
+      fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=set_board_title', {
         method: 'POST',
         body: formData
       });

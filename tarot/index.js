@@ -15,7 +15,7 @@ class TarotIndex extends HTMLElement {
       year: 'numeric'
     });
     this.innerHTML = `
-      <title-bar root="true" data-entries-link="/app/tarot-entries.html" data-settings-link="/app/tarot-settings.html" class="w-full" title="Today" subtitle="${todayDate}"></title-bar>
+      <title-bar root="true" data-entries-link="/tarot-entries.html" data-settings-link="/tarot-settings.html" class="w-full" title="Today" subtitle="${todayDate}"></title-bar>
       <tarot-card-reading></tarot-card-reading>
     `;
   }

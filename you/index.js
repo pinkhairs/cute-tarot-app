@@ -6,7 +6,7 @@ class YouIndex extends HTMLElement {
   }
   
   async getProfile() {
-    const response = await fetch('/pwa.php?action=get_profile');
+    const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_profile');
     const profile = await response.json();
     return profile;
   }
@@ -28,8 +28,8 @@ class YouIndex extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full" data-settings-link="/app/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
-    <form action="/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <title-bar class="w-full" data-settings-link="/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
+    <form action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl text-center">
         <div class="label opacity-80 font-serif">Avatar</div>
         <label for="avatar" class="border-dashed border-2 rounded-lg border-black p-4">
@@ -74,7 +74,7 @@ class YouIndex extends HTMLElement {
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('file', file);
-      const response = await fetch('/pwa.php?action=upload_avatar', {
+      const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_avatar', {
         method: 'POST',
         body: formData,
       });

@@ -1,6 +1,8 @@
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
+import '/components/login-page.js';
+import '/components/signup-page.js';
 import '/styles.css';
 import '/tarot/index.js';
 import '/tarot/settings.js';
@@ -18,20 +20,26 @@ import '/you/index.js';
 import '/you/settings.js';
 import youBg from '@/assets/you-bg.png';
 
-async function getPath(requestPath) {
-  const response = await fetch(`/pwa.php?action=check_logged_in`);
-  const data = await response.text();
-  if (!data) {
-    return '/app/login-page.html';
+const getPath = async (requestPath) => {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    credentials: 'include'
+  });
+  const userInfo = await response.json();
+
+  const nonce = userInfo.nonce;
+
+  if (!userInfo.user_id) {
+      return '/account-signup-page.html';
   }
 
-  if (requestPath === '/app/') {
-    const response = await fetch(`/pwa.php?action=check_if_today_reading_exists`);
-    const data = await response.text();
-
-    if (data) {
-      return '/app/tarot-today-intention.html';
-    }
+  if (requestPath === '/tarot-index.html' || requestPath === '/') {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=check_if_today_reading_exists&_wpnonce=${nonce}`, {
+        credentials: 'include'
+      });
+      const data = await response.text();
+      if (data) {
+        return '/tarot-today-intention.html';
+      }
   }
 }
 
@@ -48,12 +56,12 @@ app.appendChild(bottomSpacer);
 document.body.appendChild(tabDock);
 const loadingState = document.getElementById("loading-screen");
 
-getPath('/app/').then(path => {
+getPath('/').then(path => {
   if (path) {
     content.setAttribute('hx-get', path);
     content.setAttribute('hx-trigger', 'load');
   } else {
-    content.setAttribute('hx-get', '/app/tarot-index.html');
+    content.setAttribute('hx-get', '/tarot-index.html');
     content.setAttribute('hx-trigger', 'load');
   }
   htmx.process(content);
@@ -69,6 +77,14 @@ document.addEventListener('htmx:beforeRequest', (event) => {
     }, 0);
   }
   const requestPath = event.detail.pathInfo.requestPath;
+  if (requestPath === '/tarot-index.html') {
+    getPath(requestPath).then(path => {
+      if (path === '/tarot-today-intention.html') {
+        window.location.reload();
+        return;
+      }
+    });
+  }
       
   if (requestPath.includes('-index.html') || requestPath.includes('tarot-today-intention.html')) {
     tabDock.classList.remove('translate-y-[150%]');
@@ -78,41 +94,41 @@ document.addEventListener('htmx:beforeRequest', (event) => {
     bottomSpacer.classList.remove('h-[132px]', 'flex-shrink-0');
   }
   
-      if (requestPath.includes('/app/tarot')) {
+      if (requestPath.includes('/tarot')) {
+        const getNonce = async () => {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_nonce`, {
+            credentials: 'include'
+          });
+          return await response.text();
+        }
 
-        document.documentElement.className = 'text-white';
-        const mat = async () => {
-          const response = await fetch(`/pwa.php?action=get_mat`);
-          if (response.ok) {
+        getNonce().then(nonce => {
+          document.documentElement.className = 'text-white';
+          const mat = async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat&_wpnonce=${nonce}`, { credentials: 'include' });
             return await response.json();
           }
-        }
+          mat().then(data => {
+            let matJson;
+            let textColor
+            if (!data.mat) {
+              matJson = '';
+              textColor = 'black';
+            } else {
+              matJson = data.mat;
+              textColor = data.color;
+            }
     
-        const getMat = async () => {
-          return await mat();
-        }
-    
-        const matData = getMat();
-        matData.then(async data => {
-          let matJson;
-          let textColor
-          if (!matData) {
-            matJson = '';
-            textColor = 'black';
-          } else {
-            matJson = JSON.parse(data).mat;
-            textColor = JSON.parse(data).color;
-          }
-  
-          background.style.backgroundImage = `url(${matJson})`;
-          document.documentElement.className = `text-${textColor}`;
-          background.classList.add(`${textColor}-text`);
-        })
-      } if (requestPath.includes('/app/vision-boards')) {
+            background.style.backgroundImage = `url(${matJson})`;
+            document.documentElement.className = `text-${textColor}`;
+            background.classList.add(`${textColor}-text`);
+          });
+        });
+      } if (requestPath.includes('/vision-boards')) {
         document.documentElement.className = 'text-black';
         background.style.backgroundImage = '';
         background.classList.remove(`black-text`, 'white-text');
-      } if (requestPath.includes('/app/you')) {
+      } if (requestPath.includes('/you') || requestPath.includes('/account')) {
         document.documentElement.className = 'text-black';
         background.style.backgroundImage = `url(${youBg})`;
         background.classList.remove(`black-text`, 'white-text');

@@ -4,7 +4,7 @@ class VisionBoardsSettings extends HTMLElement {
   }
 
   connectedCallback() {
-    const placeCreateNew = async () => await fetch('/pwa.php?action=place_create_new');
+    const placeCreateNew = async () => await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new');
     placeCreateNew().then(async data => {
       const jsonData = await data.json();
       const json = JSON.parse(jsonData);
@@ -16,7 +16,7 @@ class VisionBoardsSettings extends HTMLElement {
 
   render() {
     const saveCreateNew = async (value) => {
-      const response = await fetch(`/pwa.php?action=save_create_new&value=${value}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${value}`);
       const data = await response.json();
       return data;
     }
@@ -26,7 +26,7 @@ class VisionBoardsSettings extends HTMLElement {
       <option value="last" ${this.placeCreateNew === 'last' ? 'selected' : ''}>Last</option>
     `;
     this.innerHTML = `
-    <title-bar data-back-link="/app/vision-boards-index.html" class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
+    <title-bar data-back-link="/vision-boards-index.html" class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
     <form class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="deck" class="label opacity-80 font-serif">Place "Create New"</label>

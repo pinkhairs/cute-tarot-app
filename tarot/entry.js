@@ -1,10 +1,19 @@
 import Cookies from 'js-cookie'
+import star from '@/assets/star.svg';
 
 class TarotEntry extends HTMLElement {
   constructor() {
     super();
     this.slug = Cookies.get('tarot-slug'); // To store the slug extracted from the URL
     this.entry = null; // To store the fetched entry data
+  }
+
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+        credentials: 'include'
+    });
+    const userInfo = await response.json();
+    return userInfo.nonce; // Extract nonce from user info
   }
 
   connectedCallback() {
@@ -14,15 +23,17 @@ class TarotEntry extends HTMLElement {
   }
 
   async fetchPostBySlug(slug) {
-    const response = await fetch(`/pwa.php?action=tarot_entry&slug=${slug}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch the post');
-    }
+    this.getNonce().then(async nonce => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entry&slug=${slug}&_wpnonce=${nonce}`, { credentials: 'include' });
+      if (!response.ok) {
+        throw new Error('Failed to fetch the post');
+      }
 
-    const posts = await response.json();
-    this.entry = JSON.parse(posts)[0];
-    this.render();
-    hideLoadingScreen();
+      const posts = await response.json();
+      this.entry = posts[0];
+      this.render();
+      hideLoadingScreen();
+    });
   }
 
   getRelativeTime(dateString) {
@@ -49,11 +60,11 @@ class TarotEntry extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar data-back-link="/app/tarot-entries.html" class="w-full" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
+      <title-bar data-back-link="/tarot-entries.html" class="w-full" title="${this.getRelativeTime(this.entry.title)}" subtitle="${this.entry.title}"></title-bar>
       <div class="w-full px-6 flex items-start justify-center">
         <img src="${this.entry.card_image}" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-24 lg:h-48" alt="">
       </div>
-      <div class="px-6 mt-8 short:mt-4 flex items-center justify-center gap-4 flex-col">
+      <div class="px-6 flex items-center justify-center gap-4 flex-col">
         <div class="text-center items-center justify-center">
           <h2>${this.entry.card_title}</h2>
         </div>
@@ -64,6 +75,7 @@ class TarotEntry extends HTMLElement {
           <div class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
             <p class="text-lg">${this.entry.intention ? this.entry.intention : '<span class="italic">None this day</span>'}</p>
+            ${this.entry.manifested ? `<p class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"><img class="h-3" src="${star}" alt=""> Manifested</p>` : ''}
           </div>
         </form>
       </div>

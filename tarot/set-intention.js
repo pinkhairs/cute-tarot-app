@@ -5,6 +5,15 @@ class SetIntention extends HTMLElement {
     this.index = 0;
   }
 
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
+  }
+
   getRandomIdea() {
     if (this.index === this.ideas.length - 1) {
       this.index = 0;
@@ -15,25 +24,24 @@ class SetIntention extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getNonce().then((nonce) => {
     this.render();
 
     const todayCard = async () => {
-      const response = await fetch(`/pwa.php?action=today_card`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
       const json = await response.json();
       return json;
     }
 
-    todayCard().then(data => {
-      const card = JSON.parse(data);
+    todayCard().then(card => {
       document.getElementById('card-title-text').textContent = card.card_title;
       document.getElementById('card-content').textContent = card.card_content;
       document.getElementById('card').setAttribute('src', card.card_image);
     });
 
     const todayIntention = async () => {
-      const response = await fetch(`/pwa.php?action=intention`);
-      const json = await response.json();
-      return JSON.parse(json);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
+      return await response.json();
     };
 
     todayIntention().then(data => {
@@ -42,19 +50,20 @@ class SetIntention extends HTMLElement {
     });
 
     hideLoadingScreen();
+  });
   }
 
   render() {
     const saveReading = async (intention) => {
-      await fetch(`/pwa.php?action=save_reading&card=0&intention=${intention}`);
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=0&intention=${intention}&_wpnonce=${this.nonce}`, { credentials: 'include' });
     }
 
     this.innerHTML = `
-      <title-bar class="w-full" data-back-link="/app/tarot-index.html" title="Set Intention"></title-bar>
+      <title-bar class="w-full" data-back-link="/tarot-index.html" title="Set Intention"></title-bar>
       <div class="w-full px-6 flex items-start justify-center">
         <img id="card" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-32 lg:h-48" alt="">
       </div>
-      <div class="px-6 mt-8 short:mt-4 flex items-center justify-center gap-4 flex-col">
+      <div class="px-6 flex items-center justify-center gap-4 flex-col">
         <div class="text-center items-center justify-center">
           <h2 id="card-title-text"></h2>
         </div>
@@ -75,7 +84,7 @@ class SetIntention extends HTMLElement {
     document.getElementById('save_intention').addEventListener('click', async () => {
       const intentionText = document.getElementById('intention-text').value;
       saveReading(intentionText).then(() => {
-        window.location.href = '/app/';
+        window.location.reload();
       });
     });
 

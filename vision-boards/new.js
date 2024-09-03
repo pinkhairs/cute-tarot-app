@@ -5,7 +5,7 @@ class VisionBoardsNew extends HTMLElement {
   }
 
   async getIdeas() {
-    const response = await fetch('/pwa.php?action=vision_board_ideas');
+    const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board_ideas');
     if (!response.ok) {
       throw new Error('Failed to fetch entries');
     }
@@ -31,8 +31,8 @@ class VisionBoardsNew extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar data-back-link="/app/vision-boards-index.html" class="w-full" title="Vision Board" subtitle="Changes will save automatically"></title-bar>
-    <form method="post" enctype="multipart/form-data" action="/pwa.php?action=upload_inspiration" id="new" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <title-bar data-back-link="/vision-boards-index.html" class="w-full" title="Vision Board" subtitle="Changes will save automatically"></title-bar>
+    <form method="post" enctype="multipart/form-data" action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_inspiration" id="new" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="vision-board-title" class="label opacity-80 font-serif">Name</label>
         <textarea placeholder="Type here" id="vision-board-title" name="title" class="w-full text-center bg-transparent focus:text-black focus:bg-white px-6 py-2 rounded-lg"></textarea>
