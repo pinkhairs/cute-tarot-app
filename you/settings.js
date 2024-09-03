@@ -7,15 +7,25 @@ class YouSettings extends HTMLElement {
     this.nonce = '';
   }
 
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
+  }
+
   async fetchProfile() {
-    const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info');
-    const json = await response.json();
-    const profile = JSON.parse(json);
-    this.first_name = profile.first_name;
-    this.last_name = profile.last_name;
-    this.email = profile.email;
-    this.nonce = profile.nonce;
-    this.render();
+    this.getNonce().then(async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      const profile = await response.json();
+      console.log(profile);
+      this.first_name = profile.first_name;
+      this.last_name = profile.last_name;
+      this.email = profile.email;
+      this.render();
+    });
   }
 
   connectedCallback() {
@@ -26,7 +36,7 @@ class YouSettings extends HTMLElement {
   render() {
     this.innerHTML = `
     <title-bar data-back-link="/you-index.html" class="w-full" title="Settings" subtitle="Remember to save changes"></title-bar>
-    <form method="post" action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_account_info" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <form id="account-form" method="post" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl">
         <label for="first_name" class="label opacity-80 font-serif">First name</label>
         <input id="first_name" name="first_name" placeholder="First name" class="text-center focus:outline-none focus:bg-neutral transition-colors w-full rounded-xl p-2 bg-transparent" value="${this.first_name}" />
@@ -38,8 +48,8 @@ class YouSettings extends HTMLElement {
       </div>
 
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl">
-        <label for="email" class="label opacity-80 font-serif">Last name</label>
-        <input type="email" id="email" name="email" placeholder="you@cutetarot.com" class="text-center focus:outline-none focus:bg-neutral transition-colors w-full rounded-xl p-2 bg-transparent" value="${this.email}" />
+        <label for="email" class="label opacity-80 font-serif">Email</label>
+        <input type="email" id="email" name="email" placeholder="example@cutetarot.com" class="text-center focus:outline-none focus:bg-neutral transition-colors w-full rounded-xl p-2 bg-transparent" value="${this.email}" />
       </div>
 
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl">
@@ -53,6 +63,21 @@ class YouSettings extends HTMLElement {
     </form>
     <div class="h-4"></div>
     `;
+
+    document.getElementById('account-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_account_info&_wpnonce=${this.nonce}`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      // if password was set
+      if (formData.get('password')) {
+        window.location.reload();
+      }
+    });
   }
 }
 

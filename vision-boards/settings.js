@@ -1,29 +1,40 @@
 class VisionBoardsSettings extends HTMLElement {
   constructor() {
     super();
+    this.value = '';
+  }
+
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
   }
 
   connectedCallback() {
-    const placeCreateNew = async () => await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new');
-    placeCreateNew().then(async data => {
-      const jsonData = await data.json();
-      const json = JSON.parse(jsonData);
-      this.placeCreateNew = json.place;
-      this.render();
-      hideLoadingScreen();
+    this.getNonce().then(() => {
+      const placeCreateNew = async () => await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      placeCreateNew().then(async data => {
+        this.value = await data.text();
+        if (this.value === '') this.value = 'first';
+        this.render();
+        hideLoadingScreen();
+      });
     });
   }
 
   render() {
-    const saveCreateNew = async (value) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${value}`);
-      const data = await response.json();
+    const saveCreateNew = async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${this.value}&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      const data = await response.text();
       return data;
     }
 
     const options = `
-      <option value="first" ${this.placeCreateNew === 'first' ? 'selected' : ''}>First</option>
-      <option value="last" ${this.placeCreateNew === 'last' ? 'selected' : ''}>Last</option>
+      <option value="first" ${this.value === 'first' ? 'selected' : ''}>First</option>
+      <option value="last" ${this.value === 'last' ? 'selected' : ''}>Last</option>
     `;
     this.innerHTML = `
     <title-bar data-back-link="/vision-boards-index.html" class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
@@ -38,8 +49,8 @@ class VisionBoardsSettings extends HTMLElement {
     `;
 
     document.getElementById('deck').addEventListener('change', (event) => {
-      const value = event.target.value;
-      saveCreateNew(value);
+      this.value = event.target.value;
+      saveCreateNew();
     });
   }
 }

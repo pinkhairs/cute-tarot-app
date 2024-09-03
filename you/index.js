@@ -4,26 +4,36 @@ class YouIndex extends HTMLElement {
     this.debounceTimeout = null;
     this.debounceDelay = 2000; // 2 seconds debounce delay
   }
+
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
+  }
   
   async getProfile() {
-    const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_profile');
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_profile&_wpnonce=${this.nonce}`, { credentials: 'include' });
     const profile = await response.json();
     return profile;
   }
 
   connectedCallback() {
-    this.render();
-    this.getProfile().then(data => {
-      const json = JSON.parse(data);
-      document.getElementById('life_right_now').value = json.life_right_now;
-      document.getElementById('describe_a_day_in_your_dream_life').value = json.describe_a_day_in_your_dream_life;
-      document.getElementById('life_vision').value = json.life_vision;
-      document.getElementById('bucket_list').value = json.bucket_list;
-      document.getElementById('current_responsibilities').value = json.current_responsibilities;
-      document.getElementById('style').value = json.style;
-      this.attachListeners();
+    this.getNonce().then(() => {
+      this.render();
+      this.getProfile().then(json => {
+        document.getElementById('life_right_now').value = json.life_right_now;
+        document.getElementById('describe_a_day_in_your_dream_life').value = json.describe_a_day_in_your_dream_life;
+        document.getElementById('life_vision').value = json.life_vision;
+        document.getElementById('bucket_list').value = json.bucket_list;
+        document.getElementById('current_responsibilities').value = json.current_responsibilities;
+        document.getElementById('style').value = json.style;
+        this.attachListeners();
+      });
+      hideLoadingScreen();
     });
-    hideLoadingScreen();
   }
 
   render() {
@@ -74,12 +84,17 @@ class YouIndex extends HTMLElement {
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('file', file);
-      const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_avatar', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_avatar&_wpnonce=${this.nonce}`, {
         method: 'POST',
         body: formData,
+        credentials: 'include'
       });
-      await response.json();
-      window.location.reload();
+      const newAvatar = await response.text();
+      // make me a style tag to update the avatar
+      const styles = document.createElement('style');
+      styles.textContent = `#avatar { background-image: url(${newAvatar}) !important; }`;
+      document.head.appendChild(styles);
+      hideLoadingScreen();
     });
   }
 

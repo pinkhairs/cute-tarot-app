@@ -4,20 +4,30 @@ class VisionBoardEntries extends HTMLElement {
   constructor() {
     super();
     this.entries = [];
+    this.nonce = '';
   }
 
   connectedCallback() {
-    this.fetchEntries();
+    this.getNonce().then(() => {
+      this.fetchEntries();
+    });
   }
 
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
+  }
 
   async fetchEntries() {
-    const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards');
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch entries');
     }
-    const json = await response.json();
-    this.entries = JSON.parse(json);
+    this.entries = await response.json();
     this.render();
     hideLoadingScreen();
   }

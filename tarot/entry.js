@@ -51,10 +51,16 @@ class TarotEntry extends HTMLElement {
     } else if (diffDays === 1) {
       return 'Yesterday';
     } else if (diffDays < 7) {
-      return `${diffDays}d ago`; // Example: 2d ago
-    } else {
+      return `${diffDays} days ago`; // Example: 2d ago
+    } else if (diffDays < 28) {
       const diffWeeks = Math.floor(diffDays / 7);
-      return `${diffWeeks}w ago`; // Example: 1w ago
+      return `${diffWeeks} weeks ago`; // Example: 1w ago
+    } else if (diffDays < 365) {
+      const diffMonths = Math.floor(diffDays / 30);
+      return `${diffMonths} months ago`; // Example: 1m ago
+    } else {
+      const diffYears = Math.floor(diffDays / 365);
+      return `${diffYears} years ago`; // Example: 1y ago
     }
   }
 

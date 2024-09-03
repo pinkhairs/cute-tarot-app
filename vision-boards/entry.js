@@ -5,22 +5,33 @@ class VisionBoardsEntry extends HTMLElement {
     super();
     this.slug = Cookies.get('board-slug'); // To store the slug extracted from the URL
     this.entry = null; // To store the fetched entry data
+    this.nonce = ''; // To store the nonce
   }
 
   connectedCallback() {
     if (this.slug) {
-      this.fetchPostBySlug(this.slug); // Fetch the post data using the slug
+      this.getNonce().then(() => {
+        this.fetchPostBySlug(this.slug); // Fetch the post data using the slug
+      });
     }
   }
 
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
+  }
+
   async fetchPostBySlug(slug) {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board&slug=${slug}`);
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board&slug=${slug}&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }
 
-    const posts = await response.json();
-    this.entry = JSON.parse(posts);
+    this.entry = await response.json();
     this.render();
     hideLoadingScreen();
   }

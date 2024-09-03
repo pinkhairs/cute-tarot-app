@@ -44,8 +44,7 @@ class TabDock extends HTMLElement {
           </button>
         </div>
         <div class="flex items-center">
-          <button type="button" hx-get="/you-index.html" hx-target="#content">
-            <img src="${this.avatar}" id="avatar" alt="You" class="rounded-xl w-16 h-16">
+          <button id="avatar" class="rounded-xl w-16 h-16 bg-cover bg-center bg-no-repeat" type="button" hx-get="/you-index.html" hx-target="#content" style="background-image: url(${this.avatar})">
           </button>
         </div>
       </div>

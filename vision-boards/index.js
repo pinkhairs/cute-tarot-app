@@ -7,24 +7,34 @@ class VisionBoardsIndex extends HTMLElement {
     this.placeCreateNew = null;
   }
 
+  async getNonce() {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+      credentials: 'include'
+    });
+    const userInfo = await response.json();
+    this.nonce = userInfo.nonce;
+    return userInfo.nonce;
+  }
+
   connectedCallback() {
-    this.fetchEntries();
+    this.getNonce().then(() => {
+      this.fetchEntries();
+    });
   }
 
 
   async fetchEntries() {
-    const response = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards');
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       return;
     }
-    const json = await response.json();
-    this.entries = JSON.parse(json);
-    const placeCreateNew = await fetch('${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new');
+    this.entries = await response.json();
+    const placeCreateNew = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!placeCreateNew.ok) {
       this.placeCreateNew = 'first';
     } else {
-      const createNewJson = await placeCreateNew.json();
-      this.placeCreateNew = JSON.parse(createNewJson).place;
+      const createNewJson = await placeCreateNew.text();
+      this.placeCreateNew = createNewJson;
     }
     this.render();
     hideLoadingScreen();

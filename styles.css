@@ -79,7 +79,7 @@ h3 {
 
 
 #content > * {
-  @apply flex flex-col lg:max-w-2xl mx-auto gap-6 lg:gap-8 flex-1 h-full;
+  @apply flex flex-col lg:max-w-2xl mx-auto gap-6 short:gap-4 lg:gap-8 flex-1 h-full;
 }
 
 .bg-transparent {
