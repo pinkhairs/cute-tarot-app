@@ -6,7 +6,7 @@ class SetIntention extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -28,7 +28,7 @@ class SetIntention extends HTMLElement {
     this.render();
 
     const todayCard = async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
       const json = await response.json();
       return json;
     }
@@ -40,7 +40,7 @@ class SetIntention extends HTMLElement {
     });
 
     const todayIntention = async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
       return await response.json();
     };
 
@@ -55,7 +55,7 @@ class SetIntention extends HTMLElement {
 
   render() {
     const saveReading = async (intention) => {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=0&intention=${intention}&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_reading&card=0&intention=${intention}&_wpnonce=${this.nonce}`, { credentials: 'include' });
     }
 
     this.innerHTML = `

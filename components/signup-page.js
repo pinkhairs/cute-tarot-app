@@ -5,7 +5,7 @@ class SignupPage extends HTMLElement {
   }
 
   async fetchNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_nonce`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_nonce`, {
       credentials: 'include'
     });
     this.nonce = await response.text();
@@ -46,7 +46,7 @@ class SignupPage extends HTMLElement {
     document.getElementById('signup').addEventListener('submit', async (event) => {
       event.preventDefault();
       showLoadingScreen();
-      const signupRequest = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=account_signup&_wpnonce=${this.nonce}`, {
+      const signupRequest = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=account_signup&_wpnonce=${this.nonce}`, {
         method: 'POST',
         credentials: 'include',
         body: new FormData(document.querySelector('form'))

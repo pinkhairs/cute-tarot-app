@@ -21,7 +21,7 @@ import '/you/settings.js';
 import youBg from '@/assets/you-bg.png';
 
 const getPath = async (requestPath) => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+  const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
     credentials: 'include'
   });
   const userInfo = await response.json();
@@ -33,7 +33,7 @@ const getPath = async (requestPath) => {
   }
 
   if (requestPath === '/tarot-index.html' || requestPath === '/') {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=check_if_today_reading_exists&_wpnonce=${nonce}`, {
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=check_if_today_reading_exists&_wpnonce=${nonce}`, {
         credentials: 'include'
       });
       const data = await response.text();
@@ -96,7 +96,7 @@ document.addEventListener('htmx:beforeRequest', (event) => {
   
       if (requestPath.includes('/tarot')) {
         const getNonce = async () => {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_nonce`, {
+          const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_nonce`, {
             credentials: 'include'
           });
           return await response.text();
@@ -105,7 +105,7 @@ document.addEventListener('htmx:beforeRequest', (event) => {
         getNonce().then(nonce => {
           document.documentElement.className = 'text-white';
           const mat = async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat&_wpnonce=${nonce}`, { credentials: 'include' });
+            const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_mat&_wpnonce=${nonce}`, { credentials: 'include' });
             return await response.json();
           }
           mat().then(data => {

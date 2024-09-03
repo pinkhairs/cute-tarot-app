@@ -9,7 +9,7 @@ class VisionBoardSettings extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -26,7 +26,7 @@ class VisionBoardSettings extends HTMLElement {
   }
 
   async fetchPostBySlug(slug) {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board&slug=${slug}&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=vision_board&slug=${slug}&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }
@@ -76,7 +76,7 @@ class VisionBoardSettings extends HTMLElement {
         formData.append('id', this.slug);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=set_board_title&_wpnonce=${this.nonce}`, {
+            const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=set_board_title&_wpnonce=${this.nonce}`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
@@ -103,7 +103,7 @@ class VisionBoardSettings extends HTMLElement {
         formData.append('id', this.slug);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_inspiration&_wpnonce=${this.nonce}`, {
+            const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=upload_inspiration&_wpnonce=${this.nonce}`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
@@ -130,7 +130,7 @@ class VisionBoardSettings extends HTMLElement {
         formData.append('id', this.slug);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_inspiration&_wpnonce=${this.nonce}`, {
+            const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=upload_inspiration&_wpnonce=${this.nonce}`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'

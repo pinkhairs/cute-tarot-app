@@ -5,7 +5,7 @@ class VisionBoardsSettings extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -15,7 +15,7 @@ class VisionBoardsSettings extends HTMLElement {
 
   connectedCallback() {
     this.getNonce().then(() => {
-      const placeCreateNew = async () => await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      const placeCreateNew = async () => await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=place_create_new&_wpnonce=${this.nonce}`, { credentials: 'include' });
       placeCreateNew().then(async data => {
         this.value = await data.text();
         if (this.value === '') this.value = 'first';
@@ -27,7 +27,7 @@ class VisionBoardsSettings extends HTMLElement {
 
   render() {
     const saveCreateNew = async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${this.value}&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_create_new&value=${this.value}&_wpnonce=${this.nonce}`, { credentials: 'include' });
       const data = await response.text();
       return data;
     }

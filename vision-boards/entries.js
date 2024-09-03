@@ -14,7 +14,7 @@ class VisionBoardEntries extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -23,7 +23,7 @@ class VisionBoardEntries extends HTMLElement {
   }
 
   async fetchEntries() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch entries');
     }

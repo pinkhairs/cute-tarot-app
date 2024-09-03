@@ -7,7 +7,7 @@ class TodayIntention extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
         credentials: 'include'
     });
     const userInfo = await response.json();
@@ -19,7 +19,7 @@ class TodayIntention extends HTMLElement {
     this.getNonce().then(nonce => {
       this.render();
       const todayCard = async () => {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
+        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
         return await response.json();
       }
 
@@ -32,7 +32,7 @@ class TodayIntention extends HTMLElement {
       });
 
       const manifestationStatus = async () => {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=manifestation_status&_wpnonce=${nonce}`, { credentials: 'include' });
+        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=manifestation_status&_wpnonce=${nonce}`, { credentials: 'include' });
         return await response.json();
       }
 
@@ -46,7 +46,7 @@ class TodayIntention extends HTMLElement {
       });
 
       const todayIntention = async () => {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
+        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
         return await response.json();
       };
 
@@ -67,7 +67,7 @@ class TodayIntention extends HTMLElement {
 
   render() {
     const recordManifestation = async (intention) => {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=record_manifestation&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=record_manifestation&_wpnonce=${this.nonce}`, { credentials: 'include' });
     }
     const todayDate = new Date().toLocaleDateString('en-US', {
       month: 'long',

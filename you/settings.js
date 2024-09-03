@@ -8,7 +8,7 @@ class YouSettings extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -18,7 +18,7 @@ class YouSettings extends HTMLElement {
 
   async fetchProfile() {
     this.getNonce().then(async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info&_wpnonce=${this.nonce}`, { credentials: 'include' });
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_account_info&_wpnonce=${this.nonce}`, { credentials: 'include' });
       const profile = await response.json();
       console.log(profile);
       this.first_name = profile.first_name;
@@ -58,7 +58,7 @@ class YouSettings extends HTMLElement {
       </div>
       <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Save Information</button>
     </form>
-    <form method="post" action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=log_out&_wpnonce=${this.nonce}" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <form method="post" action="${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=log_out&_wpnonce=${this.nonce}" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <button class="text-brand font-bold text-lg" type="submit">Log out</button>
     </form>
     <div class="h-4"></div>
@@ -67,7 +67,7 @@ class YouSettings extends HTMLElement {
     document.getElementById('account-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_account_info&_wpnonce=${this.nonce}`, {
+      await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_account_info&_wpnonce=${this.nonce}`, {
         method: 'POST',
         body: formData,
         credentials: 'include'

@@ -6,7 +6,7 @@ class YouIndex extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -15,7 +15,7 @@ class YouIndex extends HTMLElement {
   }
   
   async getProfile() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_profile&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_profile&_wpnonce=${this.nonce}`, { credentials: 'include' });
     const profile = await response.json();
     return profile;
   }
@@ -39,7 +39,7 @@ class YouIndex extends HTMLElement {
   render() {
     this.innerHTML = `
     <title-bar class="w-full" data-settings-link="/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
-    <form action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <form action="${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl text-center">
         <div class="label opacity-80 font-serif">Avatar</div>
         <label for="avatar" class="border-dashed border-2 rounded-lg border-black p-4">
@@ -84,7 +84,7 @@ class YouIndex extends HTMLElement {
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('file', file);
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_avatar&_wpnonce=${this.nonce}`, {
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=upload_avatar&_wpnonce=${this.nonce}`, {
         method: 'POST',
         body: formData,
         credentials: 'include'

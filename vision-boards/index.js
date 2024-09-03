@@ -8,7 +8,7 @@ class VisionBoardsIndex extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -24,12 +24,12 @@ class VisionBoardsIndex extends HTMLElement {
 
 
   async fetchEntries() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       return;
     }
     this.entries = await response.json();
-    const placeCreateNew = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const placeCreateNew = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=place_create_new&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!placeCreateNew.ok) {
       this.placeCreateNew = 'first';
     } else {

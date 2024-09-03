@@ -17,7 +17,7 @@ class VisionBoardsEntry extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -26,7 +26,7 @@ class VisionBoardsEntry extends HTMLElement {
   }
 
   async fetchPostBySlug(slug) {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board&slug=${slug}&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=vision_board&slug=${slug}&_wpnonce=${this.nonce}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }
@@ -44,7 +44,7 @@ class VisionBoardsEntry extends HTMLElement {
     `).join('');
 
     const settings = `
-    <form method="post" enctype="multipart/form-data" action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col flex-1 flex items-center justify-start gap-6">
+    <form method="post" enctype="multipart/form-data" action="${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=upload_inspiration" id="new" class="pb-8 short:pb-4 w-full  mx-auto flex-col flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl">
         <label for="vision-board-title" class="label opacity-80 font-serif">Name</label>
         <textarea placeholder="Type here" id="vision-board-title" name="title" class="w-full text-center bg-transparent focus:text-black focus:bg-white px-6 py-2 rounded-lg">${title}</textarea>

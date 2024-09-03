@@ -14,7 +14,7 @@ class TarotEntries extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
         credentials: 'include'
     });
     const userInfo = await response.json();
@@ -22,7 +22,7 @@ class TarotEntries extends HTMLElement {
   }
 
   async fetchEntries(nonce) {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries&_wpnonce=${nonce}`, { credentials: 'include' });
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=tarot_entries&_wpnonce=${nonce}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch entries');
     }

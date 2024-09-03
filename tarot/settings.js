@@ -6,7 +6,7 @@ class TarotSettings extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
       credentials: 'include'
     });
     const userInfo = await response.json();
@@ -17,7 +17,7 @@ class TarotSettings extends HTMLElement {
   connectedCallback() {
     this.getNonce().then(async nonce => {
       const deck = async () => {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference&_wpnonce=${nonce}`, { credentials: 'include' });
+        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_deck_preference&_wpnonce=${nonce}`, { credentials: 'include' });
         return await response.text();
       }
 
@@ -53,7 +53,7 @@ class TarotSettings extends HTMLElement {
     document.getElementById('deck').addEventListener('change', async (event) => {
         this.deck = event.target.value;
 
-        const url = `${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading_settings&deck=${this.deck}&_wpnonce=${this.nonce}`;
+        const url = `${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_reading_settings&deck=${this.deck}&_wpnonce=${this.nonce}`;
 
         try {
             const response = await fetch(url, {
@@ -78,7 +78,7 @@ class TarotSettings extends HTMLElement {
         const formData = new FormData();
         formData.append('background', document.getElementById('mat-file').files[0]);
 
-        const url = `${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=set_mat&_wpnonce=${this.nonce}`;
+        const url = `${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=set_mat&_wpnonce=${this.nonce}`;
 
         try {
             const response = await fetch(url, {
@@ -93,7 +93,7 @@ class TarotSettings extends HTMLElement {
 
             const background = document.querySelector('#background');
             const mat = async () => {
-              const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat&_wpnonce=${this.nonce}`, { credentials: 'include' });
+              const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_mat&_wpnonce=${this.nonce}`, { credentials: 'include' });
               return await response.json();
             }
             mat().then(data => {

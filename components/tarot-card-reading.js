@@ -6,7 +6,7 @@ class TarotCardReading extends HTMLElement {
   }
 
   async getNonce() {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_credentials`, {
+    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
         credentials: 'include'
     });
     const userInfo = await response.json();
@@ -20,16 +20,16 @@ class TarotCardReading extends HTMLElement {
       document.getElementById('flip-card-button').addEventListener('click', () => this.flipCard(nonce));
   
       const deck = async () => {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference&_wpnonce=${nonce}`, { credentials: 'include' });
+        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_deck_preference&_wpnonce=${nonce}`, { credentials: 'include' });
         if (!response.ok) throw new Error('Network response was not ok.');
         return await response.text();
       }
 
       deck().then(data => {
         if (data !== 'Spoopy Tarot') {
-          this.card = `${import.meta.env.VITE_API_BASE_URL}/wp-content/uploads/2024/08/kawaii-79.png`;
+          this.card = `${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/wp-content/uploads/2024/08/kawaii-79.png`;
         } else {
-          this.card = `${import.meta.env.VITE_API_BASE_URL}/wp-content/uploads/2024/08/spoopy-79.png`;
+          this.card = `${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/wp-content/uploads/2024/08/spoopy-79.png`;
         }
   
         document.getElementById('card-back').setAttribute('src', this.card);
@@ -42,13 +42,13 @@ class TarotCardReading extends HTMLElement {
     const flipCardButton = document.getElementById('flip-card-button');
 
     const quantumPick = async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=quantum_pick&_wpnonce=${nonce}`, { credentials: 'include' });
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=quantum_pick&_wpnonce=${nonce}`, { credentials: 'include' });
       const data = await response.json();
       return data;
     }
 
     const saveReading = async (cardId) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}&_wpnonce=${nonce}`, { credentials: 'include' });
+      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_reading&card=${cardId}&_wpnonce=${nonce}`, { credentials: 'include' });
       const data = await response.json();
       return data;
     }
