@@ -20,8 +20,8 @@ import '/vision-boards/new.js';
 import '/vision-boards/board-settings.js';
 import '/you/index.js';
 import '/you/settings.js';
-import { fetchWithAuth } from '@/auth'; // Adjust the path as necessary
-import { Preferences } from '@capacitor/preferences';
+import '/you/pentacles.js';
+import { fetchWithAuth } from '@/auth';
 
 const app = document.querySelector('#app');
 const background = document.querySelector('#background');
@@ -57,7 +57,6 @@ setupTodayCard();
 
 document.addEventListener('htmx:beforeSwap', async (event) => {
   const todaysCard = await getTodayReading();
-
   if (todaysCard && event.detail.pathInfo.requestPath === '/tarot-index.html') {
     event.preventDefault();
     htmx.ajax('GET', '/tarot-today-intention.html', { target: '#content' });

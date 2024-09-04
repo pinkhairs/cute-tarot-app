@@ -1,36 +1,20 @@
 import { removeToken, fetchWithAuth } from '@/auth';
 
-class YouSettings extends HTMLElement {
+class YouPentacles extends HTMLElement {
   constructor() {
     super();
-    this.first_name = '';
-    this.last_name = '';
-    this.email = '';
-  }
-
-  async fetchProfile() {
-    try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info`);
-      const profile = await response.json();
-      this.first_name = profile.first_name;
-      this.last_name = profile.last_name;
-      this.email = profile.email;
-      this.render();
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
   }
 
   connectedCallback() {
-    this.fetchProfile();
+    this.render();
     hideLoadingScreen();
   }
 
   render() {
     this.innerHTML = `
-    <title-bar data-back-link="/you-index.html" class="w-full" title="Settings" subtitle="Remember to save changes"></title-bar>
+    <title-bar data-back-link="/you-settings.html" class="w-full" title="Pentacles" subtitle="These don’t expire"></title-bar>
 
-    <form id="account-form" method="post" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+    <div class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
 
 
 
@@ -50,7 +34,7 @@ class YouSettings extends HTMLElement {
 
     </div>
     </div>
-    <div>      <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">Get More</button>
+    <div>      <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-white font-serif text-brand rounded-xl px-4 py-2">Get More</button>
 </div>
   </div>
   <p class="text-center text-sm opacity-80">Pentacles are credits you can use around the app. No subscription—just a pay-as-you-go system so you can invest more in your manifestations.</p>
@@ -74,15 +58,17 @@ class YouSettings extends HTMLElement {
         <label for="password" class="label opacity-80 font-serif">Password (only if changing)</label>
         <input type="password" id="password" name="password" placeholder="• • • • •" class="text-center focus:outline-none focus:bg-neutral transition-colors w-full rounded-xl p-2 bg-transparent" />
       </div>
-      <button id="account-button" type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Save Information</button>
-    </form>
+      <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Save Information</button>
+    </div>
     <div class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <button id="logout-button" class="text-brand font-bold text-lg" type="button">Log out</button>
     </div>
     <div class="h-4"></div>
     `;
 
-    document.getElementById('account-button').addEventListener('click', async (e) => {
+    htmx.process(this);
+
+    document.getElementById('account-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData();
       formData.append('first_name', document.getElementById('first_name').value);
@@ -111,4 +97,4 @@ class YouSettings extends HTMLElement {
   }
 }
 
-customElements.define('you-settings', YouSettings);
+customElements.define('you-pentacles', YouPentacles);
