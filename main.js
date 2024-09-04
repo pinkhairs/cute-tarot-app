@@ -1,3 +1,4 @@
+//main.js
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
@@ -20,7 +21,9 @@ import '/you/index.js';
 import '/you/settings.js';
 import youBg from '@/assets/you-bg.png';
 import { fetchWithAuth } from '@/auth'; // Adjust the path as necessary
+import { Preferences } from '@capacitor/preferences';
 
+const setupApp = async () => {
 const app = document.querySelector('#app');
 const background = document.querySelector('#background');
 const content = document.querySelector('#content');
@@ -28,30 +31,26 @@ const tabDock = document.createElement('tab-dock');
 tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2', 'translate-y-[150%]', 'transition-transform', 'duration-1000', 'z-50', 'ease-out');
 const topSpacer = document.createElement('div');
 topSpacer.classList.add('h-6', 'lg:h-8', 'flex-shrink-0');
-app.prepend(topSpacer);
 const bottomSpacer = document.createElement('div');
-app.appendChild(bottomSpacer);
-document.body.appendChild(tabDock);
 const loadingState = document.getElementById("loading-screen");
 
 const getTodayReading = async () => {
-  const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`, { credentials: 'include' });
-  return await data.json();
-}
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`);
+  return await response.json(); // Return the JSON if fetch was successful
+};
 
 async function setupTodayCard() {
   const todaysCard = await getTodayReading();
-
-  const content = document.getElementById('content'); // Ensure you have the correct element
-  // Remove any existing HTMX attributes
   content.removeAttribute('hx-get');
   content.removeAttribute('hx-trigger');
 
-  // Conditionally set the hx-get attribute based on the user's status
-  content.setAttribute('hx-get', todaysCard ? '/tarot-today-intention.html' : '/tarot-index.html');
-  content.setAttribute('hx-trigger', 'load');
+  if (todaysCard) {
+    content.setAttribute('hx-get', '/tarot-today-intention.html');
+  } else {
+    content.setAttribute('hx-get', '/tarot-index.html');
+  }
 
-  // Reinitialize HTMX on the content element
+  content.setAttribute('hx-trigger', 'load');
   htmx.process(content);
 }
 
@@ -60,16 +59,10 @@ setupTodayCard();
 document.addEventListener('htmx:beforeSwap', async (event) => {
   const todaysCard = await getTodayReading();
 
-  // Check if today's card exists and if the current request is for tarot-index.html
   if (todaysCard && event.detail.pathInfo.requestPath === '/tarot-index.html') {
-    // Prevent htmx from swapping the default view
     event.preventDefault();
-
-    // Optionally, load a different view or navigate to a different URL
-    // You can use htmx or window.location to navigate or modify the DOM directly
     htmx.ajax('GET', '/tarot-today-intention.html', { target: '#content' });
-
-    return; // Exit the function after handling the event
+    return;
   }
 });
 
@@ -82,9 +75,11 @@ document.addEventListener('htmx:beforeRequest', async (event) => {
       loadingState.classList.remove('opacity-0');
     }, 0);
   }
-  const requestPath = event.detail.pathInfo.requestPath;
+});
 
-  // Ensure tabs respond properly
+
+document.addEventListener('htmx:afterSwap', async (event) => {
+  const requestPath = event.detail.pathInfo.requestPath;
   if (requestPath.includes('-index.html') || requestPath.includes('tarot-today-intention.html')) {
     tabDock.classList.remove('translate-y-[150%]');
     bottomSpacer.classList.add('h-[132px]', 'flex-shrink-0');
@@ -97,6 +92,7 @@ document.addEventListener('htmx:beforeRequest', async (event) => {
   if (requestPath.includes('/tarot')) {
     document.documentElement.className = 'text-white';
     const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat`, { credentials: 'include' });
+
     const matData = await data.json();
     background.style.backgroundImage = `url(${matData.mat || ''})`;
     document.documentElement.className = `text-${matData.color || 'black'}`;
@@ -109,5 +105,31 @@ document.addEventListener('htmx:beforeRequest', async (event) => {
     document.documentElement.className = 'text-black';
     background.style.backgroundImage = `url(${youBg})`;
     background.classList.remove('black-text', 'white-text');
+  }
+});
+
+app.prepend(topSpacer);
+app.appendChild(bottomSpacer);
+document.body.appendChild(tabDock);
+};
+
+const setUpLoginPage = () => {
+  const background = document.querySelector('#background');
+  document.documentElement.className = 'text-black';
+  background.style.backgroundImage = `url(${youBg})`;
+  background.classList.remove('black-text', 'white-text');
+  const content = document.querySelector('#content');
+  content.setAttribute('hx-get', '/account-login-page.html');
+  content.setAttribute('hx-trigger', 'load');
+  htmx.process(content);
+}
+
+
+const checkForLogin = async () => await Preferences.get({ key: 'go_to_login' });
+checkForLogin().then(({ value }) => {
+  if (value !== 'true') {
+    setupApp();
+  } else {
+    setUpLoginPage();
   }
 });

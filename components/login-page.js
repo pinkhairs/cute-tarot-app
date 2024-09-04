@@ -1,4 +1,5 @@
 import { setToken, getToken, removeToken } from '@/auth'; // adjust the path as necessary
+import { Preferences } from '@capacitor/preferences'; // To handle preferences
 
 class LoginPage extends HTMLElement {
   constructor() {
@@ -42,14 +43,15 @@ class LoginPage extends HTMLElement {
           credentials: 'include',
           body: formData
         });
-        
-        const loginResponse = await loginRequest.text(); 
-        
+
+        const loginResponse = await loginRequest.text();
+
         if (loginResponse) {
           await setToken(loginResponse);
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1111);
+
+          // Clear the 'alreadyRedirected' flag upon successful login
+          await Preferences.set({ key: 'go_to_login', value: 'false' });
+          window.location.reload();
         } else {
           hideLoadingScreen();
           alert('There was an error with your login. Try resetting your password. Please contact info@cutetarot.com if you need help.');

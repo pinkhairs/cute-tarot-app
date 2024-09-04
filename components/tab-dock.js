@@ -1,4 +1,4 @@
-import { getToken } from '@/auth'; // adjust the path as necessary
+import { fetchWithAuth } from '@/auth'; // Use fetchWithAuth from your auth module
 import today from '@/assets/today.png';
 import visionBoards from '@/assets/vision-boards.png';
 
@@ -9,27 +9,20 @@ class TabDock extends HTMLElement {
   }
 
   async getAvatar() {
-    const token = await getToken(); // Retrieve the JWT from storage
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`, {
-      headers: {
-        'Authorization': `Bearer ${token}` // Use the JWT in the Authorization header
-      },
-      credentials: 'include' // Ensure credentials are included if needed for session handling
-    });
-    if (!response.ok) {
-      throw new Error('Failed to fetch avatar.');
-    }
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`);
+
     return await response.text();
   }
 
   connectedCallback() {
-    this.getAvatar().then(avatar => {
-      this.avatar = avatar;
-      this.render();
-    }).catch(error => {
-      console.error('Error fetching avatar:', error.message);
-      // Handle errors or set a default avatar image if needed
-    });
+    this.getAvatar()
+      .then(avatar => {
+        this.avatar = avatar || 'default-avatar.png'; // Fallback to a default avatar if empty
+        this.render();
+      })
+      .catch(error => {
+        console.error('Error during connectedCallback:', error.message);
+      });
   }
 
   render() {

@@ -1,4 +1,4 @@
-import { getToken } from '@/auth'; // Import getToken from your auth module
+import { fetchWithAuth } from '@/auth';
 
 class TarotCardReading extends HTMLElement {
   constructor() {
@@ -26,40 +26,20 @@ class TarotCardReading extends HTMLElement {
   }
 
   async getDeckPreference() {
-    const token = await getToken(); // Get the JWT token
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}` // Attach the JWT token to the request
-      },
-      credentials: 'include'
-    });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
+    if (!response) return;
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.text();
   }
 
   async quantumPick() {
-    const token = await getToken(); // Get the JWT token
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=quantum_pick`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}` // Attach the JWT token to the request
-      },
-      credentials: 'include'
-    });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=quantum_pick`);
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.json();
   }
 
   async saveReading(cardId) {
-    const token = await getToken(); // Get the JWT token
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}` // Attach the JWT token to the request
-      },
-      credentials: 'include'
-    });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}`);
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.json();
   }
