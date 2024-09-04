@@ -55,6 +55,7 @@ h3 {
 }
 
 #app {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -76,7 +77,6 @@ h3 {
 #background.black-text::before {
   background: rgba(238, 244, 255, .8);
 }
-
 
 #content > * {
   @apply flex flex-col lg:max-w-2xl mx-auto gap-6 short:gap-4 lg:gap-8 flex-1 h-full;

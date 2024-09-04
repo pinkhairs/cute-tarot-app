@@ -1,74 +1,64 @@
 import star from '@/assets/star.svg';
+import { fetchWithAuth } from '@/auth'; // Import the function to get JWT token
 
 class TodayIntention extends HTMLElement {
   constructor() {
     super();
-    this.nonce = '';
-  }
-
-  async getNonce() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
-        credentials: 'include'
-    });
-    const userInfo = await response.json();
-    this.nonce = userInfo.nonce;
-    return userInfo.nonce; // Extract nonce from user info
   }
 
   connectedCallback() {
-    this.getNonce().then(nonce => {
-      this.render();
-      const todayCard = async () => {
-        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
-        return await response.json();
+    this.render();
+
+    this.todayCard().then(card => {
+      document.getElementById('card-title-text').textContent = card.card_title;
+      document.getElementById('card-content').textContent = card.card_content;
+      document.getElementById('card').setAttribute('src', card.card_image);
+      hideLoadingScreen();
+    });
+
+    this.manifestationStatus().then(data => {
+      if (data.manifested) {
+        document.getElementById('record-manifestation').classList.add('hidden');
+        document.getElementById('record-manifestation').classList.remove('flex');
+        document.getElementById('manifested').classList.remove('hidden');
+        document.getElementById('manifested').classList.add('inline-flex');
       }
+    });
 
-      todayCard().then(card => {
-        document.getElementById('card-title-text').textContent = card.card_title;
-        document.getElementById('card-content').textContent = card.card_content;
-        document.getElementById('card').setAttribute('src', card.card_image);
-
-        hideLoadingScreen();
-      });
-
-      const manifestationStatus = async () => {
-        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=manifestation_status&_wpnonce=${nonce}`, { credentials: 'include' });
-        return await response.json();
+    this.todayIntention().then(intention => {
+      if (!intention) {
+        document.getElementById('set-intention-button').classList.remove('hidden');
+        document.getElementById('set-intention-button').classList.add('flex');
+        document.getElementById('set-intention').classList.add('hidden');
+      } else {
+        document.getElementById('set-intention-button').classList.add('hidden');
+        document.getElementById('intention-text').textContent = intention;
+        document.getElementById('set-intention').classList.remove('hidden');
+        document.getElementById('set-intention').classList.add('flex');
       }
-
-      manifestationStatus().then(data => {
-        if (data.manifested) {
-          document.getElementById('record-manifestation').classList.add('hidden');
-          document.getElementById('record-manifestation').classList.remove('flex');
-          document.getElementById('manifested').classList.remove('hidden');
-          document.getElementById('manifested').classList.add('inline-flex');
-        }
-      });
-
-      const todayIntention = async () => {
-        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
-        return await response.json();
-      };
-
-      todayIntention().then(json => {
-        if (!json.intention) {
-          document.getElementById('set-intention-button').classList.remove('hidden');
-          document.getElementById('set-intention-button').classList.add('flex');
-          document.getElementById('set-intention').classList.add('hidden');
-        } else {
-          document.getElementById('set-intention-button').classList.add('hidden');
-          document.getElementById('intention-text').textContent = json.intention;
-          document.getElementById('set-intention').classList.remove('hidden');
-          document.getElementById('set-intention').classList.add('flex');
-        }
-      });
     });
   }
 
+  async todayCard() {
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`, { credentials: 'include' });
+    return await response.json();
+  }
+
+  async manifestationStatus() {
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=manifestation_status`, { credentials: 'include' });
+    return await response.text();
+  }
+
+  async todayIntention() {
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention`, { credentials: 'include' });
+    return await response.text();
+  }
+
   render() {
-    const recordManifestation = async (intention) => {
-      await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=record_manifestation&_wpnonce=${this.nonce}`, { credentials: 'include' });
+    const recordManifestation = async () => {
+      await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=record_manifestation`, { credentials: 'include' });
     }
+
     const todayDate = new Date().toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
@@ -89,21 +79,20 @@ class TodayIntention extends HTMLElement {
         </div>
         <button id="set-intention-button" type="button" hx-target="#content" hx-get="/tarot-set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
 
-        <div id="set-intention" class="hidden  flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
-        <a hx-target="#content" hx-get="/tarot-set-intention.html" class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
-          <label class="label opacity-80 font-serif">Today's intention</label>
-          <p class="text-lg" id="intention-text"></p>
-        </a>
-        <button type="button" id="record-manifestation" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-6 py-3">I Manifested This</button>
-        <button type="button" id="manifested" class="hidden transition-opacity items-center justify-center gap-2 origin-top duration-1000 bg-accent text-black text-lg font-serif rounded-xl px-6 py-3"><img src="${star}" class="h-4 w-4" alt="" /> Manifested</button>
-      </div>
+        <div id="set-intention" class="hidden flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
+          <a hx-target="#content" hx-get="/tarot-set-intention.html" class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
+            <label class="label opacity-80 font-serif">Today's intention</label>
+            <p class="text-lg" id="intention-text"></p>
+          </a>
+          <button type="button" id="record-manifestation" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-6 py-3">I Manifested This</button>
+          <button type="button" id="manifested" class="hidden transition-opacity items-center justify-center gap-4 origin-top duration-1000 bg-accent text-black text-lg font-serif rounded-xl px-6 py-3"><img src="${star}" class="h-4 w-4" alt="" /> Manifested</button>
+        </div>
       </div>
     `;
     htmx.process(this);
     document.getElementById('record-manifestation').addEventListener('click', async () => {
-      recordManifestation().then(() => {
-        window.location.reload();
-      });
+      await recordManifestation();
+      window.location.reload();
     });
   }
 }

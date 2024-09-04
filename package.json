@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ios": "npm run build && npx cap run ios --target 1BB07406-D6A6-468B-A428-168A13A2E457"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
@@ -19,6 +20,7 @@
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
+    "@capacitor/preferences": "^6.0.2",
     "cordova-plugin-purchase": "^13.11.1",
     "js-cookie": "^3.0.5"
   }

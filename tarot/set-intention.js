@@ -1,17 +1,10 @@
+import { fetchWithAuth } from '@/auth'; // Ensure this path is correct
+
 class SetIntention extends HTMLElement {
   constructor() {
     super();
     this.ideas = [];
     this.index = 0;
-  }
-
-  async getNonce() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
-      credentials: 'include'
-    });
-    const userInfo = await response.json();
-    this.nonce = userInfo.nonce;
-    return userInfo.nonce;
   }
 
   getRandomIdea() {
@@ -24,14 +17,14 @@ class SetIntention extends HTMLElement {
   }
 
   connectedCallback() {
-    this.getNonce().then((nonce) => {
     this.render();
 
+    // Fetch today's card
     const todayCard = async () => {
-      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=today_card&_wpnonce=${nonce}`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`, { credentials: 'include' });
       const json = await response.json();
       return json;
-    }
+    };
 
     todayCard().then(card => {
       document.getElementById('card-title-text').textContent = card.card_title;
@@ -39,8 +32,9 @@ class SetIntention extends HTMLElement {
       document.getElementById('card').setAttribute('src', card.card_image);
     });
 
+    // Fetch today's intention
     const todayIntention = async () => {
-      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=intention&_wpnonce=${nonce}`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention`, { credentials: 'include' });
       return await response.json();
     };
 
@@ -50,13 +44,12 @@ class SetIntention extends HTMLElement {
     });
 
     hideLoadingScreen();
-  });
   }
 
   render() {
     const saveReading = async (intention) => {
-      await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_reading&card=0&intention=${intention}&_wpnonce=${this.nonce}`, { credentials: 'include' });
-    }
+      await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=0&intention=${encodeURIComponent(intention)}`, { credentials: 'include' });
+    };
 
     this.innerHTML = `
       <title-bar class="w-full" data-back-link="/tarot-index.html" title="Set Intention"></title-bar>
@@ -71,25 +64,24 @@ class SetIntention extends HTMLElement {
           <p id="card-content"></p>
         </div>
         <form class=" flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
-          <div class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
+          <div class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
-            <textarea id="intention-text" placeholder="Type here" class="text-center focus:outline-none focus:text-black focus:bg-white w-full rounded-xl p-2 bg-transparent"></textarea>
-            ${this.ideas ? `<button type="button" class="text-brand font-bold" id="random-idea">Try a suggestion</button>` : ''}
+            <textarea id="intention-text" placeholder="Type here" class="text-center focus:outline-none focus:text-black focus:bg-white w-full rounded-xl p-4 bg-transparent"></textarea>
+            ${this.ideas.length ? `<button type="button" class="text-brand font-bold" id="random-idea">Try a suggestion</button>` : ''}
           </div>
-          <button id="save_intention" type="button" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-6 py-3">Save Intention</a>
+          <button id="save_intention" type="button" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-6 py-3">Save Intention</button>
         </form>
       </div>
     `;
 
     document.getElementById('save_intention').addEventListener('click', async () => {
       const intentionText = document.getElementById('intention-text').value;
-      saveReading(intentionText).then(() => {
-        window.location.reload();
-      });
+      await saveReading(intentionText);
+      window.location.reload();
     });
 
-    if (this.ideas) {
-      document.getElementById('random-idea').addEventListener('click', (event) => {
+    if (this.ideas.length) {
+      document.getElementById('random-idea').addEventListener('click', () => {
         const randomIdea = this.getRandomIdea();
         document.getElementById('intention-text').value = randomIdea;
       });

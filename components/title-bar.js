@@ -41,7 +41,7 @@ class TitleBar extends HTMLElement {
             </div>` : ''}
           </div>
           <div class="flex-grow text-center">
-            <h1 class="break-all">${this.title}</h1>
+            <h1 class="break-words">${this.title}</h1>
           </div>
           <div class="flex items-center justify-end w-8">
             ${this.root || this.settingsLink ? `

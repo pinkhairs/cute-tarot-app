@@ -1,5 +1,6 @@
-import Cookies from 'js-cookie'
 import star from '@/assets/star.svg';
+import { Preferences } from '@capacitor/preferences';
+import { fetchWithAuth } from '@/auth'; // Ensure the correct path is used
 
 class TarotEntries extends HTMLElement {
   constructor() {
@@ -8,27 +9,21 @@ class TarotEntries extends HTMLElement {
   }
   
   connectedCallback() {
-    this.getNonce().then(nonce => {
-      this.fetchEntries(nonce);
-    });
+    this.fetchEntries();
   }
 
-  async getNonce() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
-        credentials: 'include'
-    });
-    const userInfo = await response.json();
-    return userInfo.nonce;
-  }
-
-  async fetchEntries(nonce) {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=tarot_entries&_wpnonce=${nonce}`, { credentials: 'include' });
-    if (!response.ok) {
-      throw new Error('Failed to fetch entries');
+  async fetchEntries() {
+    try {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries`, { credentials: 'include' });
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries');
+      }
+      this.entries = await response.json();
+      this.render();
+      hideLoadingScreen();
+    } catch (error) {
+      console.error('Error fetching entries:', error);
     }
-    this.entries = await response.json();
-    this.render();
-    hideLoadingScreen();
   }
 
   render() {
@@ -43,8 +38,7 @@ class TarotEntries extends HTMLElement {
           </div>
           <div class="flex-grow pl-4">
             <h3 class="mb-2">${entry.title}</h3>
-            <p class="leading-loose">${entry.intention}
-            </p>
+            <p class="my-2">${entry.intention}</p>
             ${entry.manifested ? `<p class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"><img class="h-3" src="${star}" alt=""> Manifested</p>` : ''}
           </div>
         </button>
@@ -65,8 +59,11 @@ class TarotEntries extends HTMLElement {
     htmx.process(this);
 
     document.querySelectorAll('.load-entry').forEach(button => {
-      button.addEventListener('click', () => {
-        Cookies.set('tarot-slug', button.getAttribute('data-slug'));
+      button.addEventListener('click', async () => {
+        await Preferences.set({
+          key: 'tarot-slug',
+          value: button.dataset.slug
+      });
       });
     });
   }

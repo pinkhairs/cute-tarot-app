@@ -1,39 +1,29 @@
-import Cookies from 'js-cookie'
 import star from '@/assets/star.svg';
+import { Preferences } from '@capacitor/preferences';
+import { fetchWithAuth } from '@/auth'; // Ensure the correct path is used
 
 class TarotEntry extends HTMLElement {
   constructor() {
     super();
-    this.slug = Cookies.get('tarot-slug'); // To store the slug extracted from the URL
     this.entry = null; // To store the fetched entry data
   }
 
-  async getNonce() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
-        credentials: 'include'
-    });
-    const userInfo = await response.json();
-    return userInfo.nonce; // Extract nonce from user info
-  }
-
   connectedCallback() {
-    if (this.slug) {
-      this.fetchPostBySlug(this.slug); // Fetch the post data using the slug
-    }
+    this.fetchPostBySlug(); // Fetch the post data using the slug
   }
 
-  async fetchPostBySlug(slug) {
-    this.getNonce().then(async nonce => {
-      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=tarot_entry&slug=${slug}&_wpnonce=${nonce}`, { credentials: 'include' });
-      if (!response.ok) {
-        throw new Error('Failed to fetch the post');
-      }
+  async fetchPostBySlug() {
+    const getSlug = await Preferences.get({ key: 'tarot-slug' });
+    const slug = getSlug.value;
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entry&slug=${slug}`, { credentials: 'include' });
+    if (!response.ok) {
+      throw new Error('Failed to fetch the post');
+    }
 
-      const posts = await response.json();
-      this.entry = posts[0];
-      this.render();
-      hideLoadingScreen();
-    });
+    const posts = await response.json();
+    this.entry = posts[0];
+    this.render();
+    hideLoadingScreen();
   }
 
   getRelativeTime(dateString) {
@@ -51,16 +41,16 @@ class TarotEntry extends HTMLElement {
     } else if (diffDays === 1) {
       return 'Yesterday';
     } else if (diffDays < 7) {
-      return `${diffDays} days ago`; // Example: 2d ago
+      return `${diffDays} days ago`;
     } else if (diffDays < 28) {
       const diffWeeks = Math.floor(diffDays / 7);
-      return `${diffWeeks} weeks ago`; // Example: 1w ago
+      return `${diffWeeks} weeks ago`;
     } else if (diffDays < 365) {
       const diffMonths = Math.floor(diffDays / 30);
-      return `${diffMonths} months ago`; // Example: 1m ago
+      return `${diffMonths} months ago`;
     } else {
       const diffYears = Math.floor(diffDays / 365);
-      return `${diffYears} years ago`; // Example: 1y ago
+      return `${diffYears} years ago`;
     }
   }
 
@@ -78,7 +68,7 @@ class TarotEntry extends HTMLElement {
           <p>${this.entry.card_content}</p>
         </div>
         <form class="flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
-          <div class="field flex flex-col items-center justify-between gap-2 w-full rounded-2xl text-center">
+          <div class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
             <p class="text-lg">${this.entry.intention ? this.entry.intention : '<span class="italic">None this day</span>'}</p>
             ${this.entry.manifested ? `<p class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"><img class="h-3" src="${star}" alt=""> Manifested</p>` : ''}

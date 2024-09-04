@@ -1,35 +1,30 @@
-import Cookies from "js-cookie";
+import { fetchWithAuth } from '@/auth'; // Ensure the path is correct
+import { Preferences } from '@capacitor/preferences';
 
 class VisionBoardEntries extends HTMLElement {
   constructor() {
     super();
     this.entries = [];
-    this.nonce = '';
   }
 
-  connectedCallback() {
-    this.getNonce().then(() => {
-      this.fetchEntries();
-    });
-  }
-
-  async getNonce() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
-      credentials: 'include'
-    });
-    const userInfo = await response.json();
-    this.nonce = userInfo.nonce;
-    return userInfo.nonce;
+  async connectedCallback() {
+    await this.fetchEntries(); // Fetch the entries when the component is connected
   }
 
   async fetchEntries() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=vision_boards&_wpnonce=${this.nonce}`, { credentials: 'include' });
-    if (!response.ok) {
-      throw new Error('Failed to fetch entries');
+    try {
+      // Fetch the vision board entries using JWT authentication
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards`, { credentials: 'include' });
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries');
+      }
+      this.entries = await response.json();
+      this.render();
+      hideLoadingScreen();
+    } catch (error) {
+      console.error('Error fetching vision board entries:', error);
+      // Optionally, display an error message to the user
     }
-    this.entries = await response.json();
-    this.render();
-    hideLoadingScreen();
   }
 
   render() {
@@ -64,8 +59,12 @@ class VisionBoardEntries extends HTMLElement {
     htmx.process(this);
 
     document.querySelectorAll('.load-entry').forEach(button => {
-      button.addEventListener('click', () => {
-        Cookies.set('board-slug', button.getAttribute('data-slug'));
+      button.addEventListener('click', async () => {
+        // Save the slug to Capacitor Preferences instead of using cookies
+        await Preferences.set({
+          key: 'board-slug',
+          value: button.getAttribute('data-slug')
+        });
       });
     });
   }

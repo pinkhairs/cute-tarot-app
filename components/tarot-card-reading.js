@@ -1,3 +1,5 @@
+import { getToken } from '@/auth'; // Import getToken from your auth module
+
 class TarotCardReading extends HTMLElement {
   constructor() {
     super();
@@ -5,84 +7,92 @@ class TarotCardReading extends HTMLElement {
     this.cardId = null;
   }
 
-  async getNonce() {
-    const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_credentials`, {
-        credentials: 'include'
-    });
-    const userInfo = await response.json();
-    return userInfo.nonce; // Extract nonce from user info
-  }
-
   connectedCallback() {
-    this.getNonce().then(nonce => {
-      this.render();
+    this.render();
+    document.getElementById('flip-card-button').addEventListener('click', () => this.flipCard());
 
-      document.getElementById('flip-card-button').addEventListener('click', () => this.flipCard(nonce));
-  
-      const deck = async () => {
-        const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=get_deck_preference&_wpnonce=${nonce}`, { credentials: 'include' });
-        if (!response.ok) throw new Error('Network response was not ok.');
-        return await response.text();
+    this.getDeckPreference().then(data => {
+      if (data !== 'Spoopy Tarot') {
+        this.card = `${import.meta.env.VITE_API_BASE_URL}/wp-content/uploads/2024/08/kawaii-79.png`;
+      } else {
+        this.card = `${import.meta.env.VITE_API_BASE_URL}/wp-content/uploads/2024/08/spoopy-79.png`;
       }
 
-      deck().then(data => {
-        if (data !== 'Spoopy Tarot') {
-          this.card = `${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/wp-content/uploads/2024/08/kawaii-79.png`;
-        } else {
-          this.card = `${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/wp-content/uploads/2024/08/spoopy-79.png`;
-        }
-  
-        document.getElementById('card-back').setAttribute('src', this.card);
-        hideLoadingScreen();
-      });
+      document.getElementById('card-back').setAttribute('src', this.card);
+      hideLoadingScreen();
+    }).catch(error => {
+      console.error('Error fetching deck preference:', error);
     });
-   }
-  
-  async flipCard(nonce) {
+  }
+
+  async getDeckPreference() {
+    const token = await getToken(); // Get the JWT token
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` // Attach the JWT token to the request
+      },
+      credentials: 'include'
+    });
+    if (!response.ok) throw new Error('Network response was not ok.');
+    return await response.text();
+  }
+
+  async quantumPick() {
+    const token = await getToken(); // Get the JWT token
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=quantum_pick`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` // Attach the JWT token to the request
+      },
+      credentials: 'include'
+    });
+    if (!response.ok) throw new Error('Network response was not ok.');
+    return await response.json();
+  }
+
+  async saveReading(cardId) {
+    const token = await getToken(); // Get the JWT token
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}` // Attach the JWT token to the request
+      },
+      credentials: 'include'
+    });
+    if (!response.ok) throw new Error('Network response was not ok.');
+    return await response.json();
+  }
+
+  async flipCard() {
     const flipCardButton = document.getElementById('flip-card-button');
-
-    const quantumPick = async () => {
-      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=quantum_pick&_wpnonce=${nonce}`, { credentials: 'include' });
-      const data = await response.json();
-      return data;
-    }
-
-    const saveReading = async (cardId) => {
-      const response = await fetch(`${window.location.hostname.includes('localhost') ? 'https://cutetarot.local' : 'https://cutetarot.com'}/pwa.php?action=save_reading&card=${cardId}&_wpnonce=${nonce}`, { credentials: 'include' });
-      const data = await response.json();
-      return data;
-    }
-
     flipCardButton.classList.add('opacity-0');
 
-    await quantumPick().then(card => {
+      const card = await this.quantumPick();
       document.getElementById('card-info').classList.remove('-z-20');
       document.getElementById('card-title-text').textContent = card.card_title;
       document.getElementById('card-content').textContent = card.card_content;
       document.getElementById('card-image').setAttribute('src', card.card_image);
-      saveReading(card.card_id);
-    });
+      await this.saveReading(card.card_id);
 
-    const card = document.getElementById('card');
-    const cardDescription = document.getElementById('card-description');
-    const cardTitle = document.getElementById('card-title');
-    const setIntentionButton = document.getElementById('set-intention-button');
-    card.classList.toggle('flipped');
-    card.classList.add('duration-1000');
-    flipCardButton.classList.add('opacity-0');
-    
-    setTimeout(() => {
-      flipCardButton.classList.add('hidden');
-      cardTitle.classList.remove('opacity-0');
-    }, 1000);
-    setTimeout(() => {
-    }, 2000);
-    setTimeout(() => {
-      cardDescription.classList.remove('opacity-0');
-    }, 2000);
-    setTimeout(() => {
-      setIntentionButton.classList.remove('opacity-0');
-    }, 3000);
+      const cardElement = document.getElementById('card');
+      const cardDescription = document.getElementById('card-description');
+      const cardTitle = document.getElementById('card-title');
+      const setIntentionButton = document.getElementById('set-intention-button');
+      cardElement.classList.toggle('flipped');
+      cardElement.classList.add('duration-1000');
+      flipCardButton.classList.add('opacity-0');
+      
+      setTimeout(() => {
+        flipCardButton.classList.add('hidden');
+        cardTitle.classList.remove('opacity-0');
+      }, 1000);
+      setTimeout(() => {
+        cardDescription.classList.remove('opacity-0');
+      }, 2000);
+      setTimeout(() => {
+        setIntentionButton.classList.remove('opacity-0');
+      }, 3000);
   }
 
   render() {
