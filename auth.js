@@ -1,17 +1,18 @@
 import { Preferences } from '@capacitor/preferences';
+import youBg from '@/assets/you-bg.png';
 
-// Utility to set JWT token
 export async function setToken(token) {
-    await Preferences.set({
-        key: 'authToken',
-        value: token
-    });
+  console.log('Setting token:', token);  // Add this line
+  await Preferences.set({
+      key: 'authToken',
+      value: token
+  });
 }
 
-// Utility to get JWT token
 export async function getToken() {
-    const result = await Preferences.get({ key: 'authToken' });
-    return result.value ?? null;
+  const result = await Preferences.get({ key: 'authToken' });
+  console.log('Retrieved token:', result.value);  // Add this line
+  return result.value ?? null;
 }
 
 // Utility to remove JWT token
@@ -19,30 +20,30 @@ export async function removeToken() {
     await Preferences.remove({ key: 'authToken' });
 }
 
+function redirectToLogin() {
+  const background = document.querySelector('#background');
+  const content = document.querySelector('#content');
+  document.documentElement.className = 'text-black';
+  background.style.backgroundImage = `url(${youBg})`;
+  background.classList.remove('black-text', 'white-text');
+  content.setAttribute('hx-get', '/account-login-page.html');
+  content.setAttribute('hx-trigger', 'load');
+  htmx.process(content);
+}
 export async function fetchWithAuth(url, options = {}) {
   const token = await getToken();
-  const validateToken = async (token) => {
-    const request = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=is_valid_jwt&token=${token}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }
-    );
-    const response = await request.text();
-    return response;
-  }
-  if (!await validateToken(token)) {
-    await Preferences.set({ key: 'go_to_login', value: 'true' });
+  const timestamp = Date.now();
+
+  if (!token) {
+    redirectToLogin();
+    return;
   }
 
-  // Add the token to the Authorization header
   options.headers = {
     ...options.headers,
     'Authorization': `Bearer ${token}`
   };
 
-  const response = await fetch(url, options);
-
+  const response = await fetch(url+'&'+timestamp+'='+timestamp, options);
   return response;
 }

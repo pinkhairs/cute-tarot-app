@@ -1,4 +1,5 @@
 //main.js
+import youBg from '@/assets/you-bg.png';
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
@@ -19,11 +20,9 @@ import '/vision-boards/new.js';
 import '/vision-boards/board-settings.js';
 import '/you/index.js';
 import '/you/settings.js';
-import youBg from '@/assets/you-bg.png';
 import { fetchWithAuth } from '@/auth'; // Adjust the path as necessary
 import { Preferences } from '@capacitor/preferences';
 
-const setupApp = async () => {
 const app = document.querySelector('#app');
 const background = document.querySelector('#background');
 const content = document.querySelector('#content');
@@ -36,7 +35,7 @@ const loadingState = document.getElementById("loading-screen");
 
 const getTodayReading = async () => {
   const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`);
-  return await response.json(); // Return the JSON if fetch was successful
+  if (response) return await response.json(); // Return the JSON if fetch was successful
 };
 
 async function setupTodayCard() {
@@ -92,7 +91,7 @@ document.addEventListener('htmx:afterSwap', async (event) => {
   if (requestPath.includes('/tarot')) {
     document.documentElement.className = 'text-white';
     const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat`, { credentials: 'include' });
-
+    if (!data) return;
     const matData = await data.json();
     background.style.backgroundImage = `url(${matData.mat || ''})`;
     document.documentElement.className = `text-${matData.color || 'black'}`;
@@ -111,25 +110,3 @@ document.addEventListener('htmx:afterSwap', async (event) => {
 app.prepend(topSpacer);
 app.appendChild(bottomSpacer);
 document.body.appendChild(tabDock);
-};
-
-const setUpLoginPage = () => {
-  const background = document.querySelector('#background');
-  document.documentElement.className = 'text-black';
-  background.style.backgroundImage = `url(${youBg})`;
-  background.classList.remove('black-text', 'white-text');
-  const content = document.querySelector('#content');
-  content.setAttribute('hx-get', '/account-login-page.html');
-  content.setAttribute('hx-trigger', 'load');
-  htmx.process(content);
-}
-
-
-const checkForLogin = async () => await Preferences.get({ key: 'go_to_login' });
-checkForLogin().then(({ value }) => {
-  if (value !== 'true') {
-    setupApp();
-  } else {
-    setUpLoginPage();
-  }
-});

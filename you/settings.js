@@ -1,4 +1,4 @@
-import { fetchWithAuth } from '@/auth';
+import { removeToken, fetchWithAuth } from '@/auth';
 
 class YouSettings extends HTMLElement {
   constructor() {
@@ -12,7 +12,6 @@ class YouSettings extends HTMLElement {
     try {
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info`);
       const profile = await response.json();
-      console.log(profile);
       this.first_name = profile.first_name;
       this.last_name = profile.last_name;
       this.email = profile.email;
@@ -52,9 +51,9 @@ class YouSettings extends HTMLElement {
       </div>
       <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Save Information</button>
     </form>
-    <form id="logout-form" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
-      <button class="text-brand font-bold text-lg" type="submit">Log out</button>
-    </form>
+    <div class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
+      <button id="logout-button" class="text-brand font-bold text-lg" type="button">Log out</button>
+    </div>
     <div class="h-4"></div>
     `;
 
@@ -79,14 +78,10 @@ class YouSettings extends HTMLElement {
       }
     });
 
-    document.getElementById('logout-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=log_out`, { method: 'POST' });
-        window.location.href = '/account-login-page.html';
-      } catch (error) {
-        console.error('Error logging out:', error);
-      }
+    document.getElementById('logout-button').addEventListener('click', async (e) => {
+      await removeToken();
+      htmx.ajax('GET', '/account-login-page.html', { target: '#content' });
+      return;
     });
   }
 }

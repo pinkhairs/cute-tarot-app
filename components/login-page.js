@@ -13,7 +13,7 @@ class LoginPage extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full" title="Welcome back" subtitle="Come on in!"></title-bar>
+    <title-bar class="w-full" title="Hello again" subtitle="Come on in!"></title-bar>
     <div id="login" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
         <label for="email" class="label opacity-80 font-serif">Email address</label>

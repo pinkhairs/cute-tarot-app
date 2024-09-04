@@ -10,14 +10,20 @@ class TabDock extends HTMLElement {
 
   async getAvatar() {
     const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`);
-
-    return await response.text();
+    if (response && response.ok) {
+      const avatarText = await response.text();
+      console.log('Avatar response text:', avatarText);
+      return avatarText;
+    } else {
+      console.error('Failed to get avatar:', response.status, response.statusText);
+      return '';  // Return empty string if there's an error
+    }
   }
 
   connectedCallback() {
     this.getAvatar()
       .then(avatar => {
-        this.avatar = avatar || 'default-avatar.png'; // Fallback to a default avatar if empty
+        this.avatar = avatar;
         this.render();
       })
       .catch(error => {

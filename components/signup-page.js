@@ -13,7 +13,7 @@ class SignupPage extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <title-bar class="w-full" title="Welcome to Cute Tarot!" subtitle="Sign up to get free tarot readings with Kawaii Tarot and Spoopy Tarot"></title-bar>
+    <title-bar class="w-full mb-3" title="Welcome to Cute Tarot!" subtitle=""></title-bar>
     <form id="signup" class="w-full  mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
         <label for="first_name" class="label opacity-80 font-serif">First name</label>

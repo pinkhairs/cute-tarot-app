@@ -78,6 +78,10 @@ h3 {
   background: rgba(238, 244, 255, .8);
 }
 
+login-page, signup-page, forgot-page {
+  @apply py-2;
+}
+
 #content > * {
   @apply flex flex-col lg:max-w-2xl mx-auto gap-6 short:gap-4 lg:gap-8 flex-1 h-full;
 }
