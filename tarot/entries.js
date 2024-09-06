@@ -1,6 +1,7 @@
 import star from '@/assets/star.svg';
 import { Preferences } from '@capacitor/preferences';
 import { fetchWithAuth } from '@/auth'; // Ensure the correct path is used
+import { trackEvent } from '@/logsnag';
 
 class TarotEntries extends HTMLElement {
   constructor() {
@@ -14,6 +15,7 @@ class TarotEntries extends HTMLElement {
 
   async fetchEntries() {
     try {
+      trackEvent('tarot-readings', 'View entries', '🃏');
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries`, { credentials: 'include' });
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
@@ -31,7 +33,7 @@ class TarotEntries extends HTMLElement {
       <li class="flex pb-4 mb-4">
         <button type="button" hx-target="#content" hx-get="/tarot-entry.html" class="load-entry text-left flex" data-slug="${entry.slug}">
           <div>
-            <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-translucent">
+            <div class="w-20 h-20 p-4  flex-shrink-0 flex items-center justify-center rounded-xl bg-translucent">
               <img src="${entry.card_image}" alt="" class="h-[53px] rounded-md">
             </div>
             <p class="w-20 mt-2 text-center opacity-80 text-sm break-words">${entry.card_title}</p>

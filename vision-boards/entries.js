@@ -1,5 +1,6 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the path is correct
 import { Preferences } from '@capacitor/preferences';
+import { trackEvent } from '@/logsnag';
 
 class VisionBoardEntries extends HTMLElement {
   constructor() {
@@ -8,12 +9,11 @@ class VisionBoardEntries extends HTMLElement {
   }
 
   async connectedCallback() {
-    await this.fetchEntries(); // Fetch the entries when the component is connected
+    await this.fetchEntries();
   }
 
   async fetchEntries() {
     try {
-      // Fetch the vision board entries using JWT authentication
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_boards`, { credentials: 'include' });
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
@@ -23,7 +23,6 @@ class VisionBoardEntries extends HTMLElement {
       hideLoadingScreen();
     } catch (error) {
       console.error('Error fetching vision board entries:', error);
-      // Optionally, display an error message to the user
     }
   }
 
@@ -32,7 +31,7 @@ class VisionBoardEntries extends HTMLElement {
       <li class="flex break-all pb-4 mb-4">
         <button type="button" hx-target="#content" hx-get="/vision-boards-entry.html" data-slug="${entry.slug}" class="load-entry flex text-left items-center">
           <div>
-            <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center rounded-xl bg-neutral bg-cover bg-no-repeat bg-center" style="background-image: ${entry.icon.includes('//') ? `url(${entry.icon})` : `${entry.icon}`}">
+            <div class="w-20 h-20 p-4  flex-shrink-0 flex items-center justify-center rounded-xl bg-neutral bg-cover bg-no-repeat bg-center" style="background-image: ${entry.icon.includes('//') ? `url(${entry.icon})` : `${entry.icon}`}">
             ${entry.icon.includes('//') ? '' : entry.firstCharacter}
             </div>
           </div>

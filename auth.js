@@ -26,7 +26,7 @@ function redirectToLogin() {
   document.documentElement.className = 'text-black';
   background.style.backgroundImage = `url(${youBg})`;
   background.classList.remove('black-text', 'white-text');
-  content.setAttribute('hx-get', '/account-login-page.html');
+  content.setAttribute('hx-get', '/account-signup-page.html');
   content.setAttribute('hx-trigger', 'load');
   htmx.process(content);
 }

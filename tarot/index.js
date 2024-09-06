@@ -1,3 +1,5 @@
+import { trackEvent } from '@/logsnag';
+
 class TarotIndex extends HTMLElement {
   constructor() {
     super();

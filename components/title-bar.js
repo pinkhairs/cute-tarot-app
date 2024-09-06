@@ -4,7 +4,6 @@ class TitleBar extends HTMLElement {
     this.subtitle = this.getAttribute('subtitle');
     this.title = this.getAttribute('title');
     this.root = this.getAttribute('root') || false;
-    this.entries = true;
     this.settings = this.getAttribute('settings') || false;
     this.entrySettings = false;
     this.entriesLink = this.getAttribute('data-entries-link') || null;
@@ -22,7 +21,7 @@ class TitleBar extends HTMLElement {
       <header class="px-6">
         <div class="flex items-center gap-4 justify-center">
           <div class="w-8">
-            ${this.root && this.entries ? `<div>
+            ${this.root && this.entriesLink ? `<div>
               <button type="button" hx-target="#content" hx-get="${this.entriesLink}">
                 <svg fill="currentColor" class="w-5 h-5" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.5" y="0.5" width="20" height="3" rx="1.5" />

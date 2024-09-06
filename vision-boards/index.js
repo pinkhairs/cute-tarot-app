@@ -24,7 +24,7 @@ class VisionBoardsIndex extends HTMLElement {
       // Fetch the position for creating a new board
       const createNewResponse = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new`, { credentials: 'include' });
       if (!createNewResponse.ok) {
-        this.placeCreateNew = 'first'; // Default to 'first' if fetching fails
+        this.placeCreateNew = 'first';
       } else {
         this.placeCreateNew = await createNewResponse.text();
       }
@@ -48,7 +48,7 @@ class VisionBoardsIndex extends HTMLElement {
     `).join('');
 
     this.innerHTML = `
-    <title-bar data-entries-link="/vision-boards-entries.html" data-settings-link="/vision-boards-settings.html" root="true" class="w-full" title="Vision Boards"></title-bar>
+    <title-bar data-settings-link="/vision-boards-settings.html" root="true" class="w-full" title="Vision Boards"></title-bar>
     <div class="grid grid-cols-4 px-6 gap-x-2 gap-y-4">
       ${this.placeCreateNew === 'first' ? `<button type="button" hx-target="#content" hx-get="/vision-boards-new.html" class="flex flex-col items-center">
         <div class="text-xl w-[72px] h-[72px] lg:w-[96px] lg:h-[96px] flex-shrink-0 flex items-center justify-center rounded-xl bg-brand text-white font-serif">

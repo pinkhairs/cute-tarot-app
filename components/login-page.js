@@ -1,5 +1,6 @@
-import { setToken, getToken, removeToken } from '@/auth'; // adjust the path as necessary
-import { Preferences } from '@capacitor/preferences'; // To handle preferences
+import { setToken } from '@/auth';
+import { Preferences } from '@capacitor/preferences';
+import { trackEvent, identify } from '@/logsnag';
 
 class LoginPage extends HTMLElement {
   constructor() {
@@ -44,10 +45,18 @@ class LoginPage extends HTMLElement {
           body: formData
         });
 
-        const loginResponse = await loginRequest.text();
+        const loginResponse = await loginRequest.json();
 
         if (loginResponse) {
-          await setToken(loginResponse);
+          await setToken(loginResponse.token);
+          const userId = loginResponse.user_id
+          await Preferences.set({ key: 'user_id', value: loginResponse.user_id });
+
+          trackEvent('your-account', 'Login', '🔒', false, { });
+          await identify({
+            user_id: String(userId),
+            email: document.getElementById('email').value
+          });
 
           // Clear the 'alreadyRedirected' flag upon successful login
           await Preferences.set({ key: 'go_to_login', value: 'false' });

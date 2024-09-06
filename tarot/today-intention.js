@@ -1,9 +1,11 @@
 import star from '@/assets/star.svg';
 import { fetchWithAuth } from '@/auth'; // Import the function to get JWT token
+import { trackEvent } from '@/logsnag';
 
 class TodayIntention extends HTMLElement {
   constructor() {
     super();
+    this.manifested = false;
   }
 
   connectedCallback() {
@@ -17,7 +19,7 @@ class TodayIntention extends HTMLElement {
     });
 
     this.manifestationStatus().then(data => {
-      if (data.manifested) {
+      if (data) {
         document.getElementById('record-manifestation').classList.add('hidden');
         document.getElementById('record-manifestation').classList.remove('flex');
         document.getElementById('manifested').classList.remove('hidden');
@@ -45,7 +47,7 @@ class TodayIntention extends HTMLElement {
   }
 
   async manifestationStatus() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=manifestation_status`, { credentials: 'include' });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=manifestation_status`);
     return await response.text();
   }
 
@@ -56,7 +58,8 @@ class TodayIntention extends HTMLElement {
 
   render() {
     const recordManifestation = async () => {
-      await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=record_manifestation`, { credentials: 'include' });
+      await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=record_manifestation`);
+      trackEvent('tarot-readings', 'Manifested', '🃏', false );
     }
 
     const todayDate = new Date().toLocaleDateString('en-US', {
@@ -78,12 +81,14 @@ class TodayIntention extends HTMLElement {
           <p id="card-content"></p>
         </div>
         <button id="set-intention-button" type="button" hx-target="#content" hx-get="/tarot-set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
-
         <div id="set-intention" class="hidden flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
-          <a hx-target="#content" hx-get="/tarot-set-intention.html" class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
+        ${this.manifested ? `<a hx-target="#content" hx-get="/tarot-set-intention.html" class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
             <p class="text-lg" id="intention-text"></p>
-          </a>
+          </a>` : `<div class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
+            <label class="label opacity-80 font-serif">Today's intention</label>
+            <p class="text-lg" id="intention-text"></p>
+          </div>`}
           <button type="button" id="record-manifestation" class="transition-opacity origin-top duration-1000 bg-brand text-lg font-serif text-white rounded-xl px-6 py-3">I Manifested This</button>
           <button type="button" id="manifested" class="hidden transition-opacity items-center justify-center gap-4 origin-top duration-1000 bg-accent text-black text-lg font-serif rounded-xl px-6 py-3"><img src="${star}" class="h-4 w-4" alt="" /> Manifested</button>
         </div>

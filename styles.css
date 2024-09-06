@@ -20,7 +20,7 @@ h3 {
 }
 
 .card {
-  @apply flex w-full;
+  @apply flex w-full flex-1;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 2.22s;
@@ -116,9 +116,58 @@ html.text-white .bg-translucent .border-dashed {
 }
 
 tarot-card-reading {
-  @apply flex items-center justify-center flex-1;
+  @apply flex items-center justify-center flex-1 flex-col gap-4;
 }
 
 select {
   @apply w-full text-center;
+}
+
+.card-1, .card-2, .card-3 {
+  @apply absolute top-0 left-1/2 -translate-x-1/2;
+}
+
+.card-1.shuffle {
+  animation-name: card-1;
+}
+
+.card-2.shuffle {
+  animation-name: card-2;
+}
+
+.card-3.shuffle {
+  animation-name: card-3;
+}
+
+.shuffle {
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  @apply ease-out;
+}
+
+@keyframes card-1 {
+  0% { transform: translateX(-60%); }
+  16.66666% {transform: translateX(-45%) rotate(15deg);} /* Moving to -45%, which is slightly right from center */
+  33.33333% {transform: translateX(-55%) rotate(0deg); z-index: 1;} /* Moving to -55%, slightly left of center */
+  49.99999% {transform: translateX(-55%); z-index: 1;} /* Stay at -55% */
+  66.66666% {transform: translateX(-53%) rotate(0deg); z-index: 2;} /* Moving closer to center at -53% */
+  83.33333% {transform: translateX(-53%); z-index: 2;} /* Stay at -53% */
+}
+
+@keyframes card-2 {
+  0% { transform: translateX(-40%); }
+  16.66666% {transform: translateX(-50%);} /* Start at -50%, the center */
+  33.33333% {transform: translateX(-48%) rotate(0deg); z-index: 3;} /* Slightly to the right at -48% */
+  49.99999% {transform: translateX(-35%) rotate(15deg);} /* Far to the right at -35% */
+  66.66666% {transform: translateX(-52%) rotate(0deg); z-index: 1;} /* Slightly left of center at -52% */
+  83.33333% {transform: translateX(-52%); z-index: 1;} /* Stay slightly left at -52% */
+}
+
+@keyframes card-3 {
+  0% { transform: translateX(-60%); z-index: 1; }
+  16.66666% {transform: translateX(-50%);} /* Start at -50%, the center */
+  33.33333% {transform: translateX(-48%) rotate(0deg); z-index: 2;} /* Slightly right at -48% */
+  49.99999% {transform: translateX(-48%); z-index: 2;} /* Stay at -48% */
+  66.66666% {transform: translateX(-46%) rotate(0deg); z-index: 3;} /* More to the right at -46% */
+  83.33333% {transform: translateX(-30%) rotate(15deg);} /* Far to the right at -30% */
 }

@@ -1,4 +1,5 @@
 import { fetchWithAuth } from '@/auth';
+import { trackEvent } from '@/logsnag';
 
 class YouIndex extends HTMLElement {
   constructor() {
@@ -73,6 +74,7 @@ class YouIndex extends HTMLElement {
     `;
 
     document.getElementById('avatar').addEventListener('change', async (event) => {
+      trackEvent('personalization', 'Avatar updated', '🌈', false);
       showLoadingScreen();
       const file = event.target.files[0];
       const formData = new FormData();

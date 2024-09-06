@@ -56,6 +56,7 @@ async function setupTodayCard() {
 setupTodayCard();
 
 document.addEventListener('htmx:beforeSwap', async (event) => {
+  showLoadingScreen();
   const todaysCard = await getTodayReading();
   if (todaysCard && event.detail.pathInfo.requestPath === '/tarot-index.html') {
     event.preventDefault();

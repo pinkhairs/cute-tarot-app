@@ -1,4 +1,5 @@
-import { setToken, fetchWithAuth } from '@/auth';
+import { setToken } from '@/auth';
+import { trackEvent, identify } from '@/logsnag';
 
 class SignupPage extends HTMLElement {
   constructor() {
@@ -41,21 +42,31 @@ class SignupPage extends HTMLElement {
       event.preventDefault();
       showLoadingScreen();
 
-        const formData = new FormData(document.querySelector('form'));
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=account_signup`, {
-          method: 'POST',
-          credentials: 'include',
-          body: formData
-        });
+      const formData = new FormData();
+      formData.append('first_name', document.getElementById('first_name').value);
+      formData.append('email', document.getElementById('email').value);
+      formData.append('password', document.getElementById('password').value);
 
-        const result = await response.text();
-        if (response.ok) {
-          await setToken(result);  // Store JWT token
-          window.location.reload();
-        } else {
-          hideLoadingScreen();
-          alert('There was an error with your signup. Maybe you already have an account? Please contact info@cutetarot.com if you need help.');
-        }
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=account_signup`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        await setToken(result.token);
+        trackEvent('your-account', 'Signup', '🔒');
+        await identify({
+          user_id: result.user_id,
+          email: document.getElementById('email').value,
+          name: document.getElementById('first_name').value
+        });
+        window.location.reload();
+      } else {
+        hideLoadingScreen();
+        alert('There was an error with your signup. Maybe you already have an account? Please contact info@cutetarot.com if you need help.');
+      }
     });
   }
 }
