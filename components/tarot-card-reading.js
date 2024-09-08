@@ -18,7 +18,6 @@ class TarotCardReading extends HTMLElement {
 
       this.render();
       document.getElementById('flip-card-button').addEventListener('click', () => this.flipCard());
-      hideLoadingScreen();
     }).catch(error => {
       console.error('Error fetching deck preference:', error);
     });

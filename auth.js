@@ -29,7 +29,6 @@ function redirectToLogin() {
   htmx.process(content);
 }
 export async function fetchWithAuth(url, options = {}) {
-  showLoadingScreen();
   const token = await getToken();
   const timestamp = Date.now();
 
