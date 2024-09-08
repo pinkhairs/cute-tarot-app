@@ -40,11 +40,6 @@ class TabDock extends HTMLElement {
           </button>
         </div>
         <div class="flex items-center">
-          <button type="button" hx-get="/readings-index.html" hx-target="#content">
-            <img src="${readings}" alt="Readings" class="rounded-xl h-16">
-          </button>
-        </div>
-        <div class="flex items-center">
           <button type="button" hx-get="/vision-boards-index.html" hx-target="#content">
             <img src="${visionBoards}" alt="Vision Boards" class="rounded-xl h-16">
           </button>
