@@ -24,18 +24,18 @@
       const showLoadingScreen = () => {
           setTimeout(() => {
               const loadingScreen = document.getElementById('loading-screen');
-              loadingScreen.style.opacity = '1'; // Assumes full opacity is 1
-              loadingScreen.style.display = 'flex'; // Show the element by setting display to flex
+              loadingScreen.style.opacity = '1';
+              loadingScreen.style.display = 'flex';
           }, 0);
       };
 
       const hideLoadingScreen = () => {
           setTimeout(() => {
               const loadingScreen = document.getElementById('loading-screen');
-              loadingScreen.style.opacity = '0'; // Set opacity to 0 to fade out
+              loadingScreen.style.opacity = '0';
               setTimeout(() => {
-                  loadingScreen.style.display = 'none'; // Hide the element after transition by setting display to none
-              }, 500); // This timeout should match the transition-duration of the fade effect
+                  loadingScreen.style.display = 'none';
+              }, 500);
           }, 0);
       };
 

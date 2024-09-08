@@ -28,7 +28,10 @@ function redirectToLogin() {
   content.setAttribute('hx-trigger', 'load');
   htmx.process(content);
 }
-export async function fetchWithAuth(url, options = {}) {
+export async function fetchWithAuth(url, options = {}, showLoading = true) {
+  if (showLoading) {
+    showLoadingScreen();
+  }
   const token = await getToken();
   const timestamp = Date.now();
 
