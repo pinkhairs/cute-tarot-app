@@ -37,7 +37,7 @@ const bottomSpacer = document.createElement('div');
 const loadingState = document.getElementById("loading-screen");
 
 const getTodayReading = async () => {
-  // const userId = await Preferences.get({ key: 'user_id' });
+  const userId = await Preferences.get({ key: 'user_id' });
   if (!userId.value) return;
   const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&today=${todayInMonthNameDayCommaYear}&timestamp=${Date.now()}`);
