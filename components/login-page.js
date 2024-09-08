@@ -60,7 +60,6 @@ class LoginPage extends HTMLElement {
 
           // Clear the 'alreadyRedirected' flag upon successful login
           await Preferences.set({ key: 'go_to_login', value: 'false' });
-          hideLoadingScreen();
           htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
         } else {
           hideLoadingScreen();
