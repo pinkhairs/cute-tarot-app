@@ -98,7 +98,7 @@ class TodayIntention extends HTMLElement {
     htmx.process(this);
     document.getElementById('record-manifestation').addEventListener('click', async () => {
       await recordManifestation();
-      window.location.reload();
+      htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
     });
   }
 }

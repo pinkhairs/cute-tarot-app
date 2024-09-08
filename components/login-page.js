@@ -60,7 +60,8 @@ class LoginPage extends HTMLElement {
 
           // Clear the 'alreadyRedirected' flag upon successful login
           await Preferences.set({ key: 'go_to_login', value: 'false' });
-          window.location.reload();
+          hideLoadingScreen();
+          htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
         } else {
           hideLoadingScreen();
           alert('There was an error with your login. Try resetting your password. Please contact info@cutetarot.com if you need help.');

@@ -9,7 +9,7 @@ class TarotSettings extends HTMLElement {
 
   connectedCallback() {
     const deck = async () => {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, { credentials: 'include' }, false);
       return await response.text();
     };
 
@@ -52,13 +52,14 @@ class TarotSettings extends HTMLElement {
         const response = await fetchWithAuth(url, {
           method: 'POST',
           credentials: 'include'
-        });
+        }, false);
 
         if (!response.ok) {
           throw new Error('Failed to save deck settings');
         }
 
         console.log('Deck settings saved successfully');
+        hideLoadingScreen();
       } catch (error) {
         console.error('Error saving deck settings:', error);
       }
@@ -66,8 +67,6 @@ class TarotSettings extends HTMLElement {
 
     // Event listener for mat file upload
     document.getElementById('mat-file').addEventListener('change', async () => {
-      showLoadingScreen();
-
       const formData = new FormData();
       formData.append('background', document.getElementById('mat-file').files[0]);
 
@@ -86,7 +85,7 @@ class TarotSettings extends HTMLElement {
 
         trackEvent('personalization', 'Mat uploaded', '🌈', false);
 
-        window.location.reload();
+        htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
       } catch (error) {
         console.error('Error uploading mat:', error);
         hideLoadingScreen();

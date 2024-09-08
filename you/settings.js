@@ -11,7 +11,7 @@ class YouSettings extends HTMLElement {
 
   async fetchProfile() {
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_account_info`, { }, false);
       const profile = await response.json();
       this.first_name = profile.first_name;
       this.last_name = profile.last_name;
@@ -105,9 +105,10 @@ class YouSettings extends HTMLElement {
         await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_account_info`, {
           method: 'POST',
           body: formData,
-        });
+        }, false);
         if (formData.get('password')) {
-          window.location.reload();
+          await removeToken();
+          htmx.ajax('GET', '/account-login-page.html', { target: '#content' });
         }
       } catch (error) {
         console.error('Error saving account info:', error);

@@ -62,7 +62,7 @@ class SignupPage extends HTMLElement {
           email: document.getElementById('email').value,
           name: document.getElementById('first_name').value
         });
-        window.location.reload();
+        htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
       } else {
         hideLoadingScreen();
         alert('There was an error with your signup. Maybe you already have an account? Please contact info@cutetarot.com if you need help.');

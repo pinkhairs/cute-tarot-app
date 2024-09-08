@@ -1,5 +1,10 @@
 {
   "appId": "com.cutetarot.app",
   "appName": "Cute Tarot",
-  "webDir": "dist"
+  "webDir": "dist",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-purchase": {}
+    }
+  }
 }

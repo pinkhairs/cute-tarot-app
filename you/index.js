@@ -32,7 +32,7 @@ class YouIndex extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar class="w-full" data-settings-link="/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
+      <title-bar root="true" class="w-full" data-settings-link="/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
       <form action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
         <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl text-center">
           <div class="label opacity-80 font-serif">Avatar</div>

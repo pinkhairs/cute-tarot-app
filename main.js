@@ -23,6 +23,8 @@ import '/you/index.js';
 import '/you/settings.js';
 import '/you/pentacles.js';
 import '/readings/index.js';
+import '/readings/entries.js';
+import '/readings/entry.js';
 import { fetchWithAuth } from '@/auth';
 import { Preferences } from '@capacitor/preferences';
 
@@ -109,6 +111,12 @@ document.addEventListener('htmx:afterSwap', async (event) => {
       background.classList.remove('black-text', 'white-text');
       background.innerHTML = '';
     } else if (requestPath.startsWith('/readings')) {
+      if (requestPath.includes('entr')) {
+        document.documentElement.className = 'text-black';
+        background.style.backgroundImage = '';
+        background.classList.add('black-text');
+        background.innerHTML = '';
+      } else {
       document.documentElement.className = 'text-white';
       background.style.backgroundImage = ``;
       // add a video background
@@ -120,10 +128,11 @@ document.addEventListener('htmx:afterSwap', async (event) => {
       
       background.classList.add('white-text');
       background.classList.remove('black-text');
+      }
     } else {
       document.documentElement.className = 'text-black';
       background.style.backgroundImage = `url(${youBg})`;
-      background.classList.remove('white-text');
+      background.classList.remove('white-text', 'black-text');
       background.innerHTML = '';
     }
   }, 0);

@@ -13,7 +13,7 @@ class VisionBoardsSettings extends HTMLElement {
 
   async fetchCreateNewPlacement() {
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=place_create_new`, { credentials: 'include' }, false);
       this.value = await response.text();
       if (this.value === '') this.value = 'first'; // Default value if no response
       this.render();
@@ -27,7 +27,7 @@ class VisionBoardsSettings extends HTMLElement {
   render() {
     const saveCreateNew = async () => {
       try {
-        const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${this.value}`, { credentials: 'include' });
+        const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${this.value}`, { credentials: 'include' }, false);
         const data = await response.text();
         console.log('Create New placement saved:', data);
         trackEvent('personalization', 'Move Create New', '🌈', false, {
