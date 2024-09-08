@@ -38,7 +38,7 @@ class TarotCardReading extends HTMLElement {
   }
 
   async saveReading(cardId) {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}&title=${document.getElementById('card-title-text').textContent}`);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}&today=${document.getElementById('card-title-text').textContent}&title=${document.getElementById('card-title-text').textContent}`);
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.json();
   }

@@ -43,7 +43,7 @@ class TitleBar extends HTMLElement {
             <h1 class="break-words">${this.title}</h1>
           </div>
           <div class="flex items-center justify-end w-8">
-            ${this.root || this.settingsLink ? `
+            ${this.root && this.settingsLink ? `
             <div>
               <button type="button" hx-get="${this.settingsLink}" hx-target="#content">
                 <svg width="30" height="29" viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">

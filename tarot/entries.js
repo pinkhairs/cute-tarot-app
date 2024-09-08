@@ -16,7 +16,8 @@ class TarotEntries extends HTMLElement {
   async fetchEntries() {
     try {
       trackEvent('tarot-readings', 'View entries', '🃏');
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries`, { credentials: 'include' });
+      const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries&today=${todayInMonthNameDayCommaYear}`, { credentials: 'include' });
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
       }
@@ -40,7 +41,7 @@ class TarotEntries extends HTMLElement {
           </div>
           <div class="flex-grow pl-4">
             <h3 class="mb-2">${entry.title}</h3>
-            <p class="my-2">${entry.intention}</p>
+            <p class="my-2">${entry.intention ? entry.intention : ''}</p>
             ${entry.manifested ? `<p class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"><img class="h-3" src="${star}" alt=""> Manifested</p>` : ''}
           </div>
         </button>

@@ -16,7 +16,8 @@ class TarotEntry extends HTMLElement {
   async fetchPostBySlug() {
     const getSlug = await Preferences.get({ key: 'tarot-slug' });
     const slug = getSlug.value;
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entry&slug=${slug}`, { credentials: 'include' });
+    const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entry&slug=${slug}&today=${todayInMonthNameDayCommaYear}`, { credentials: 'include' });
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }

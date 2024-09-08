@@ -23,7 +23,8 @@ class SetIntention extends HTMLElement {
 
     // Fetch today's card
     const todayCard = async () => {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`, { credentials: 'include' });
+      const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&today=${todayInMonthNameDayCommaYear}`);
       const json = await response.json();
       return json;
     };

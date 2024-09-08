@@ -2,7 +2,6 @@ import { Preferences } from '@capacitor/preferences';
 import youBg from '@/assets/you-bg.png';
 
 export async function setToken(token) {
-  console.log('Setting token:', token);  // Add this line
   await Preferences.set({
       key: 'authToken',
       value: token
@@ -11,7 +10,6 @@ export async function setToken(token) {
 
 export async function getToken() {
   const result = await Preferences.get({ key: 'authToken' });
-  console.log('Retrieved token:', result.value);  // Add this line
   return result.value ?? null;
 }
 
@@ -31,6 +29,7 @@ function redirectToLogin() {
   htmx.process(content);
 }
 export async function fetchWithAuth(url, options = {}) {
+  showLoadingScreen();
   const token = await getToken();
   const timestamp = Date.now();
 
@@ -45,5 +44,9 @@ export async function fetchWithAuth(url, options = {}) {
   };
 
   const response = await fetch(url+'&'+timestamp+'='+timestamp, options);
+
+  if (response.status === 401) {
+    redirectToLogin();
+  }
   return response;
 }

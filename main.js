@@ -1,5 +1,6 @@
 //main.js
 import youBg from '@/assets/you-bg.png';
+import video from '@/assets/video.mp4';
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
@@ -21,7 +22,9 @@ import '/vision-boards/board-settings.js';
 import '/you/index.js';
 import '/you/settings.js';
 import '/you/pentacles.js';
+import '/readings/index.js';
 import { fetchWithAuth } from '@/auth';
+import { Preferences } from '@capacitor/preferences';
 
 const app = document.querySelector('#app');
 const background = document.querySelector('#background');
@@ -34,8 +37,12 @@ const bottomSpacer = document.createElement('div');
 const loadingState = document.getElementById("loading-screen");
 
 const getTodayReading = async () => {
-  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`);
-  if (response) return await response.json(); // Return the JSON if fetch was successful
+  const userId = await Preferences.get({ key: 'userId' });
+  if (!userId.value) return;
+  const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&today=${todayInMonthNameDayCommaYear}&timestamp=${Date.now()}`);
+  const json = await response.json();
+  return json ?? [];
 };
 
 async function setupTodayCard() {
@@ -56,7 +63,6 @@ async function setupTodayCard() {
 setupTodayCard();
 
 document.addEventListener('htmx:beforeSwap', async (event) => {
-  showLoadingScreen();
   const todaysCard = await getTodayReading();
   if (todaysCard && event.detail.pathInfo.requestPath === '/tarot-index.html') {
     event.preventDefault();
@@ -76,9 +82,9 @@ document.addEventListener('htmx:beforeRequest', async (event) => {
   }
 });
 
-
 document.addEventListener('htmx:afterSwap', async (event) => {
   const requestPath = event.detail.pathInfo.requestPath;
+
   if (requestPath.includes('-index.html') || requestPath.includes('tarot-today-intention.html')) {
     tabDock.classList.remove('translate-y-[150%]');
     bottomSpacer.classList.add('h-[132px]', 'flex-shrink-0');
@@ -86,25 +92,41 @@ document.addEventListener('htmx:afterSwap', async (event) => {
     tabDock.classList.add('translate-y-[150%]');
     bottomSpacer.classList.remove('h-[132px]', 'flex-shrink-0');
   }
-  
-  // Theme settings for different sections
-  if (requestPath.includes('/tarot')) {
-    document.documentElement.className = 'text-white';
-    const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat`, { credentials: 'include' });
-    if (!data) return;
-    const matData = await data.json();
-    background.style.backgroundImage = `url(${matData.mat || ''})`;
-    document.documentElement.className = `text-${matData.color || 'black'}`;
-    background.classList.add(matData.color+'-text');
-  } else if (requestPath.includes('/vision-boards')) {
-    document.documentElement.className = 'text-black';
-    background.style.backgroundImage = '';
-    background.classList.remove('black-text', 'white-text');
-  } else if (requestPath.includes('/you') || requestPath.includes('/account')) {
-    document.documentElement.className = 'text-black';
-    background.style.backgroundImage = `url(${youBg})`;
-    background.classList.remove('black-text', 'white-text');
-  }
+
+  setTimeout(async () => {
+    if (requestPath.startsWith('/tarot')) {
+      document.documentElement.className = 'text-white';
+      const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat`, { credentials: 'include' });
+      if (!data) return;
+      const matData = await data.json();
+      background.style.backgroundImage = `url(${matData.mat || ''})`;
+      document.documentElement.className = `text-${matData.color || 'black'}`;
+      background.classList.add(matData.color+'-text');
+      background.innerHTML = '';
+    } else if (requestPath.startsWith('/vision-boards')) {
+      document.documentElement.className = 'text-black';
+      background.style.backgroundImage = '';
+      background.classList.remove('black-text', 'white-text');
+      background.innerHTML = '';
+    } else if (requestPath.startsWith('/readings')) {
+      document.documentElement.className = 'text-white';
+      background.style.backgroundImage = ``;
+      // add a video background
+      background.innerHTML = `
+        <video autoplay muted playsinline loop class="object-cover w-full h-full">
+          <source src="${video}" type="video/mp4">
+        </video>
+      `;
+      
+      background.classList.add('white-text');
+      background.classList.remove('black-text');
+    } else {
+      document.documentElement.className = 'text-black';
+      background.style.backgroundImage = `url(${youBg})`;
+      background.classList.remove('white-text');
+      background.innerHTML = '';
+    }
+  }, 0);
 });
 
 app.prepend(topSpacer);

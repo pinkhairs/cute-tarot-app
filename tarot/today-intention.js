@@ -42,7 +42,8 @@ class TodayIntention extends HTMLElement {
   }
 
   async todayCard() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card`, { credentials: 'include' });
+    const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&today=${todayInMonthNameDayCommaYear}`);
     return await response.json();
   }
 

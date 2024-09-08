@@ -21,6 +21,7 @@
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
     "@capacitor/preferences": "^6.0.2",
+    "@huggingface/inference": "^2.8.0",
     "cordova-plugin-purchase": "^13.11.1",
     "js-cookie": "^3.0.5",
     "logsnag": "^1.0.0"
