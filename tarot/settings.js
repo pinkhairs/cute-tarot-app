@@ -1,5 +1,5 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the correct path is used
-import { trackEvent } from '@/logsnag';
+
 
 class TarotSettings extends HTMLElement {
   constructor() {
@@ -44,7 +44,6 @@ class TarotSettings extends HTMLElement {
     `;
 
     document.getElementById('deck').addEventListener('change', async (event) => {
-      trackEvent('personalization', 'Change deck', '🌈', false, { deck: this.deck });
       this.deck = event.target.value;
       const url = `${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading_settings&deck=${this.deck}`;
 
@@ -82,8 +81,6 @@ class TarotSettings extends HTMLElement {
         if (!response.ok) {
           throw new Error('Failed to upload mat');
         }
-
-        trackEvent('personalization', 'Mat uploaded', '🌈', false);
 
         htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
       } catch (error) {

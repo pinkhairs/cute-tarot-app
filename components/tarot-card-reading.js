@@ -1,5 +1,5 @@
 import { fetchWithAuth } from '@/auth';
-import { trackEvent } from '@/logsnag';
+
 
 class TarotCardReading extends HTMLElement {
   constructor() {
@@ -44,7 +44,6 @@ class TarotCardReading extends HTMLElement {
   }
 
   async flipCard() {
-    trackEvent('tarot-readings', 'Shuffle', '🃏');
     document.querySelector('.card-1').classList.add('shuffle');
     document.querySelector('.card-2').classList.add('shuffle');
     document.querySelector('.card-3').classList.add('shuffle');
@@ -54,7 +53,6 @@ class TarotCardReading extends HTMLElement {
 
       const card = await this.quantumPick();
       await this.saveReading(card.card_id);
-      trackEvent('tarot-readings', 'Pick', '🃏');
       document.querySelector('.card-1').classList.remove('shuffle');
       document.querySelector('.card-2').classList.remove('shuffle');
       document.querySelector('.card-3').classList.remove('shuffle');

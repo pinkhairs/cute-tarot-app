@@ -1,5 +1,5 @@
 import { fetchWithAuth } from '@/auth'; // Ensure this path is correct
-import { trackEvent } from '@/logsnag';
+
 
 class SetIntention extends HTMLElement {
   constructor() {
@@ -19,12 +19,11 @@ class SetIntention extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    trackEvent('tarot-readings', 'Intention', '🃏');
 
     // Fetch today's card
     const todayCard = async () => {
       const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&today=${todayInMonthNameDayCommaYear}`);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&title=${todayInMonthNameDayCommaYear}&${Date.now()}=${Date.now()}`);
       const json = await response.json();
       return json;
     };
@@ -89,7 +88,6 @@ class SetIntention extends HTMLElement {
     document.getElementById('save_intention').addEventListener('click', async () => {
       const intentionText = document.getElementById('intention-text').value;
       await saveReading(intentionText);
-      trackEvent('tarot-readings', 'Set intention', '🃏', false, { intention: intentionText });
       htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
     });
   }

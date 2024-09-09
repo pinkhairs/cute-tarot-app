@@ -26,17 +26,17 @@ class YouPentacles extends HTMLElement {
       <div class="flex items-center flex-col justify-center rounded-2xl bg-brand text-center p-2">
         <p class="text-white text-2xl font-serif">22</p>
         <h2 class="text-white font-sans text-sm opacity-80 mb-2">Pentacles</h2>
-        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">Buy $6</button>
+        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$5.99</button>
         </div>
       <div class="flex items-center flex-col justify-center rounded-2xl bg-brand text-center p-2">
         <p class="text-white text-2xl font-serif">111</p>
         <h2 class="text-white font-sans text-sm opacity-80 mb-2">Pentacles</h2>
-        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">Buy $10</button>
+        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$9.99</button>
         </div>
       <div class="flex items-center flex-col justify-center rounded-2xl bg-brand text-center p-2">
         <p class="text-white text-2xl font-serif">333</p>
         <h2 class="text-white font-sans text-sm opacity-80 mb-2">Pentacles</h2>
-        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">Buy $30</button>
+        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$29.99</button>
         </div>
     </div>
   
@@ -110,7 +110,6 @@ class YouPentacles extends HTMLElement {
 
     
     document.getElementById('pentacles').addEventListener('click', async (e) => {
-      trackEvent('pentacles', 'Pentacles click', '🪙', false);
       alert('Pentacles are coming soon!');
     });
   }

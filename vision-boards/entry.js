@@ -1,6 +1,6 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the path to fetchWithAuth is correct
 import { Preferences } from '@capacitor/preferences';
-import { trackEvent } from '@/logsnag';
+
 
 class VisionBoardsEntry extends HTMLElement {
   constructor() {
@@ -19,7 +19,6 @@ class VisionBoardsEntry extends HTMLElement {
   }
 
   async fetchPostBySlug(slug) {
-    trackEvent('vision-boards', 'Vision board', '🔮', false, { slug });
     try {
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=vision_board&slug=${slug}`, { credentials: 'include' });
       if (!response.ok) {
@@ -43,7 +42,7 @@ class VisionBoardsEntry extends HTMLElement {
     `).join('');
 
     this.innerHTML = `
-    <title-bar data-back-link="/vision-boards-index.html" data-settings-link="/vision-board-settings.html" class="w-full" title="${title}"></title-bar>
+    <title-bar root="true" data-back-link="/vision-boards-index.html" data-settings-link="/vision-board-settings.html" class="w-full" title="${title}"></title-bar>
     <div class="px-6 grid grid-cols-1 gap-6 md:grid-cols-2">
       ${imagesHtml}
     </div>

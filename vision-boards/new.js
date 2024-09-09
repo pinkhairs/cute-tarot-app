@@ -1,6 +1,6 @@
 import { fetchWithAuth } from '@/auth';
 import { Preferences } from '@capacitor/preferences';
-import { trackEvent } from '@/logsnag';
+
 
 class VisionBoardsNew extends HTMLElement {
   constructor() {
@@ -49,7 +49,6 @@ class VisionBoardsNew extends HTMLElement {
           const data = await response.text();
           await Preferences.set({ key: 'board-slug', value: data });
           const getBoardSlug = await Preferences.get({ key: 'board-slug' });
-          trackEvent('vision-boards', 'New vision board', '🔮', false, { title: document.getElementById('vision-board-title').value, slug: getBoardSlug.value });
 
           if (getBoardSlug.value) {
             htmx.ajax('GET', '/vision-boards-entry.html', { target: '#content' });

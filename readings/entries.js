@@ -1,6 +1,6 @@
 import { Preferences } from '@capacitor/preferences';
 import { fetchWithAuth } from '@/auth'; // Ensure the correct path is used
-import { trackEvent } from '@/logsnag';
+
 
 class ReadingsEntries extends HTMLElement {
   constructor() {
@@ -14,7 +14,6 @@ class ReadingsEntries extends HTMLElement {
 
   async fetchEntries() {
     try {
-      trackEvent('reading-readings', 'View entries', '🃏');
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=reading_entries`);
       if (!response.ok) {
         throw new Error('Failed to fetch entries');

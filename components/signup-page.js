@@ -1,10 +1,8 @@
 import { setToken } from '@/auth';
-import { trackEvent, identify } from '@/logsnag';
 
 class SignupPage extends HTMLElement {
   constructor() {
     super();
-    this.jwtToken = '';  // Store JWT token here
   }
 
   connectedCallback() {
@@ -49,24 +47,17 @@ class SignupPage extends HTMLElement {
 
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=account_signup`, {
         method: 'POST',
-        credentials: 'include',
         body: formData
       });
 
       const result = await response.json();
       if (response.ok) {
         await setToken(result.token);
-        trackEvent('your-account', 'Signup', '🔒');
-        await identify({
-          user_id: result.user_id,
-          email: document.getElementById('email').value,
-          name: document.getElementById('first_name').value
-        });
         htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
       } else {
-        hideLoadingScreen();
         alert('There was an error with your signup. Maybe you already have an account? Please contact info@cutetarot.com if you need help.');
       }
+      hideLoadingScreen();
     });
   }
 }

@@ -1,7 +1,7 @@
 import star from '@/assets/star.svg';
 import { Preferences } from '@capacitor/preferences';
 import { fetchWithAuth } from '@/auth'; // Ensure the correct path is used
-import { trackEvent } from '@/logsnag';
+
 
 class TarotEntry extends HTMLElement {
   constructor() {
@@ -21,7 +21,6 @@ class TarotEntry extends HTMLElement {
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }
-    trackEvent('tarot-readings', 'View reading', '🃏', false, { slug });
 
     const posts = await response.json();
     this.entry = posts[0];

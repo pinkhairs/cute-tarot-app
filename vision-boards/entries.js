@@ -1,6 +1,6 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the path is correct
 import { Preferences } from '@capacitor/preferences';
-import { trackEvent } from '@/logsnag';
+
 
 class VisionBoardEntries extends HTMLElement {
   constructor() {

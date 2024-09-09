@@ -1,6 +1,5 @@
 import { setToken } from '@/auth';
 import { Preferences } from '@capacitor/preferences';
-import { trackEvent, identify } from '@/logsnag';
 
 class LoginPage extends HTMLElement {
   constructor() {
@@ -33,39 +32,33 @@ class LoginPage extends HTMLElement {
 
     htmx.process(this);
 
-    document.getElementById('login-button').addEventListener('click', async (event) => {
-        showLoadingScreen();
+    document.getElementById('login-button').addEventListener('click', async () => {
+      showLoadingScreen();
         const formData = new FormData();
         formData.append('username', document.getElementById('email').value);
         formData.append('password', document.getElementById('password').value);
+        const timestamp = Date.now();
 
-        const loginRequest = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=account_login`, {
+        const loginRequest = await fetch(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=account_login&${timestamp}=${timestamp}`, {
           method: 'POST',
-          credentials: 'include',
           body: formData
         });
 
         const loginResponse = await loginRequest.json();
 
-        if (loginResponse) {
+        try {
           await setToken(loginResponse.token);
           const userId = loginResponse.user_id
-          await Preferences.set({ key: 'user_id', value: loginResponse.user_id });
-
-          trackEvent('your-account', 'Login', '🔒', false, { });
-          await identify({
-            user_id: String(userId),
-            email: document.getElementById('email').value
-          });
+          await Preferences.set({ key: 'user_id', value: userId });
 
           // Clear the 'alreadyRedirected' flag upon successful login
           await Preferences.set({ key: 'go_to_login', value: 'false' });
           htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
-        } else {
-          hideLoadingScreen();
+        } catch (error) {
           alert('There was an error with your login. Try resetting your password. Please contact info@cutetarot.com if you need help.');
         }
-    });
+        hideLoadingScreen();
+      });
   }
 }
 

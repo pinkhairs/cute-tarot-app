@@ -1,6 +1,6 @@
 import star from '@/assets/star.svg';
 import { fetchWithAuth } from '@/auth'; // Import the function to get JWT token
-import { trackEvent } from '@/logsnag';
+
 
 class TodayIntention extends HTMLElement {
   constructor() {
@@ -43,7 +43,7 @@ class TodayIntention extends HTMLElement {
 
   async todayCard() {
     const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&today=${todayInMonthNameDayCommaYear}`);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&title=${todayInMonthNameDayCommaYear}&${Date.now()}=${Date.now()}`);
     return await response.json();
   }
 
@@ -60,7 +60,6 @@ class TodayIntention extends HTMLElement {
   render() {
     const recordManifestation = async () => {
       await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=record_manifestation`);
-      trackEvent('tarot-readings', 'Manifested', '🃏', false );
     }
 
     const todayDate = new Date().toLocaleDateString('en-US', {

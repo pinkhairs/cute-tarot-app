@@ -1,5 +1,4 @@
 import { removeToken, fetchWithAuth } from '@/auth';
-import { trackEvent, identify, getUserId } from '@/logsnag';
 
 class YouSettings extends HTMLElement {
   constructor() {
@@ -93,14 +92,6 @@ class YouSettings extends HTMLElement {
       formData.append('email', document.getElementById('email').value);
       formData.append('password', document.getElementById('password').value);
       
-      trackEvent('your-account', 'Update account', '🔒');
-      const loggify = await identify({
-        user_id: await getUserId(),
-        email: document.getElementById('email').value,
-        name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value
-      });
-      console.log(loggify);
-
       try {
         await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_account_info`, {
           method: 'POST',
@@ -117,7 +108,6 @@ class YouSettings extends HTMLElement {
 
     document.getElementById('logout-button').addEventListener('click', async (e) => {
       await removeToken();
-      trackEvent('your-account', 'Log out', '🔒', false);
       htmx.ajax('GET', '/account-login-page.html', { target: '#content' });
       return;
     });

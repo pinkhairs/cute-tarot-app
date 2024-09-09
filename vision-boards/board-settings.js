@@ -1,6 +1,6 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the path to your auth file is correct
 import { Preferences } from '@capacitor/preferences';
-import { trackEvent } from '@/logsnag';
+
 
 class VisionBoardSettings extends HTMLElement {
   constructor() {
@@ -75,7 +75,6 @@ class VisionBoardSettings extends HTMLElement {
           body: formData,
           credentials: 'include'
         });
-        trackEvent('vision-boards', 'Delete vision board', '🔮', false, { slug: this.slug, title: event.target.value });
 
         htmx.ajax('GET', '/vision-boards-index.html', { target: '#content' });
       }
@@ -98,7 +97,6 @@ class VisionBoardSettings extends HTMLElement {
           throw new Error('Failed to save board title');
         }
 
-        trackEvent('vision-boards', 'Vision board title update', '🔮', false, { slug: this.slug, title: event.target.value });
         console.log('Board title saved successfully');
       } catch (error) {
         console.error('Error saving board title:', error);
@@ -126,7 +124,6 @@ class VisionBoardSettings extends HTMLElement {
           throw new Error('Failed to upload inspiration images');
         }
 
-        trackEvent('vision-boards', 'New inspiration upload', '🔮', false, { slug: this.slug, image_count: Array.from(event.target.files).length });
         alert('New inspiration added successfully');
       } catch (error) {
         console.error('Error uploading inspiration images:', error);
@@ -154,7 +151,6 @@ class VisionBoardSettings extends HTMLElement {
           throw new Error('Failed to upload icon');
         }
 
-        trackEvent('vision-boards', 'Icon update', '🔮', false, { slug: this.slug });
 
         document.getElementById('icon-now').src = await response.text();
       } catch (error) {

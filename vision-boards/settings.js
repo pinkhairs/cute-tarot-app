@@ -1,5 +1,5 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the path to fetchWithAuth is correct
-import { trackEvent } from '@/logsnag';
+
 
 class VisionBoardsSettings extends HTMLElement {
   constructor() {
@@ -30,9 +30,6 @@ class VisionBoardsSettings extends HTMLElement {
         const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_create_new&value=${this.value}`, { credentials: 'include' }, false);
         const data = await response.text();
         console.log('Create New placement saved:', data);
-        trackEvent('personalization', 'Move Create New', '🌈', false, {
-          create_new_placement: this.value,
-        });
       } catch (error) {
         console.error('Error saving create new placement:', error);
       }

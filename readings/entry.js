@@ -1,6 +1,6 @@
 import { Preferences } from '@capacitor/preferences';
 import { fetchWithAuth } from '@/auth';
-import { trackEvent } from '@/logsnag';
+
 
 class ReadingsEntry extends HTMLElement {
   constructor() {
