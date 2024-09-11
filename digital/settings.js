@@ -1,7 +1,7 @@
 import { fetchWithAuth } from '@/auth'; // Ensure the path to fetchWithAuth is correct
 
 
-class VisionBoardsSettings extends HTMLElement {
+class DigitalSettings extends HTMLElement {
   constructor() {
     super();
     this.value = '';
@@ -41,7 +41,7 @@ class VisionBoardsSettings extends HTMLElement {
     `;
     
     this.innerHTML = `
-    <title-bar data-back-link="/vision-boards-index.html" class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
+    <title-bar data-back-link="/digital-index.html" class="w-full" title="Settings" subtitle="Changes will save automatically"></title-bar>
     <form class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
       <div class="field flex flex-col items-center justify-between p-4 bg-translucent gap-3 w-full rounded-2xl">
         <label for="create-new-placement" class="label opacity-80 font-serif">Place "Create New"</label>
@@ -59,4 +59,4 @@ class VisionBoardsSettings extends HTMLElement {
   }
 }
 
-customElements.define('vision-boards-settings', VisionBoardsSettings);
+customElements.define('digital-settings', DigitalSettings);

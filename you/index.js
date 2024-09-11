@@ -34,41 +34,41 @@ class YouIndex extends HTMLElement {
     this.innerHTML = `
       <title-bar root="true" class="w-full" data-settings-link="/you-settings.html" title="You" subtitle="Personalize your experience"></title-bar>
       <form action="${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_profile" method="post" class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-4 w-full rounded-2xl text-center">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl text-center">
           <div class="label opacity-80 font-serif">Avatar</div>
-          <label for="avatar" class="border-dashed border-2 rounded-lg border-black p-4">
+          <label for="avatar" class="border-dashed border-2 rounded-lg border-black p-3">
             Upload <input type="file" id="avatar" name="file" class="hidden" accept="image/*">
           </label>
         </div>
 
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
           <label for="life_right_now" class="label opacity-80 font-serif">Life right now</label>
-          <textarea id="life_right_now" name="life_right_now" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-4 bg-transparent"></textarea>
+          <textarea id="life_right_now" name="life_right_now" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-3 bg-transparent"></textarea>
         </div>
 
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
           <label for="describe_a_day_in_your_dream_life" class="label opacity-80 font-serif">Describe a day in your dream life</label>
-          <textarea id="describe_a_day_in_your_dream_life" name="describe_a_day_in_your_dream_life" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-4 bg-transparent"></textarea>
+          <textarea id="describe_a_day_in_your_dream_life" name="describe_a_day_in_your_dream_life" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-3 bg-transparent"></textarea>
         </div>
 
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
           <label for="life_vision" class="label opacity-80 font-serif">Life vision</label>
-          <textarea id="life_vision" name="life_vision" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-4 bg-transparent"></textarea>
+          <textarea id="life_vision" name="life_vision" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-3 bg-transparent"></textarea>
         </div>
 
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
           <label for="bucket_list" class="label opacity-80 font-serif">Bucket list</label>
-          <textarea id="bucket_list" name="bucket_list" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-4 bg-transparent"></textarea>
+          <textarea id="bucket_list" name="bucket_list" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-3 bg-transparent"></textarea>
         </div>
 
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
           <label for="current_responsibilities" class="label opacity-80 font-serif">Current responsibilities</label>
-          <textarea id="current_responsibilities" name="current_responsibilities" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-4 bg-transparent"></textarea>
+          <textarea id="current_responsibilities" name="current_responsibilities" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-32 w-full rounded-xl p-3 bg-transparent"></textarea>
         </div>
 
-        <div class="field flex flex-col items-center justify-between p-4 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
+        <div class="field flex flex-col items-center justify-between p-3 text-black bg-white bg-opacity-90 gap-3 w-full rounded-2xl">
           <label for="style" class="label opacity-80 font-serif">Style (emoji work well here)</label>
-          <input type="text" id="style" name="style" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-10 w-full rounded-xl p-4 bg-transparent">
+          <input type="text" id="style" name="style" placeholder="Type here" class="text-center focus:outline-none focus:bg-neutral transition-colors h-10 w-full rounded-xl p-3 bg-transparent">
         </div>
       </form>
     `;

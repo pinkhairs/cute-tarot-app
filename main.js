@@ -1,6 +1,7 @@
 //main.js
 import youBg from '@/assets/you-bg.png';
 import video from '@/assets/video.mp4';
+import referenceBg from '@/assets/reference-bg.png';
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
@@ -13,20 +14,19 @@ import '/tarot/entries.js';
 import '/tarot/set-intention.js';
 import '/tarot/today-intention.js';
 import '/tarot/entry.js';
-import '/vision-boards/index.js';
-import '/vision-boards/entries.js';
-import '/vision-boards/settings.js';
-import '/vision-boards/entry.js';
-import '/vision-boards/new.js';
-import '/vision-boards/board-settings.js';
+import '/digital/index.js';
+import '/digital/entries.js';
+import '/digital/settings.js';
+import '/digital/entry.js';
+import '/digital/new.js';
 import '/you/index.js';
 import '/you/settings.js';
 import '/you/pentacles.js';
 import '/readings/index.js';
 import '/readings/entries.js';
 import '/readings/entry.js';
+import '/reference/index.js';
 import { fetchWithAuth } from '@/auth';
-import { Preferences } from '@capacitor/preferences';
 
 const app = document.querySelector('#app');
 const background = document.querySelector('#background');
@@ -82,15 +82,27 @@ document.addEventListener('htmx:beforeRequest', async (event) => {
   }
 });
 
+
 document.addEventListener('htmx:afterSwap', async (event) => {
   const requestPath = event.detail.pathInfo.requestPath;
 
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
+  if (!response) return;
+  if (!response.ok) throw new Error('Network response was not ok.');
+  const deck = await response.text();
+
+  if (deck !== 'Spoopy Tarot') {
+    document.documentElement.setAttribute('data-theme', 'kawaii');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'spoopy');
+  }
+
   if (requestPath.includes('-index.html') || requestPath.includes('tarot-today-intention.html')) {
     tabDock.classList.remove('translate-y-[150%]');
-    bottomSpacer.classList.add('h-[132px]', 'flex-shrink-0');
+    bottomSpacer.classList.add('h-[118px]', 'flex-shrink-0');
   } else {
     tabDock.classList.add('translate-y-[150%]');
-    bottomSpacer.classList.remove('h-[132px]', 'flex-shrink-0');
+    bottomSpacer.classList.remove('h-[118px]', 'flex-shrink-0');
   }
 
   setTimeout(async () => {
@@ -103,7 +115,7 @@ document.addEventListener('htmx:afterSwap', async (event) => {
       document.documentElement.className = `text-${matData.color || 'black'}`;
       background.classList.add(matData.color+'-text');
       background.innerHTML = '';
-    } else if (requestPath.startsWith('/vision-boards')) {
+    } else if (requestPath.startsWith('/digital')) {
       document.documentElement.className = 'text-black';
       background.style.backgroundImage = '';
       background.classList.remove('black-text', 'white-text');
@@ -127,6 +139,11 @@ document.addEventListener('htmx:afterSwap', async (event) => {
       background.classList.add('white-text');
       background.classList.remove('black-text');
       }
+    } else if (requestPath.startsWith('/reference')) {
+      document.documentElement.className = 'text-black';
+      background.style.backgroundImage = `url()`;
+      background.classList.remove('black-text', 'white-text');
+      background.innerHTML = '';
     } else {
       document.documentElement.className = 'text-black';
       background.style.backgroundImage = `url(${youBg})`;

@@ -82,7 +82,7 @@ login-page, signup-page, forgot-page {
   @apply py-2;
 }
 
-#content > * {
+#content > *:not(reading-index) {
   @apply flex flex-col lg:max-w-2xl mx-auto gap-6 short:gap-4 lg:gap-8 flex-1 h-full;
 }
 
@@ -170,4 +170,12 @@ select {
   49.99999% {transform: translateX(-48%); z-index: 2;} /* Stay at -48% */
   66.66666% {transform: translateX(-46%) rotate(0deg); z-index: 3;} /* More to the right at -46% */
   83.33333% {transform: translateX(-30%) rotate(15deg);} /* Far to the right at -30% */
+}
+
+.scrollbar::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+.scrollbar {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
 }

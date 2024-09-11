@@ -1,5 +1,4 @@
 import cards from '@/assets/cards.svg';
-import camera from '@/assets/camera.png';
 import cv from "@techstark/opencv-js";
 import { fetchWithAuth } from '@/auth';
 import { Preferences } from '@capacitor/preferences';
@@ -19,11 +18,11 @@ class ReadingsIndex extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar root="true" data-entries-link="/readings-entries.html" class="w-full" title="Readings" subtitle="Take a pic and get a reading"></title-bar>
-      <div class="p-4 flex-1">
+      <title-bar root="true" data-entries-link="/readings-entries.html" class="w-full" title="IRL Readings"></title-bar>
+      <div class="p-4 pb-0 flex-1">
 
         <label class="h-full w-full flex items-center justify-between border-dashed border-2 rounded-2xl border-white p-4 flex-col">
-          <div><img src="${camera}" alt="" class="h-8"></div><div class="flex flex-col items-center justify-center">
+          <div></div><div class="flex flex-col items-center justify-center">
           <input type="file" id="reading" name="reading" class="hidden" accept="image/*">
           <img src="${cards}" alt="" class="h-16 mb-4">
           <h2 class="mb-2 flex items-center justify-center gap-1.5">
