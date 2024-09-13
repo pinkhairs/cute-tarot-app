@@ -1,9 +1,7 @@
 import cards from '@/assets/cards.svg';
-import { Camera, CameraResultType } from '@capacitor/camera';
 import cv from "@techstark/opencv-js";
 import { fetchWithAuth } from '@/auth';
 import { Preferences } from '@capacitor/preferences';
-
 
 class ReadingsIndex extends HTMLElement {
   constructor() {
@@ -16,6 +14,27 @@ class ReadingsIndex extends HTMLElement {
     const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_pentacles`, {}, false);
     return await response.text();
   }
+
+  async requestCameraPermissions() {
+    // Check camera permissions first
+    const permissions = await navigator.permissions.query({ name: 'camera' });
+    
+    // If permissions are denied or prompt, request permissions
+    if (permissions.state === 'denied') {
+        alert('Camera access was denied. Please enable it in settings.');
+        hideLoadingScreen();
+        return;
+    } else if (permissions.state === 'prompt') {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            stream.getTracks().forEach(track => track.stop()); // Stop the stream once access is granted
+            console.log('Camera access granted.');
+        } catch (error) {
+            console.error('Camera access denied:', error);
+            alert('Camera access was denied. Please enable it in settings.');
+        }
+    }
+  } 
   
   async handleImageCapture() {
     showLoadingScreen();
@@ -94,7 +113,9 @@ class ReadingsIndex extends HTMLElement {
       </div>
     `;
 
-    document.getElementById('file-label').addEventListener('click', (e) => {
+    document.getElementById('file-label').addEventListener('click', async (e) => {
+      await this.requestCameraPermissions();
+
       if (this.pentacles < 1) {
         if (confirm('You do not have enough pentacles to get a reading. Click OK to purchase more.')) {
           htmx.ajax('GET', '/you-pentacles.html', '#content');

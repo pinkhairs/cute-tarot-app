@@ -26,7 +26,7 @@ class TarotCardReading extends HTMLElement {
   }
 
   async getDeckPreference() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, {}, false)
     if (!response) return;
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.text();

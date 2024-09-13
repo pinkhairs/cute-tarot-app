@@ -86,7 +86,7 @@ document.addEventListener('htmx:beforeRequest', async (event) => {
 document.addEventListener('htmx:afterSwap', async (event) => {
   const requestPath = event.detail.pathInfo.requestPath;
 
-  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, {}, false)
   if (!response) return;
   if (!response.ok) throw new Error('Network response was not ok.');
   const deck = await response.text();
@@ -108,7 +108,7 @@ document.addEventListener('htmx:afterSwap', async (event) => {
   setTimeout(async () => {
     if (requestPath.startsWith('/tarot')) {
       document.documentElement.className = 'text-white';
-      const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat`, { credentials: 'include' });
+      const data = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_mat`);
       if (!data) return;
       const matData = await data.json();
       background.style.backgroundImage = `url(${matData.mat || ''})`;

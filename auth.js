@@ -28,6 +28,7 @@ function redirectToLogin() {
   content.setAttribute('hx-trigger', 'load');
   htmx.process(content);
 }
+
 export async function fetchWithAuth(url, options = {}, showLoading = true) {
   if (showLoading) {
     showLoadingScreen();
@@ -49,6 +50,7 @@ export async function fetchWithAuth(url, options = {}, showLoading = true) {
 
   if (response.status === 401) {
     redirectToLogin();
+    return;
   }
   return response;
 }

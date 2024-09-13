@@ -14,7 +14,7 @@ class TabDock extends HTMLElement {
   }
 
   async getAvatar() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`, {}, false);
     if (response && response.ok) {
       const avatarText = await response.text();
       return avatarText;
