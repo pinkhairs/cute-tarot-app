@@ -179,3 +179,25 @@ select {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
 }
+
+#coin {
+  position: relative; /* Ensures the translation is relative to its original position */
+  transform: translateZ(0) translateY(400%) rotateY(360deg);
+  @apply transition-all duration-1000;
+}
+
+.animate-jump-spin {
+  animation: jumpAndSpin 2s ease-in-out;
+}
+
+@keyframes jumpAndSpin {
+  0%, 100% {
+    transform: translateZ(0) translateY(0) rotateY(0deg);
+  }
+  50% {
+    transform: translateZ(0) translateY(-400%) rotateY(3440deg);
+  }
+  100% {
+    transform: translateZ(0) translateY(400%) rotateY(360deg);
+  }
+}

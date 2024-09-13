@@ -60,7 +60,6 @@ class TarotSettings extends HTMLElement {
         const result = await response.text();
         document.getElementById('deck-icon').setAttribute('src', result);
 
-        console.log('Deck settings saved successfully');
         hideLoadingScreen();
       } catch (error) {
         console.error('Error saving deck settings:', error);

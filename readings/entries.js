@@ -30,7 +30,7 @@ class ReadingsEntries extends HTMLElement {
     const getFirstSentence = text => (text.match(/[^.!?]*[.!?]/) || [''])[0].trim();
     const entriesHtml = this.entries.map(entry => `
       <li class="flex pb-4 mb-4">
-        <button type="button" hx-target="#content" hx-get="/reading-entry.html" class="load-entry text-left flex items-center" data-slug="${entry.slug}">
+        <button type="button" hx-target="#content" hx-get="/readings-entry.html" class="load-entry text-left flex items-center" data-slug="${entry.slug}">
           <div>
             <div class="w-20 h-20 p-4  flex-shrink-0 flex items-center justify-center rounded-xl bg-translucent">
               <img src="${entry.image}" alt="" class="h-[53px] rounded-md">

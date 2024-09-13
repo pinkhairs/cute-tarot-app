@@ -28,6 +28,7 @@
     "cordova-plugin-purchase": "^13.11.1",
     "js-cookie": "^3.0.5",
     "logsnag": "^1.0.0",
-    "tiny-slider": "^2.9.4"
+    "tiny-slider": "^2.9.4",
+    "toastify-js": "^1.12.0"
   }
 }

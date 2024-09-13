@@ -16,16 +16,16 @@ import '/tarot/today-intention.js';
 import '/tarot/entry.js';
 import '/digital/index.js';
 import '/digital/entries.js';
-import '/digital/settings.js';
 import '/digital/entry.js';
-import '/digital/new.js';
 import '/you/index.js';
 import '/you/settings.js';
+import '/you/entries.js';
 import '/you/pentacles.js';
 import '/readings/index.js';
 import '/readings/entries.js';
 import '/readings/entry.js';
 import '/reference/index.js';
+import '/reference/entry.js';
 import { fetchWithAuth } from '@/auth';
 
 const app = document.querySelector('#app');

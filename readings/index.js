@@ -1,15 +1,64 @@
 import cards from '@/assets/cards.svg';
+import { Camera, CameraResultType } from '@capacitor/camera';
 import cv from "@techstark/opencv-js";
 import { fetchWithAuth } from '@/auth';
 import { Preferences } from '@capacitor/preferences';
+
 
 class ReadingsIndex extends HTMLElement {
   constructor() {
     super();
     this.cards = [];
+    this.pentacles = 0;
   }
+
+  async getPentacles() {
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_pentacles`, {}, false);
+    return await response.text();
+  }
+  
+  async handleImageCapture() {
+    showLoadingScreen();
+  
+    // Check camera permissions first
+    const permissions = await Camera.checkPermissions();
+    
+    // If permissions are denied or prompt, request permissions
+    if (permissions.camera === 'denied' || permissions.camera === 'prompt') {
+      const requestedPermissions = await Camera.requestPermissions({ permissions: ['camera', 'photos'] });
+      if (requestedPermissions.camera === 'denied') {
+        alert('Camera access was denied. Please enable it in settings.');
+        hideLoadingScreen();
+        return;
+      }
+    }
+  
+    // If permissions are granted, proceed to open the camera
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera,  // Ensure camera source is used
+      });
+  
+      const imageUrl = image.webPath;
+      const imageElement = this.querySelector('#image');
+      imageElement.src = imageUrl;
+  
+      // Process the image after capturing it
+      this.processImage(imageUrl);
+    } catch (error) {
+      console.error("Error capturing image: ", error);
+      hideLoadingScreen();
+    }
+  }
+
   connectedCallback() {
-    this.render();
+    this.getPentacles().then(pentacles => {
+      this.pentacles = pentacles;
+      this.render();
+    });
     this.setupEventListeners();
     if (typeof hideLoadingScreen === 'function') {
       hideLoadingScreen();
@@ -18,35 +67,44 @@ class ReadingsIndex extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar root="true" data-entries-link="/readings-entries.html" class="w-full" title="IRL Readings"></title-bar>
-      <div class="p-4 pb-0 flex-1">
+      <title-bar root="true" data-entries-link="/readings-entries.html" class="w-full" title="IRL Readings" subtitle="Take a pic and get a reading"></title-bar>
 
-        <label class="h-full w-full flex items-center justify-between border-dashed border-2 rounded-2xl border-white p-4 flex-col">
-          <div></div><div class="flex flex-col items-center justify-center">
-          <input type="file" id="reading" name="reading" class="hidden" accept="image/*">
+      <img id="image" class="-z-50 absolute opacity-0">
+      <canvas id="canvas" class="-z-50 absolute opacity-0"></canvas>
+      
+      <div class="p-4 flex-1">
+        <div class="h-full w-full flex items-center justify-between border-dashed border-2 rounded-2xl border-white p-4 flex-col">
+        <div></div>
+        <label id="file-label" class="flex flex-col items-center justify-center">
+          ${this.pentacles > 0 ? `<input type="file" id="reading" name="reading" class="hidden" accept="image/*">` :``}
           <img src="${cards}" alt="" class="h-16 mb-4">
           <h2 class="mb-2 flex items-center justify-center gap-1.5">
-          
           Tap for photo</h2>
           <p class="opacity-80 mb-2 text-center">3 card spread • Light background • Kawaii Tarot and Spoopy Tarot exclusive</p>
         </label>
-      </div>
-           <button type="button" class="inline-flex items-center gap-1">
-             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM5.35434 9.63724L5.08937 11.3956C4.99753 12.0039 5.64272 12.4531 6.18086 12.156L7.73797 11.2973C7.95148 11.1791 8.21002 11.1739 8.4282 11.2833L10.0187 12.0788C10.5685 12.3537 11.1956 11.8787 11.0791 11.2751L10.7434 9.52845C10.6972 9.28862 10.7721 9.04119 10.9434 8.86746L12.1917 7.60048C12.6234 7.16236 12.3654 6.41949 11.7553 6.34345L9.99058 6.12351C9.74841 6.09368 9.53608 5.94628 9.42377 5.72926L8.60485 4.15051C8.32174 3.60476 7.53558 3.62056 7.2747 4.17742L6.51954 5.78776C6.41601 6.00886 6.21011 6.16504 5.96912 6.20482L4.21488 6.49612C3.6083 6.59673 3.38076 7.34955 3.82941 7.76953L5.12797 8.98504C5.30579 9.15174 5.39061 9.39566 5.35434 9.63724Z" fill="#F6D072"/>
-            </svg>
-            <div class="opacity-80 font-serif text-sm" hx-get="/you-pentacles.html" hx-target="#content">1 reading = 1 pentacle</div>
 
-          </button>
+        <div class="mt-4 inline-flex items-center gap-1">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM5.35434 9.63724L5.08937 11.3956C4.99753 12.0039 5.64272 12.4531 6.18086 12.156L7.73797 11.2973C7.95148 11.1791 8.21002 11.1739 8.4282 11.2833L10.0187 12.0788C10.5685 12.3537 11.1956 11.8787 11.0791 11.2751L10.7434 9.52845C10.6972 9.28862 10.7721 9.04119 10.9434 8.86746L12.1917 7.60048C12.6234 7.16236 12.3654 6.41949 11.7553 6.34345L9.99058 6.12351C9.74841 6.09368 9.53608 5.94628 9.42377 5.72926L8.60485 4.15051C8.32174 3.60476 7.53558 3.62056 7.2747 4.17742L6.51954 5.78776C6.41601 6.00886 6.21011 6.16504 5.96912 6.20482L4.21488 6.49612C3.6083 6.59673 3.38076 7.34955 3.82941 7.76953L5.12797 8.98504C5.30579 9.15174 5.39061 9.39566 5.35434 9.63724Z" fill="#F6D072"/>
+          </svg>
+
+        <div class="opacity-80 font-serif">You will spend 1 pentacle</div>
       </div>
-      <div class="relative">
-        <img id="image" class="-z-50 absolute opacity-0">
-        <canvas id="canvas" class="-z-50 absolute opacity-0"></canvas>
+        </div>
       </div>
     `;
-  }
 
+    document.getElementById('file-label').addEventListener('click', (e) => {
+      if (this.pentacles < 1) {
+        if (confirm('You do not have enough pentacles to get a reading. Click OK to purchase more.')) {
+          htmx.ajax('GET', '/you-pentacles.html', '#content');
+        }
+        return false;
+      }
+    })
+  }
   setupEventListeners() {
+    if (this.pentacles < 1) return;
     const fileInput = this.querySelector('#reading');
     fileInput.addEventListener('change', this.handleImageUpload.bind(this));
   }
@@ -143,8 +201,6 @@ class ReadingsIndex extends HTMLElement {
     binary.delete();
     contours.delete();
     hierarchy.delete();
-
-    console.log('Found cards:', this.cards);
 }
 
 

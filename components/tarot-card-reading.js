@@ -1,5 +1,6 @@
 import { fetchWithAuth } from '@/auth';
-
+import pentacle from '@/assets/pentacle.png';
+import bell from '@/assets/bell.mp3';
 
 class TarotCardReading extends HTMLElement {
   constructor() {
@@ -17,6 +18,7 @@ class TarotCardReading extends HTMLElement {
       }
 
       this.render();
+      hideLoadingScreen();
       document.getElementById('flip-card-button').addEventListener('click', () => this.flipCard());
     }).catch(error => {
       console.error('Error fetching deck preference:', error);
@@ -83,6 +85,12 @@ class TarotCardReading extends HTMLElement {
       setTimeout(() => {
         setIntentionButton.classList.remove('opacity-0');
       }, 3000);
+      setTimeout(async () => {
+        await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=add_pentacle`, {}, false);
+        const audio = new Audio(bell);
+        audio.play();
+        document.getElementById('coin').classList.add('animate-jump-spin');
+      }, 3333)
   }
 
   render() {
@@ -117,7 +125,11 @@ class TarotCardReading extends HTMLElement {
           </div>
         </div>
       </div>
-    </div>`
+    </div>
+    <div class="fixed bottom-0 w-full left-0" style="perspective: 1000px">
+      <img src="${pentacle}" alt="Pentacle" id="coin" class="text-center mx-auto" />
+    </div>
+    `
     ;
   }
 }

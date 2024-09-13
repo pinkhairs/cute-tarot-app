@@ -1,7 +1,6 @@
 import star from '@/assets/star.svg';
 import { fetchWithAuth } from '@/auth'; // Import the function to get JWT token
 
-
 class TodayIntention extends HTMLElement {
   constructor() {
     super();
@@ -11,11 +10,11 @@ class TodayIntention extends HTMLElement {
   connectedCallback() {
     this.render();
 
+
     this.todayCard().then(card => {
       document.getElementById('card-title-text').textContent = card.card_title;
       document.getElementById('card-content').textContent = card.card_content;
       document.getElementById('card').setAttribute('src', card.card_image);
-      hideLoadingScreen();
     });
 
     this.manifestationStatus().then(data => {
@@ -38,6 +37,7 @@ class TodayIntention extends HTMLElement {
         document.getElementById('set-intention').classList.remove('hidden');
         document.getElementById('set-intention').classList.add('flex');
       }
+      hideLoadingScreen();
     });
   }
 
@@ -81,7 +81,7 @@ class TodayIntention extends HTMLElement {
           <p id="card-content"></p>
         </div>
         <button id="set-intention-button" type="button" hx-target="#content" hx-get="/tarot-set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
-        <div id="set-intention" class="hidden flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
+        <div hx-target="#content" hx-get="/tarot-set-intention.html" id="set-intention" class="hidden flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
         ${this.manifested ? `<a hx-target="#content" hx-get="/tarot-set-intention.html" class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
             <p class="text-lg" id="intention-text"></p>

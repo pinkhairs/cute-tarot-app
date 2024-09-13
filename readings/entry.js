@@ -9,12 +9,13 @@ class ReadingsEntry extends HTMLElement {
   }
 
   connectedCallback() {
-    this.fetchPostBySlug(); // Fetch the post data using the slug
+    const getSlug = Preferences.get({ key: 'reading-slug' });
+    getSlug.then((value) => {
+      this.fetchPostBySlug(value.value); // Fetch the post data using the slug
+    });
   }
 
-  async fetchPostBySlug() {
-    const getSlug = await Preferences.get({ key: 'reading-slug' });
-    const slug = getSlug.value;
+  async fetchPostBySlug(slug) {
     const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=reading_entry&id=${slug}`);
     this.entry = await response.json();
     this.render();
@@ -23,7 +24,7 @@ class ReadingsEntry extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <title-bar data-back-link="/readings-entries.html" class="w-full" title="Tarot" subtitle="${this.entry.date}"></title-bar>
+      <title-bar data-back-link="/readings-index.html" class="w-full" title="Tarot" subtitle="${this.entry.date}"></title-bar>
       <div class="w-full px-6 flex items-start justify-center">
         <img src="${this.entry.image}" class="rounded-2xl bg-[rgba(255,255,255,.85)] shadow-[0_0_56px_-8px_rgba(85,123,193,0.2)] h-32 md:h-48 short:h-24 lg:h-48" alt="">
       </div>

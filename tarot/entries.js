@@ -38,7 +38,7 @@ class TarotEntries extends HTMLElement {
             </div>
             <p class="w-20 mt-2 text-center opacity-80 text-sm break-words">${entry.card_title}</p>
           </div>
-          <div class="flex-grow pl-4">
+          <div class="flex-grow pl-4 flex-col">
             <h3 class="mb-2">${entry.title}</h3>
             <p class="my-2">${entry.intention ? entry.intention : ''}</p>
             ${entry.manifested ? `<p class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"><img class="h-3" src="${star}" alt=""> Manifested</p>` : ''}
