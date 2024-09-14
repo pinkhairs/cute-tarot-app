@@ -15,7 +15,6 @@ class DigitalIndex extends HTMLElement {
     this.getDeckPreference().then(async data => {
       this.deck = data;
       this.render();
-      hideLoadingScreen();
     });
   }
 

@@ -6,7 +6,6 @@ class TarotIndex extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    hideLoadingScreen();
   }
 
   render() {

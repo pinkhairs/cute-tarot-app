@@ -15,13 +15,12 @@ class DigitalEntries extends HTMLElement {
 
   async fetchEntries() {
     try {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=digital_readings`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=digital_readings`);
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
       }
       this.entries = await response.json();
       this.render();
-      hideLoadingScreen();
     } catch (error) {
       console.error('Error fetching entries:', error);
     }

@@ -20,7 +20,6 @@ class ReferenceEntry extends HTMLElement {
 
     this.entry = await response.json();
     this.render();
-    hideLoadingScreen();
   }
 
   render() {

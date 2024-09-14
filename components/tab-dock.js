@@ -14,14 +14,9 @@ class TabDock extends HTMLElement {
   }
 
   async getAvatar() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`, {}, false);
-    if (response && response.ok) {
-      const avatarText = await response.text();
-      return avatarText;
-    } else {
-      console.error('Failed to get avatar:', response.status, response.statusText);
-      return '';  // Return empty string if there's an error
-    }
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_avatar`);
+    const avatarText = await response.text();
+    return avatarText;
   }
 
   connectedCallback() {
@@ -33,15 +28,10 @@ class TabDock extends HTMLElement {
           this.render();
         });
       })
-      .catch(error => {
-        console.error('Error during connectedCallback:', error.message);
-      });
   }
 
   async getDeckPreference() {
     const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
-    if (!response) return;
-    if (!response.ok) throw new Error('Network response was not ok.');
     return await response.text();
   }
 
@@ -51,7 +41,7 @@ class TabDock extends HTMLElement {
       day: 'numeric',
     });
     this.innerHTML = `
-      <div hx-sync="this:replace last" class="w-max p-3 grid grid-cols-5 backdrop-blur-md bg-[rgba(255,255,255,.85)] shadow-[0_0_40px_-8px_rgba(85,123,193,0.2)] items-center rounded-3xl h-20 justify-center gap-2">
+      <div class="w-max p-3 grid grid-cols-5 backdrop-blur-md bg-[rgba(255,255,255,.85)] shadow-[0_0_40px_-8px_rgba(85,123,193,0.2)] items-center rounded-3xl h-20 justify-center gap-2">
         <div class="flex items-center">
           <button type="button" class="w-14 h-14 bg-cover rounded-2xl" style="background-image: url(${calendar})" hx-get="/tarot-index.html" hx-target="#content">
             <h2 class="text-[#F1789F] text-[34px] font-['Madimi_One'] mt-4">${todayDate}</h2>

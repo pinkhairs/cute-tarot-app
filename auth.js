@@ -1,10 +1,9 @@
 import { Preferences } from '@capacitor/preferences';
-import youBg from '@/assets/you-bg.png';
 
 export async function setToken(token) {
   await Preferences.set({
-      key: 'authToken',
-      value: token
+    key: 'authToken',
+    value: token
   });
 }
 
@@ -15,42 +14,61 @@ export async function getToken() {
 
 // Utility to remove JWT token
 export async function removeToken() {
-    await Preferences.remove({ key: 'authToken' });
+  await Preferences.remove({ key: 'authToken' });
 }
 
-function redirectToLogin() {
-  const background = document.querySelector('#background');
-  const content = document.querySelector('#content');
-  document.documentElement.className = 'text-black';
-  background.style.backgroundImage = `url(${youBg})`;
-  background.classList.remove('black-text', 'white-text');
-  content.setAttribute('hx-get', '/account-signup-page.html');
-  content.setAttribute('hx-trigger', 'load');
-  htmx.process(content);
+function redirectToSignup() {
+  htmx.ajax('GET', '/account-signup-page.html', '#content');
 }
 
-export async function fetchWithAuth(url, options = {}, showLoading = true) {
-  if (showLoading) {
-    showLoadingScreen();
-  }
+// Global counter to track active requests
+let activeRequests = 0;
+
+export async function fetchWithAuth(url, options = {}, hideLoading = false) {
   const token = await getToken();
   const timestamp = Date.now();
 
   if (!token) {
-    redirectToLogin();
-    return;
+    await removeToken();
   }
+
+  // Show loading screen if this is the first active request
+  if (activeRequests === 0 && !hideLoading) {
+    showLoadingScreen();
+  }
+  activeRequests++;
 
   options.headers = {
     ...options.headers,
     'Authorization': `Bearer ${token}`
   };
 
-  const response = await fetch(url+'&'+timestamp+'='+timestamp, options);
+  try {
+    const response = await fetch(url + '&' + timestamp + '=' + timestamp, options);
 
-  if (response.status === 401) {
-    redirectToLogin();
-    return;
+    if (response.status === 401 || !token) {
+      redirectToSignup();
+      return;
+    }
+
+    if (response.ok) {
+      return response;  // Return the response if the request was successful
+    } else {
+      console.error('Request failed', response);
+      throw new Error('Request failed');
+    }
+
+  } catch (error) {
+    console.error('Error during fetch', error);
+    throw error;
+
+  } finally {
+    // Always decrement activeRequests, even if an error occurs
+    activeRequests--;
+
+    // Hide loading screen when all requests have finished
+    if (activeRequests === 0) {
+      hideLoadingScreen();
+    }
   }
-  return response;
 }

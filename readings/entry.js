@@ -19,7 +19,6 @@ class ReadingsEntry extends HTMLElement {
     const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=reading_entry&id=${slug}`);
     this.entry = await response.json();
     this.render();
-    hideLoadingScreen();
   }
 
   render() {

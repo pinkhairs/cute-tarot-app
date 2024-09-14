@@ -9,7 +9,7 @@ class TarotSettings extends HTMLElement {
 
   connectedCallback() {
     const deck = async () => {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, { credentials: 'include' }, false);
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`);
       return await response.text();
     };
 
@@ -18,7 +18,6 @@ class TarotSettings extends HTMLElement {
       this.options = `<option value="Kawaii Tarot" ${this.deck === 'Kawaii Tarot' ? 'selected' : ''}>Kawaii Tarot</option>`;
       this.options += `<option value="Spoopy Tarot" ${this.deck === 'Spoopy Tarot' ? 'selected' : ''}>Spoopy Tarot</option>`;
       this.render();
-      hideLoadingScreen();
     }).catch(error => {
       console.error('Error fetching deck preference:', error);
     });
@@ -50,8 +49,7 @@ class TarotSettings extends HTMLElement {
       try {
         const response = await fetchWithAuth(url, {
           method: 'POST',
-          credentials: 'include'
-        }, false);
+        });
 
         if (!response.ok) {
           throw new Error('Failed to save deck settings');
@@ -60,7 +58,6 @@ class TarotSettings extends HTMLElement {
         const result = await response.text();
         document.getElementById('deck-icon').setAttribute('src', result);
 
-        hideLoadingScreen();
       } catch (error) {
         console.error('Error saving deck settings:', error);
       }
@@ -77,7 +74,6 @@ class TarotSettings extends HTMLElement {
         const response = await fetchWithAuth(url, {
           method: 'POST',
           body: formData,
-          credentials: 'include'
         });
 
         if (!response.ok) {
@@ -87,7 +83,6 @@ class TarotSettings extends HTMLElement {
         htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
       } catch (error) {
         console.error('Error uploading mat:', error);
-        hideLoadingScreen();
       }
     });
   }

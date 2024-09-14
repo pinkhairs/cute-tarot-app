@@ -10,6 +10,7 @@
     "ios": "npm run build && npx cap run ios --target 1BB07406-D6A6-468B-A428-168A13A2E457"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",

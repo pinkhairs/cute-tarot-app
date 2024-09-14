@@ -1,6 +1,7 @@
 import intentions from '@/assets/intentions.png';
 import inspired from '@/assets/inspired.png';
 import vision from '@/assets/vision.png';
+import { handleOrder } from '@/iap.js';
 
 class YouPentacles extends HTMLElement {
   constructor() {
@@ -9,7 +10,6 @@ class YouPentacles extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    hideLoadingScreen();
   }
 
   render() {
@@ -26,17 +26,17 @@ class YouPentacles extends HTMLElement {
       <div class="flex items-center flex-col justify-center rounded-2xl bg-brand text-center p-2">
         <p class="text-white text-2xl font-serif">11</p>
         <h2 class="text-white font-sans text-sm opacity-80 mb-2">Pentacles</h2>
-        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$1.99</button>
+        <button id="product-1" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$1.99</button>
         </div>
       <div class="flex items-center flex-col justify-center rounded-2xl bg-brand text-center p-2">
         <p class="text-white text-2xl font-serif">111</p>
         <h2 class="text-white font-sans text-sm opacity-80 mb-2">Pentacles</h2>
-        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$9.99</button>
+        <button id="product-2" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$9.99</button>
         </div>
       <div class="flex items-center flex-col justify-center rounded-2xl bg-brand text-center p-2">
         <p class="text-white text-2xl font-serif">999</p>
         <h2 class="text-white font-sans text-sm opacity-80 mb-2">Pentacles</h2>
-        <button hx-get="/you-pentacles.html" hx-target="#content" type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$99.99</button>
+        <button id="product-3"  type="button" class="w-full mx-auto transition-opacity origin-top duration-1000 bg-accent font-serif text-black rounded-xl px-4 py-2">$99.99</button>
         </div>
     </div>
   
@@ -107,6 +107,16 @@ class YouPentacles extends HTMLElement {
       </div>
       <div class="h-4"></div>
       </div>`;
+
+      document.getElementById('product-1').addEventListener('click', async () => {
+        handleOrder('11credits');
+      });
+      document.getElementById('product-2').addEventListener('click', async () => {
+        handleOrder('111credits');
+      });
+      document.getElementById('product-3').addEventListener('click', async () => {
+        handleOrder('999credits');
+      });
   }
 }
 

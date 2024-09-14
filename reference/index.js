@@ -215,7 +215,6 @@ return combinations.join(',');
     this.kawaii = await response.json();
     await this.getSpoopyTarotCards();
     this.render();
-    hideLoadingScreen();
   }
 
   connectedCallback() {
@@ -231,12 +230,12 @@ return combinations.join(',');
     const width = 78 * 64 + 77 * 8 + 6;
     this.innerHTML = `
      <title-bar root="true" class="w-full" title="Reference"></title-bar>
-      <div id="numbers" class="flex w-full gap-1 px-6 pt-1.5">
+      <div id="numbers" class="flex w-full gap-1 px-6">
         ${[...Array(10).keys()].map(number => `
           <button data-number="${number}" class="number-filter bg-neutral flex-1 aspect-square flex items-center text-sm justify-center rounded-full font-['Madimi_One']">${number}</button>
         `).join('')}
       </div>
-      <div id="suits" class="flex w-full gap-1 px-6 pt-1.5">
+      <div id="suits" class="flex w-full gap-1 px-6">
         ${['Major', 'Pentacles', 'Cups', 'Wands', 'Swords'].map(suit => `
           <button data-suit="${suit}" class="suit-filter bg-neutral px-2 py-1.5 flex items-center text-sm justify-center flex-1 rounded-xl font-['Madimi_One']">${suit}</button>
         `).join('')}
@@ -248,8 +247,8 @@ return combinations.join(',');
      <div class="scrollbar w-screen overflow-x-scroll">
      <div class="flex max-w-none gap-2 pl-6 pr-2">
       ${this.kawaii.map((item) => `
-        <button data-slug="${item.slug}" data-deck="kawaii" class="card-reference transition-all origin-left duration-1000  w-28 short:w-16" type="button">
-          <img class="h-auto inline-block max-w-none rounded-xl w-28 short:w-16" data-number-matches="${this.getNumbers('kawaii', item.name)}" data-suit="${this.getSuit(item.name)}" src="${item.image}" />
+        <button data-number-matches="${this.getNumbers('kawaii', item.name)}" data-suit="${this.getSuit(item.name)}" data-slug="${item.slug}" data-deck="kawaii" class="card-reference transition-all origin-left duration-1000  w-24 short:w-16" type="button">
+          <img class="h-auto inline-block max-w-none rounded-xl w-24 short:w-16"  src="${item.image}" />
         </button>
       `).join('')}
      </div>
@@ -258,8 +257,8 @@ return combinations.join(',');
      <div class="scrollbar w-screen overflow-x-scroll">
      <div class="flex max-w-none gap-2 pl-6 pr-2">
       ${this.spoopy.map((item) => `
-        <button data-slug="${item.slug}" data-deck="spoopy" class="card-reference transition-all origin-left duration-1000 w-28 short:w-16" type="button">
-          <img class="h-auto inline-block max-w-none rounded-xl w-28 short:w-16" data-number-matches="${this.getNumbers('spoopy', item.name)}" data-suit="${this.getSuit(item.name)}" src="${item.image}" />
+        <button data-number-matches="${this.getNumbers('spoopy', item.name)}" data-suit="${this.getSuit(item.name)}" data-slug="${item.slug}" data-deck="spoopy" class="card-reference transition-all origin-left duration-1000 w-24 short:w-16" type="button">
+          <img class="h-auto inline-block max-w-none rounded-xl w-24 short:w-16" src="${item.image}" />
         </button>
       `).join('')}
       </div>

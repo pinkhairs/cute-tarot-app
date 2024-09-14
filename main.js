@@ -1,7 +1,6 @@
 //main.js
 import youBg from '@/assets/you-bg.png';
 import video from '@/assets/video.mp4';
-import referenceBg from '@/assets/reference-bg.png';
 import '/components/title-bar.js';
 import '/components/tarot-card-reading.js';
 import '/components/tab-dock.js';
@@ -26,67 +25,53 @@ import '/readings/entries.js';
 import '/readings/entry.js';
 import '/reference/index.js';
 import '/reference/entry.js';
-import { fetchWithAuth } from '@/auth';
+import { fetchWithAuth, getToken } from '@/auth';
 
 const app = document.querySelector('#app');
 const background = document.querySelector('#background');
 const content = document.querySelector('#content');
 const tabDock = document.createElement('tab-dock');
-tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2', 'translate-y-[150%]', 'transition-transform', 'duration-1000', 'z-50', 'ease-out');
+tabDock.classList.add('flex', 'w-max', 'justify-center', 'fixed', 'bottom-5', 'left-1/2', 'items-center', '-translate-x-1/2', 'translate-y-[150%]', 'transition-transform', 'duration-1000', 'z-[100]', 'ease-out');
 const topSpacer = document.createElement('div');
-topSpacer.classList.add('h-6', 'lg:h-8', 'flex-shrink-0');
+topSpacer.classList.add('h-6', 'lg:h-8', 'flex-shrink-0', 'top-spacer');
 const bottomSpacer = document.createElement('div');
-const loadingState = document.getElementById("loading-screen");
+
+document.addEventListener('DOMContentLoaded', async (event) => {
+  app.prepend(topSpacer);
+  app.append(bottomSpacer);
+
+  try {
+    await getTodayReading();
+  } catch (error) {
+    htmx.ajax('GET', '/account-signup-page.html', '#content');
+  }
+
+  app.appendChild(tabDock);
+});
 
 const getTodayReading = async () => {
   const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=today_card&title=${todayInMonthNameDayCommaYear}&${Date.now()}=${Date.now()}`);
-  const json = await response.json();
-  return json ?? [];
-};
+  const json = await response.json() ?? [];
 
-const setupTodayCard = async () => {
-  const todaysCard = await getTodayReading();
-  content.removeAttribute('hx-get');
-  content.removeAttribute('hx-trigger');
-
-  if (todaysCard) {
-    content.setAttribute('hx-get', '/tarot-today-intention.html');
+  if (json.length === 0) {
+    htmx.ajax('GET', '/tarot-index.html', '#content');
   } else {
-    content.setAttribute('hx-get', '/tarot-index.html');
+    htmx.ajax('GET', '/tarot-today-intention.html', '#content');
   }
-
-  content.setAttribute('hx-trigger', 'load');
-  htmx.process(content);
-}
-
-setupTodayCard();
-
-document.addEventListener('htmx:beforeSwap', async (event) => {
-  const todaysCard = await getTodayReading();
-  if (todaysCard && event.detail.pathInfo.requestPath === '/tarot-index.html') {
-    event.preventDefault();
-    htmx.ajax('GET', '/tarot-today-intention.html', { target: '#content' });
-    return;
-  }
-});
-
-
-document.addEventListener('htmx:beforeRequest', async (event) => {
-  if (event.detail.target === content) {
-    loadingState.classList.remove('hidden');
-    loadingState.classList.add('flex');
-    setTimeout(() => {
-      loadingState.classList.remove('opacity-0');
-    }, 0);
-  }
-});
-
+};
 
 document.addEventListener('htmx:afterSwap', async (event) => {
   const requestPath = event.detail.pathInfo.requestPath;
+  if (requestPath.includes('account')) {
+    document.documentElement.className = 'text-black';
+    background.style.backgroundImage = `url(${youBg})`;
+    background.classList.remove('white-text', 'black-text');
+    background.innerHTML = '';
+    return;
+  }
 
-  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, {}, false)
+  const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
   if (!response) return;
   if (!response.ok) throw new Error('Network response was not ok.');
   const deck = await response.text();
@@ -152,7 +137,3 @@ document.addEventListener('htmx:afterSwap', async (event) => {
     }
   }, 0);
 });
-
-app.prepend(topSpacer);
-app.appendChild(bottomSpacer);
-document.body.appendChild(tabDock);

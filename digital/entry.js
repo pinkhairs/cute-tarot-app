@@ -70,7 +70,6 @@ class DigitalEntry extends HTMLElement {
         key: 'digital-slug',
         value: ''
       });
-      hideLoadingScreen();
     } catch (error) {
       console.error('Error fetching digital tarot entry:', error);
       // Optionally, display an error message to the user
@@ -111,7 +110,6 @@ class DigitalEntry extends HTMLElement {
     if (!this.entry.reading) {
       if (this.pentacles > 0) {
     document.getElementById('get-reading').addEventListener('click', async () => {
-      showLoadingScreen();
       const formData = new FormData();
       formData.append('question', this.entry.question);
       formData.append('card', this.entry.card_name);

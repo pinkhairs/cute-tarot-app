@@ -16,13 +16,12 @@ class TarotEntries extends HTMLElement {
   async fetchEntries() {
     try {
       const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries&today=${todayInMonthNameDayCommaYear}`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entries&today=${todayInMonthNameDayCommaYear}`);
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
       }
       this.entries = await response.json();
       this.render();
-      hideLoadingScreen();
     } catch (error) {
       console.error('Error fetching entries:', error);
     }

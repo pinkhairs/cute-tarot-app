@@ -17,7 +17,7 @@ class TarotEntry extends HTMLElement {
     const getSlug = await Preferences.get({ key: 'tarot-slug' });
     const slug = getSlug.value;
     const todayInMonthNameDayCommaYear = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entry&slug=${slug}&today=${todayInMonthNameDayCommaYear}`, { credentials: 'include' });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=tarot_entry&slug=${slug}&today=${todayInMonthNameDayCommaYear}`);
     if (!response.ok) {
       throw new Error('Failed to fetch the post');
     }
@@ -25,7 +25,6 @@ class TarotEntry extends HTMLElement {
     const posts = await response.json();
     this.entry = posts[0];
     this.render();
-    hideLoadingScreen();
   }
 
   getRelativeTime(dateString) {

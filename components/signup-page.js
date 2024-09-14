@@ -7,7 +7,6 @@ class SignupPage extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    hideLoadingScreen();
   }
 
   render() {
@@ -38,7 +37,6 @@ class SignupPage extends HTMLElement {
 
     document.getElementById('signup').addEventListener('submit', async (event) => {
       event.preventDefault();
-      showLoadingScreen();
 
       const formData = new FormData();
       formData.append('first_name', document.getElementById('first_name').value);
@@ -56,8 +54,7 @@ class SignupPage extends HTMLElement {
         htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
       } else {
         alert('There was an error with your signup. Maybe you already have an account? Please contact info@cutetarot.com if you need help.');
-      }
-      hideLoadingScreen();
+      }dingScreen();
     });
   }
 }

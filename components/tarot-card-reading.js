@@ -18,7 +18,6 @@ class TarotCardReading extends HTMLElement {
       }
 
       this.render();
-      hideLoadingScreen();
       document.getElementById('flip-card-button').addEventListener('click', () => this.flipCard());
     }).catch(error => {
       console.error('Error fetching deck preference:', error);
@@ -26,21 +25,21 @@ class TarotCardReading extends HTMLElement {
   }
 
   async getDeckPreference() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`, {}, false)
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_deck_preference`)
     if (!response) return;
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.text();
   }
 
   async quantumPick() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=quantum_pick`, {}, false);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=quantum_pick`, {}, true);
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.json();
   }
 
   async saveReading(cardId) {
     const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}&title=${today}&today=${today}`, {}, false);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=${cardId}&title=${today}&today=${today}`, {}, true);
     if (!response.ok) throw new Error('Network response was not ok.');
     return await response.json();
   }
@@ -86,7 +85,7 @@ class TarotCardReading extends HTMLElement {
         setIntentionButton.classList.remove('opacity-0');
       }, 3000);
       setTimeout(async () => {
-        await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=add_pentacle`, {}, false);
+        await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=add_pentacle`);
         const audio = new Audio(bell);
         audio.play();
         document.getElementById('coin').classList.add('animate-jump-spin');

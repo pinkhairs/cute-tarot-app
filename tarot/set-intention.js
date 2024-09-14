@@ -11,7 +11,7 @@ class SetIntention extends HTMLElement {
   }
 
   async getPentacles() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_pentacles`, {}, false);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_pentacles`);
     return await response.text();
   }
 
@@ -45,21 +45,20 @@ class SetIntention extends HTMLElement {
 
     // Fetch today's intention
     const todayIntention = async () => {
-      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention`, { credentials: 'include' });
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention`);
       return await response.text();
     };
 
     todayIntention().then(data => {
       document.getElementById('intention-text').value = data ?? '';
       this.intention = data;
-      hideLoadingScreen();
     });
     });
   }
 
   render() {
     const saveReading = async (intention) => {
-      await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=0&intention=${encodeURIComponent(intention)}`, { credentials: 'include' });
+      await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=save_reading&card=0&intention=${encodeURIComponent(intention)}`);
     };
 
     this.innerHTML = `

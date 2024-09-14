@@ -24,7 +24,6 @@ class YouEntries extends HTMLElement {
       document.getElementById('current_responsibilities').value = json.current_responsibilities;
       document.getElementById('style').value = json.style;
       this.attachListeners();
-      hideLoadingScreen();
     }).catch(error => {
       console.error('Error fetching profile:', error);
     });

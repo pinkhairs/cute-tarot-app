@@ -20,7 +20,6 @@ class ReadingsEntries extends HTMLElement {
       }
       this.entries = await response.json();
       this.render();
-      hideLoadingScreen();
     } catch (error) {
       console.error('Error fetching entries:', error);
     }

@@ -11,7 +11,6 @@ class YouIndex extends HTMLElement {
     this.getPentacles().then(data => {
       this.pentacles = data;
       this.render();
-      hideLoadingScreen();
     });
   }
 
@@ -51,62 +50,62 @@ class YouIndex extends HTMLElement {
       <div class="px-6 w-full">
       <div class="grid grid-cols-2 gap-[2px] rounded-xl overflow-hidden">
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Got A Spark</h3>
           <p class="text-sm opacity-80 w-full text-center">Good luck shows up 3x in a row</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#FFEECC] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#FFEECC] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Echoes of Past</h3>
           <p class="text-sm opacity-80 w-full text-center">Repeating cards in different contexts</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#C0EFFF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#C0EFFF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Full Moon</h3>
           <p class="text-sm opacity-80 w-full text-center">Reading relevant to full moon</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#E9E0FF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#E9E0FF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">New Moon</h3>
           <p class="text-sm opacity-80 w-full text-center">A new moon reading</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-neutral bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-neutral bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Déjà Vu Again</h3>
           <p class="text-sm opacity-80 w-full text-center">Specific "follower" card</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Vibe Change</h3>
           <p class="text-sm opacity-80 w-full text-center">Insight from a reading is carried through</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#FFEECC] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#FFEECC] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Quantum Leap</h3>
           <p class="text-sm opacity-80 w-full text-center">Full circle moments</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#C0EFFF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#C0EFFF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">New Dawn</h3>
           <p class="text-sm opacity-80 w-full text-center">A reading first thing for a while</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#E9E0FF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#E9E0FF] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Major Arc</h3>
           <p class="text-sm opacity-80 w-full text-center">All major arcana reading</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-neutral bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-neutral bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Wander Lust</h3>
           <p class="text-sm opacity-80 w-full text-center">Wand/cup-heavy readings as of late</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Meet Cute</h3>
           <p class="text-sm opacity-80 w-full text-center">Romantic readings after perspective shift</p>
         </div>
         <div class="flex px-2.5 py-3 flex-col items-center bg-white bg-opacity-70 gap-2">
-          <h1 class="font-['Madimi_One'] text-[#FFEECC] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black">?</h1>
+          <h1 class="font-['Madimi_One'] text-[#FFEECC] bg-opacity-70 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[2px]">?</span></h1>
           <h3 class="w-full text-center">Over It</h3>
           <p class="text-sm opacity-80 w-full text-center">Recurrent topic is dropped for a while</p>
         </div>

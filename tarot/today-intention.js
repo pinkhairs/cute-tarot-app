@@ -37,7 +37,6 @@ class TodayIntention extends HTMLElement {
         document.getElementById('set-intention').classList.remove('hidden');
         document.getElementById('set-intention').classList.add('flex');
       }
-      hideLoadingScreen();
     });
   }
 
@@ -53,7 +52,7 @@ class TodayIntention extends HTMLElement {
   }
 
   async todayIntention() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention`, { credentials: 'include' });
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=intention`);
     return await response.text();
   }
 

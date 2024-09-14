@@ -8,7 +8,6 @@ class LoginPage extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    hideLoadingScreen();
   }
 
   render() {
@@ -33,7 +32,6 @@ class LoginPage extends HTMLElement {
     htmx.process(this);
 
     document.getElementById('login-button').addEventListener('click', async () => {
-      showLoadingScreen();
         const formData = new FormData();
         formData.append('username', document.getElementById('email').value);
         formData.append('password', document.getElementById('password').value);
@@ -53,11 +51,10 @@ class LoginPage extends HTMLElement {
 
           // Clear the 'alreadyRedirected' flag upon successful login
           await Preferences.set({ key: 'go_to_login', value: 'false' });
-          htmx.ajax('GET', '/tarot-index.html', { target: '#content' });
+          htmx.ajax('GET', '/tarot-index.html', '#content');
         } catch (error) {
           alert('There was an error with your login. Try resetting your password. Please contact info@cutetarot.com if you need help.');
         }
-        hideLoadingScreen();
       });
   }
 }

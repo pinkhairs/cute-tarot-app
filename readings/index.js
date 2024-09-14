@@ -11,7 +11,7 @@ class ReadingsIndex extends HTMLElement {
   }
 
   async getPentacles() {
-    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_pentacles`, {}, false);
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=get_pentacles`);
     return await response.text();
   }
 
@@ -22,7 +22,6 @@ class ReadingsIndex extends HTMLElement {
     // If permissions are denied or prompt, request permissions
     if (permissions.state === 'denied') {
         alert('Camera access was denied. Please enable it in settings.');
-        hideLoadingScreen();
         return;
     } else if (permissions.state === 'prompt') {
         try {
@@ -37,8 +36,6 @@ class ReadingsIndex extends HTMLElement {
   } 
   
   async handleImageCapture() {
-    showLoadingScreen();
-  
     // Check camera permissions first
     const permissions = await Camera.checkPermissions();
     
@@ -47,7 +44,6 @@ class ReadingsIndex extends HTMLElement {
       const requestedPermissions = await Camera.requestPermissions({ permissions: ['camera', 'photos'] });
       if (requestedPermissions.camera === 'denied') {
         alert('Camera access was denied. Please enable it in settings.');
-        hideLoadingScreen();
         return;
       }
     }
@@ -69,7 +65,6 @@ class ReadingsIndex extends HTMLElement {
       this.processImage(imageUrl);
     } catch (error) {
       console.error("Error capturing image: ", error);
-      hideLoadingScreen();
     }
   }
 
@@ -79,9 +74,6 @@ class ReadingsIndex extends HTMLElement {
       this.render();
     });
     this.setupEventListeners();
-    if (typeof hideLoadingScreen === 'function') {
-      hideLoadingScreen();
-    }
   }
 
   render() {
@@ -131,7 +123,6 @@ class ReadingsIndex extends HTMLElement {
   }
 
   handleImageUpload(event) {
-    showLoadingScreen();
     const image = this.querySelector('#image');
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -215,7 +206,6 @@ class ReadingsIndex extends HTMLElement {
       } else {
         alert('Sorry, we had trouble reading your cards. Please try again.');
       }
-      hideLoadingScreen();
     });
 
     gray.delete();

@@ -1,33 +1,55 @@
+import { store } from 'cordova-plugin-purchase';
+import { fetchWithAuth } from '@/auth';
+
+let products = [
+  { id: "11credits", alias: "11 pentacles", amount: 11, type: "consumable" },
+  { id: "111credits", alias: "111 credits", amount: 111, type: "consumable" },
+  { id: "999credits", alias: "999 credits", amount: 999, type: "consumable" },
+];
+
 document.addEventListener('deviceready', initializeStore, false);
 
 function initializeStore() {
-    if (!window.store) {
-        alert("Store not available");
+    if (!store) {
+        console.error("Store not available");
+        return;
     }
 
     store.verbosity = store.DEBUG;
 
     // Register your products
-    store.register({
-        id: "226",
-        alias: "22 credits for $6",
-        type: store.CONSUMABLE
-    });
+    store.register(products);
 
-    store.when("226").updated(function(product) {
-        if (product.loaded && product.valid && product.state === store.APPROVED) {
-            product.finish();
-        }
+    // Setup the store
+    store.when("product").updated(function(product) {
+        console.log("Product updated: ", product.id);
         updateProductStatus(product);
     });
 
-    store.error(function(error) {
-        alert("Store Error " + error.code + ": " + error.message);
+    store.when("product").approved(function(product) {
+        console.log("Product approved: ", product.id);
+        product.finish();
     });
 
-    store.ready(function() {
-        alert("Store is ready");
-        updateProductStatus(store.get("226"));
+    store.when("product").finished(function(product) {
+        console.log("Product finished: ", product.id);
+        updateProductStatus(product);
+        const amount = products.find(p => p.id === product.id).amount;
+
+        fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/pwa.php?action=add_pentacle&amount=${amount}`, {}, true);
+    });
+
+    store.error(function(error) {
+        console.error("Store Error " + error.code + ": " + error.message);
+    });
+
+    // Initialize the store
+    store.ready(() => {
+        console.log("Store is ready");
+        products.forEach(product => {
+            console.log("Product: ", store.get(product.id));
+            updateProductStatus(store.get(product.id));
+        });
     });
 
     store.refresh();
@@ -35,12 +57,17 @@ function initializeStore() {
 
 function updateProductStatus(product) {
     if (product.owned) {
-        alert("Product is owned");
+        console.log(`Product ${product.id} is owned`);
         // Product is owned: unlock full features
     } else {
-        alert("Product is not owned");
+        console.log(`Product ${product.id} is not owned`);
         // Product not owned: show purchase button
     }
 }
 
-export { initializeStore, updateProductStatus };
+function handleOrder(productId) {
+    console.log("Ordering product: ", productId);
+    store.order(productId);
+}
+
+export { updateProductStatus, handleOrder, products };
