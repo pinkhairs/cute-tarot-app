@@ -1,10 +1,21 @@
-export default {
+// tailwind.config.js
+module.exports = {
   content: [
-    './index.html',
-    './**/*.{html,js}',
-    '!./node_modules/**/*'
+    "./index.html",
+    "./App.svelte",
+    "./**/*.{svelte,js,ts,jsx,tsx}",
+    "!./node_modules/**",
   ],
   theme: {
+    fontSize: {
+      sm: '0.8rem',
+      base: '1.1rem',
+      xl: '1.3rem',
+      '2xl': '1.45rem',
+      '3xl': '1.66rem',
+      '4xl': '2rem',
+      '5xl': '3rem',
+    },
     colors: {
       black: '#667289',
       white: '#fff',
@@ -15,7 +26,7 @@ export default {
     },
     extend: {
       screens: {
-        'short': {'raw': '(max-height: 741px) and (max-width: 431px)'}
+        'short': { 'raw': '(max-height: 741px) and (max-width: 431px)' },
       },
       fontFamily: {
         sans: ['DM Sans', 'sans-serif'],
@@ -23,4 +34,4 @@ export default {
       },
     },
   },
-}
+};

@@ -1,12 +1,12 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import path from 'path';
 import fs from 'fs';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
+  plugins: [svelte()],
   resolve: {
     alias: {
-      // Adjust alias to point to a specific folder
       '@': path.resolve(__dirname, './'),
     }
   },
