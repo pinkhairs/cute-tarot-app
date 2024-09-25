@@ -76,7 +76,9 @@ class SetIntention extends HTMLElement {
         <form class=" flex flex-col items-center justify-between p-4 bg-translucent gap-4 w-full rounded-2xl text-center">
           <div class="field flex flex-col items-center justify-between gap-4 w-full rounded-2xl text-center">
             <label class="label opacity-80 font-serif">Today's intention</label>
+            <div class="textarea-field">
             <textarea id="intention-text" placeholder="Type here" class="text-center focus:outline-none focus:text-black focus:bg-white w-full rounded-xl p-4 bg-transparent"></textarea>
+            </div>
             ${this.intention === '' ? `` : `
                     <button type="button" class="inline-flex items-center gap-1">
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0">

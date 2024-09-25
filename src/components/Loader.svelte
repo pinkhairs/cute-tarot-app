@@ -1,0 +1,62 @@
+<script>
+  import { fade } from 'svelte/transition';
+  export let activeRequests = 0;
+  let zIndex = 40; // Start with a high z-index
+  let isVisible = true;
+  let opacity = 1;
+
+  $: show = activeRequests > 0;
+
+  export const showLoadingScreen = () => {
+    activeRequests = activeRequests + 1;
+    isVisible = true; // Ensure it's visible when a request starts
+    zIndex = 39; // Reset z-index to 40 when visible
+    opacity = 1;
+  };
+
+  export const hideLoadingScreen = () => {
+    activeRequests = Math.max(0, activeRequests - 1);
+  };
+</script>
+
+<style>
+  .animate-float {  
+    animation-name: float;
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+  
+  @keyframes float {
+    0% { transform: translate(0,  0); }
+    50%  { transform: translate(0, -32px); }
+    100%   { transform: translate(0, 0); }    
+  }
+</style>
+
+<div 
+  class="bg-neutral dark:bg-black loading-screen" 
+  in:fade={{ delay: 0, duration: 444 }} 
+  out:fade={{ delay: 0, duration: 444 }} 
+  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;display: flex; align-items: center; justify-content: center; z-index: {zIndex}; opacity: {opacity}; transition: opacity 500ms;"
+  bind:this={isVisible}>
+  <div role="status">
+    <svg class="dark:hidden animate-float" width="192" height="120" viewBox="0 0 192 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2253 0C145.132 0 184.778 39.6463 184.778 88.5526H108.476C108.476 81.7869 102.991 76.3022 96.2253 76.3022C89.4596 76.3022 83.975 81.7869 83.975 88.5526H7.67273C7.67273 39.6463 47.3191 0 96.2253 0Z" fill="#FFDEF6"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2253 16.625C135.95 16.625 168.152 48.8279 168.152 88.5521L108.476 88.5521C108.476 81.7864 102.991 76.3018 96.2253 76.3018C89.4596 76.3018 83.975 81.7864 83.975 88.5521L24.2982 88.5521C24.2982 48.8279 56.5011 16.625 96.2253 16.625Z" fill="#FFEECC"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M83.9799 88.2023H44.0738C44.0738 59.3998 67.4228 36.0508 96.2253 36.0508C125.028 36.0508 148.377 59.3998 148.377 88.2023H108.471C108.286 81.5985 102.874 76.3019 96.2253 76.3019C89.5767 76.3019 84.1651 81.5985 83.9799 88.2023Z" fill="#C0EFFF"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2254 59.501C80.181 59.501 67.1745 72.5075 67.1745 88.5518H125.276C125.276 72.5075 112.27 59.501 96.2254 59.501ZM96.2254 76.3015C89.4597 76.3015 83.975 81.7861 83.975 88.5518H108.476C108.476 81.7861 102.991 76.3015 96.2254 76.3015Z" fill="#E9E1FF"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M-1.27568e-05 93.472C-1.27568e-05 102.921 4.9406 111.217 12.3795 115.916C15.0161 118.428 18.7677 120 22.8498 120L26.5029 120L26.5276 120L26.5522 120L31.1732 120H64.2725C76.4378 120 86.2998 110.138 86.2998 97.9723C86.2998 85.807 76.4378 75.945 64.2725 75.945C58.8437 75.945 53.8736 77.9089 50.0339 81.1651C45.5987 72.7112 36.7366 66.9443 26.5276 66.9443C11.8768 66.9443 -1.27568e-05 78.8212 -1.27568e-05 93.472Z" fill="white"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M191.527 93.472C191.527 102.921 186.586 111.217 179.147 115.916C176.511 118.428 172.759 120 168.677 120L165.024 120L164.999 120L164.974 120L160.354 120H127.254C115.089 120 105.227 110.138 105.227 97.9723C105.227 85.807 115.089 75.945 127.254 75.945C132.683 75.945 137.653 77.9089 141.493 81.1651C145.928 72.7112 154.79 66.9443 164.999 66.9443C179.65 66.9443 191.527 78.8212 191.527 93.472Z" fill="white"/>
+    </svg>
+    <svg class="hidden dark:block animate-float" width="192" height="120" viewBox="0 0 192 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2255 0C145.132 0 184.778 39.6463 184.778 88.5526H108.476C108.476 81.7869 102.991 76.3022 96.2255 76.3022C89.4598 76.3022 83.9752 81.7869 83.9752 88.5526H7.67294C7.67294 39.6463 47.3193 0 96.2255 0Z" fill="#F7B4E5"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2255 16.626C135.95 16.626 168.153 48.8288 168.153 88.5531L108.476 88.5531C108.476 81.7874 102.991 76.3027 96.2255 76.3027C89.4599 76.3027 83.9752 81.7874 83.9752 88.5531L24.2984 88.5531C24.2984 48.8288 56.5013 16.626 96.2255 16.626Z" fill="#FFE0A3"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M83.9801 88.2033H44.074C44.074 59.4008 67.423 36.0518 96.2255 36.0518C125.028 36.0518 148.377 59.4008 148.377 88.2033H108.471C108.286 81.5994 102.874 76.3029 96.2255 76.3029C89.5769 76.3029 84.1653 81.5994 83.9801 88.2033Z" fill="#A9DBFF"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2256 59.502C80.1812 59.502 67.1747 72.5085 67.1747 88.5528H125.276C125.276 72.5085 112.27 59.502 96.2256 59.502ZM96.2256 76.3024C89.4599 76.3024 83.9752 81.7871 83.9752 88.5528H108.476C108.476 81.7871 102.991 76.3024 96.2256 76.3024Z" fill="#C7ABF6"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0.923876 93.473C0.923876 102.922 5.86449 111.218 13.3034 115.917C15.94 118.429 19.6916 120.001 23.7736 120.001L27.4268 120.001L27.4515 120.001L27.4761 120.001L32.0971 120.001H65.1964C77.3617 120.001 87.2237 110.139 87.2237 97.9733C87.2237 85.808 77.3617 75.946 65.1964 75.946C59.7676 75.946 54.7975 77.9099 50.9578 81.1661C46.5226 72.7122 37.6605 66.9453 27.4515 66.9453C12.8007 66.9453 0.923876 78.8221 0.923876 93.473Z" fill="white"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M191.527 93.473C191.527 102.922 186.586 111.218 179.147 115.917C176.511 118.429 172.759 120.001 168.677 120.001L165.024 120.001L164.999 120.001L164.975 120.001L160.354 120.001H127.254C115.089 120.001 105.227 110.139 105.227 97.9733C105.227 85.808 115.089 75.946 127.254 75.946C132.683 75.946 137.653 77.9099 141.493 81.1661C145.928 72.7122 154.79 66.9453 164.999 66.9453C179.65 66.9453 191.527 78.8221 191.527 93.473Z" fill="white"/>
+      </svg>
+      
+  </div>
+</div>

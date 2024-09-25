@@ -69,7 +69,7 @@ class TarotCardReading extends HTMLElement {
       const cardElement = document.getElementById('card');
       const cardDescription = document.getElementById('card-description');
       const cardTitle = document.getElementById('card-title');
-      const setIntentionButton = document.getElementById('set-intention-button');
+      const setIntentionButton = document.getElementById('set-intention');
       cardElement.classList.toggle('flipped');
       cardElement.classList.add('duration-1000');
       flipCardButton.classList.add('opacity-0');
@@ -119,8 +119,8 @@ class TarotCardReading extends HTMLElement {
           <div id="card-description" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
             <p id="card-content">Try a new adventure.</p>
           </div>
-          <div id="set-intention-button" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
-            <button type="button" hx-target="#content" hx-get="/tarot-set-intention.html" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
+          <div id="set-intention" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
+            <button type="button" id="set-intention-button" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
           </div>
         </div>
       </div>

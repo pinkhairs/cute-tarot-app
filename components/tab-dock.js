@@ -1,5 +1,4 @@
 import { fetchWithAuth } from '@/auth'; // Use fetchWithAuth from your auth module
-import today from '@/assets/today.png';
 import reference from '@/assets/reference.png';
 import photo from '@/assets/photo.png';
 import calendar from '@/assets/calendar.png';

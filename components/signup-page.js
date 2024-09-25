@@ -27,7 +27,7 @@ class SignupPage extends HTMLElement {
         <label for="password" class="label opacity-80 font-serif">Password</label>
         <input required type="password" id="password" name="password" placeholder="• • • • •" class="text-center focus:outline-none focus:bg-neutral transition-colors w-full rounded-xl p-2 bg-transparent" />
       </div>
-      <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Sign up &amp; continue</button>
+      <button type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Sign Up &amp; Continue</button>
       <button hx-get="/account-login-page.html" hx-target="#content" class="text-brand font-bold text-lg" type="button">Log in instead</button>
       <div class="h-4"></div>
     </form>

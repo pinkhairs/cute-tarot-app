@@ -88,7 +88,9 @@ class DigitalEntry extends HTMLElement {
       <form class="flex flex-col items-center justify-between p-4 bg-translucent gap-3 w-full rounded-2xl text-center mt-4">
         <div class="field flex flex-col items-center justify-between gap-3 w-full rounded-2xl text-center">
           <label class="label opacity-80 font-serif">Question</label>
-          <textarea id="question" name="question" placeholder="Type here" class="text-center focus:outline-none focus:bg-white transition-colors h-16 w-full rounded-xl p-3 bg-transparent">${this.entry.question ? this.entry.question : ''}</textarea>
+          <div class="textarea-field">
+            <textarea id="question" name="question" placeholder="Type here" class="text-center focus:outline-none focus:bg-white transition-colors h-16 w-full rounded-xl p-3 bg-transparent">${this.entry.question ? this.entry.question : ''}</textarea>
+          </div>
         </div>
       </form>
       <div class="mt-4 flex flex-col items-center justify-center gap-2">

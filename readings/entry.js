@@ -11,7 +11,7 @@ class ReadingsEntry extends HTMLElement {
   connectedCallback() {
     const getSlug = Preferences.get({ key: 'reading-slug' });
     getSlug.then((value) => {
-      this.fetchPostBySlug(value.value); // Fetch the post data using the slug
+      this.fetchPostBySlug(value.value);
     });
   }
 

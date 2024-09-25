@@ -49,11 +49,6 @@ h3 {
   transform: rotateY(180deg);
 }
 
-.bg-rainbow {
-  background: url(/assets/you-bg.png) no-repeat top center;
-  background-size: 100% auto;
-}
-
 #app {
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   background-size: cover;
