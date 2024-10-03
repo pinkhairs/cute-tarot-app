@@ -5,7 +5,7 @@ const fetchData = async (action, body, method = 'GET', error = '') => {
   const token = (await Preferences.get({ key: 'token' })).value ?? null;
 
   if (!token && action !== 'signup' && action !== 'login') {
-    return Promise.reject('Please log in again.');
+    Promise.reject(new Error('Token not found'));
   }
 
   if (body) {

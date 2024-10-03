@@ -11,15 +11,15 @@ html, body {
 }
 
 h1 {
-  @apply text-4xl lg:text-5xl font-serif leading-[1.1];
+  @apply text-4xl lg:text-5xl font-serif leading-[1.1] font-normal;
 }
 
 h2 {
-  font: 28px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
+  font: 400 28px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
 }
 
 h3 {
-  font: 20px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
+  font: 400 20px/1.1 'Copse', Georgia, 'Times New Roman', Times, serif;
 }
 
 input, .textarea-field {
@@ -48,6 +48,10 @@ textarea {
 
 .bg-translucent {
   @apply bg-white bg-opacity-80 dark:bg-[#56637B] dark:bg-opacity-80 dark:text-white;
+}
+
+.toasts {
+  top: calc(env(safe-area-inset-top) + 6);
 }
 
 .toast {
@@ -155,13 +159,37 @@ textarea {
   display: none;
 }
 
-.textarea-field {
-
-}
-
 .textarea-field::after {
   content: attr(data-value) " ";
   visibility: hidden;
   white-space: pre-wrap;
   z-index: -2;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 48px;
+  line-height: 1;
+  color: currentColor;
+  font-weight: 200;
+}
+
+.card-meaning p {
+  margin-bottom: 1rem;
+}
+.card-meaning h2, .card-meaning h3 {
+  display: none;
 }

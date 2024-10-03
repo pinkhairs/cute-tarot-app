@@ -110,14 +110,7 @@
             </div>
             <div class="flex-grow pl-4 flex-col">
               <h3 class="mb-2">{entry.date}</h3>
-              <p class="my-2">{entry.fields.intention || ''}</p>
-              {#if entry.fields.manifested}
-                <p
-                  class="bg-accent text-black font-serif inline-flex gap-1 px-2 py-[5px] items-center rounded-md text-sm"
-                >
-                  <img class="h-3" src="{star}" alt="" /> Manifested
-                </p>
-              {/if}
+              <p class="my-2">{entry.snippet}</p>
             </div>
           </button>
           </li>
@@ -137,14 +130,6 @@
 
 <style>
   .close-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
     transform: rotate(45deg);
-    font-size: 48px;
-    line-height: 1;
-    color: currentColor;
-    font-weight: 200;
   }
 </style>

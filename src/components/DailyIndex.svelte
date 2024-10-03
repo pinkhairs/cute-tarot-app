@@ -4,30 +4,27 @@
   import { Preferences } from '@capacitor/preferences';
   import TitleBar from '@/src/components/TitleBar.svelte';
   import Toasts from '@/src/components/Toasts.svelte';
+  import Loader from '@/src/components/Loader.svelte';
   import { onMount } from 'svelte';
   import DeckSwitcher from '@/src/components/DeckSwitcher.svelte';
   import { push } from 'svelte-spa-router';
   import fetchData from '@/src/fetchData.js';
   import star from '@/assets/star.svg';
-  import Loader from '@/src/components/Loader.svelte';
-
+  import pentacle from '@/assets/pentacle.png';
+  
   let deck;
   let notifications = [];
   $: todayReading = true;
   let id;
-  let intention;
-  let manifested;
   let loading;
+  let reading;
 
   async function handleSubmit() {
     loading = true;
-    await fetchData('postmeta', { name: 'manifested', value: true, id }, 'POST');
-    notifications = [...notifications, { message: 'Yay! Success', type: 'success' }];
-    push('/');
-    manifested = true;
-    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    todayReading = await fetchData('history', { handle: today, posts_per_page: 1 }, 'POST');
-
+    if (!reading) {
+      await fetchData('guidance', { id }, 'POST');
+    }
+    goToEntry(id);
     loading = false;
   }
 
@@ -35,12 +32,6 @@
     loading = true;
     const flipCardButton = document.getElementById('flip-card-button');
     flipCardButton.classList.add('hidden');
-
-    if ((await Preferences.get({ key: 'deck' })).value === 'Spoopy Tarot') {
-      deck = spoopy;
-    } else {
-      deck = kawaii;
-    }
 
     const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     todayReading = await fetchData('history', { handle: today, posts_per_page: 1 }, 'POST');
@@ -50,8 +41,14 @@
       const cardContent = todayReading.snippet;
       const cardTitle = todayReading.title;
       const cardImage = todayReading.image;
-      manifested = todayReading.fields.manifested;
-      intention = todayReading.fields.intention;
+      const cardDeck = todayReading.deck;
+      reading = todayReading.reading;
+
+      if (cardDeck === 'spoopy-tarot-meaning') {
+        deck = spoopy;
+      } else {
+        deck = kawaii;
+      }
 
       const cardElement = document.getElementById('card');
       const cardInfoElement = document.getElementById('card-info');
@@ -59,22 +56,27 @@
       const cardTitleElement = document.getElementById('card-title');
       const cardTitleText = document.getElementById('card-title-text');
       const cardDescription = document.getElementById('card-description');
-      const setIntentionButton = document.getElementById('set-intention');
+      const getGuidanceButton = document.getElementById('get-guidance');
 
-      cardInfoElement.classList.remove('-z-20');
+      cardInfoElement ? cardInfoElement.classList.remove('-z-20') : null;
       cardTitleText.innerText = cardTitle;
       cardImageElement.setAttribute('src', cardImage);
       flipCardButton.remove();
       cardTitleElement.classList.remove('opacity-0');
       cardDescription.classList.remove('opacity-0');
       cardDescription.innerText = cardContent;
-      setIntentionButton.classList.remove('opacity-0');
+      getGuidanceButton.classList.remove('opacity-0');
 
       //load cardImage
       cardImageElement.onload = () => {
         setTimeout(() => cardElement.classList.add('flipped'), 777);
       }
     } else {
+      if ((await Preferences.get({ key: 'deck' })).value === 'Spoopy Tarot') {
+        deck = spoopy;
+      } else {
+        deck = kawaii;
+      }
       flipCardButton.classList.remove('hidden');
     }
   }
@@ -89,6 +91,7 @@
 
   onMount(() => {
     setup();
+    loading = false;
   });
 
   async function flipCard() {
@@ -123,7 +126,7 @@
     const cardImageElement = document.getElementById('card-image');
     const cardTitleElement = document.getElementById('card-title');
     const cardTitleText = document.getElementById('card-title-text');
-    const setIntentionButton = document.getElementById('set-intention');
+    const getGuidanceButton = document.getElementById('get-guidance');
     cardElement.classList.add('duration-1000');
     cardTitleText.innerText = cardTitle;
     cardDescription.innerText = cardContent;
@@ -140,7 +143,7 @@
       cardDescription.classList.remove('opacity-0');
     }, 2000);
     setTimeout(() => {
-      setIntentionButton.classList.remove('opacity-0');
+      getGuidanceButton.classList.remove('opacity-0');
     }, 3000);
     setTimeout(() => {
       notifications = [...notifications, { message: '+1 pentacle!', type: 'info' }];
@@ -158,6 +161,9 @@
   }
 </script>
 
+{#if loading}
+  <Loader />
+{:else}
 <Toasts {notifications}></Toasts>
   <TitleBar title="Today">
     <div slot="left-action">
@@ -182,7 +188,7 @@
           <img src={deck} id="card-back" class="rounded-3xl bg-[rgba(255,255,255,.85)] h-64 md:h-80 short:h-56 lg:h-64 xl:h-80" alt="">
         </div>
         <div class="card-face card-back">
-          <img src={deck} id="card-image" class="rounded-3xl bg-[rgba(255,255,255,.85)] h-64 md:h-80 short:h-56 lg:h-64 xl:h-80" alt="">
+          <img id="card-image" class="rounded-3xl bg-[rgba(255,255,255,.85)] h-64 md:h-80 short:h-56 lg:h-64 xl:h-80" alt="">
         </div>
         <img src={deck} class="card-1 top-0 w-auto rounded-3xl bg-[rgba(255,255,255,.85)] h-64 md:h-80 short:h-56 lg:h-64 xl:h-80" alt="" />
         <img src={deck} class="card-2 top-0 w-auto rounded-3xl bg-[rgba(255,255,255,.85)] h-64 md:h-80 short:h-56 lg:h-64 xl:h-80" alt="" />
@@ -198,33 +204,17 @@
         <div id="card-description" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
           <p id="card-content"></p>
         </div>
-        {#if intention}
-          <div on:click={() => manifested ? null : goToEntry(id)} class="field flex flex-col items-center justify-between p-3.5 text-black bg-translucent gap-3 w-full rounded-2xl">
-            <label for="password" class="label opacity-80 font-serif">Intention</label>
-            <div>{intention ?? ''}</div>
-          </div>
-          {#if manifested}
-            <button
-              type="button"
-              id="manifested"
-              disabled
-              class="w-max mx-auto transition-opacity origin-top duration-1000 bg-accent text-xl font-serif text-black rounded-xl px-6 py-3 inline-flex gap-2 justify-center items-center">
-              <img class="h-4" src="{star}" alt="" /> Manifested
-            </button>
-          {:else}
-            <button
-              type="button"
-              id="manifested"
-              on:click={() => handleSubmit()}
-              class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">
-              I Manifested This!
-            </button>
-          {/if}
-        {:else}
-          <div id="set-intention" class="duration-1000 opacity-0 transition-opacity text-center items-center justify-center">
-            <button on:click={() => goToEntry(id)} id="set-intention-button" type="button" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Set Intention</button>
-          </div>
-        {/if}
+        <div id="get-guidance" class="opacity-0 transition-opacity  duration-1000 flex flex-col items-center gap-4">
+          <button
+            type="button"
+            id="get-guidance-button"
+            on:click={() => push('/daily-entries/'+id)}
+            class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white flex items-center gap-2 rounded-xl px-6 py-3">
+            See More
+          </button>
+        </div>
+        <div class="h-[104px] flex-shrink-0"></div>
       </div>
     </div>
   </div>
+  {/if}
