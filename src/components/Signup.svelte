@@ -3,7 +3,6 @@
   import fetchData from '@/src/fetchData.js';
   import { Preferences } from '@capacitor/preferences';
   import Toasts from '@/src/components/Toasts.svelte';
-  import { userStore } from '@/src/stores.js';
   import { push } from 'svelte-spa-router'; // Import push for navigation
 
   let notifications = [];
@@ -22,27 +21,11 @@
 
       const login = response.user;
 
-      userStore.set({
-        first_name: login.first_name,
-        last_name: login.last_name,
-        avatar: login.avatar,
-        pentacles: login.pentacles,
-        badges: login.badges,
-        readings: login.readings,
-        insights: login.insights,
-        topics: login.topics,
-        lookups: login.lookups,
-      });
-
       await Preferences.set({ key: 'email', value: login.email });
       await Preferences.set({ key: 'deck', value: login.deck });
-      await Preferences.set({
-        key: 'timezone',
-        value: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      });
+      await Preferences.set({ key: 'first_name', value: login.first_name });
 
-      // Navigate to the home page after successful signup
-      push('/'); // Use push from svelte-spa-router to navigate
+      push('/');
     }
   };
 

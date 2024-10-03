@@ -18,6 +18,6 @@
     </div>
   </header>
   {#if subtitle}
-    <div class="pt-2 text-center text-xl">{subtitle}</div>
+    <div class="pt-2 px-6 text-center text-xl">{subtitle}</div>
   {/if}
 </div>

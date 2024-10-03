@@ -4,10 +4,12 @@
   export let id;
 
   const showToast = async (id) => {
-    document.getElementById(id).classList.add('show');
-    setTimeout(() => {
-      hideToast(id);
-    }, 3000);
+    if (id) {
+      document.getElementById(id).classList.add('show');
+      setTimeout(() => {
+        hideToast(id);
+      }, 3000);
+    }
   };
 
   const hideToast = async (id) => {

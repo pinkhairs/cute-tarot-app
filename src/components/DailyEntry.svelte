@@ -6,6 +6,13 @@
   import Loader from '@/src/components/Loader.svelte';
   import Toasts from '@/src/components/Toasts.svelte';
   import fetchData from '@/src/fetchData.js';
+  import pentacle from '@/assets/pentacle.png';
+  import nothing from '@/assets/nothing.svg';
+  import doubt from '@/assets/doubtful.svg';
+  import thoughtful from '@/assets/thoughtful.svg';
+  import happy from '@/assets/happy.svg';
+  import excited from '@/assets/excited.svg';
+  import { get } from 'svelte/store';
 
   let entry = null;
   let loading = true;
@@ -13,21 +20,21 @@
   let notifications = [];
   let id;
   let backLink;
+  let emote;
+  let todayReading;
+  let guidance;
 
-  async function handleSubmit(manifested = false) {
-    loading = true;
-    const intention = document.getElementById('intention').value;
-
-    if (manifested) {
-      await fetchData('postmeta', { name: 'manifested', value: true, id }, 'POST');
-      notifications = [...notifications, { message: 'Yay! Success', type: 'success' }];
-    } else {
-      await fetchData('postmeta', { name: 'intention', value: intention, id }, 'POST');
-      notifications = [...notifications, { message: 'Intention saved', type: 'success' }];
+  async function handleSubmit() {
+    if (!entry.reading) {
+      loading = true;
+      const pentacles = await fetchData('usermeta', { name: 'pentacles' }, 'POST');
+      
+      if (parseInt(pentacles) >= 1) {
+        guidance = await fetchData('guidance', { id }, 'POST');
+      } else {
+        notifications = [...notifications, { message: 'You need at least 1 pentacle', type: 'error' }];
+      }
     }
-
-    entry = await fetchData('history', { handle: id, posts_per_page: 1 }, 'POST');
-
     loading = false;
   }
   
@@ -42,18 +49,43 @@
   });
 
   async function fetchEntry() {
-    try {
-      entry = await fetchData('history', { handle: id, posts_per_page: 1 }, 'POST');
-    } catch (err) {
-      notifications = [...notifications, { message: 'Failed to load entry.', type: 'error' }];
-      error = err;
-    } finally {
-      loading = false;
+    entry = await fetchData('history', { handle: id, posts_per_page: 1 }, 'POST');
+    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    if (entry.date === today) {
+      todayReading = true;
     }
+    if (entry.reading) {
+      guidance = entry.reading;
+    }
+
+    emote = entry.fields.emote;
+    loading = false;
   }
 
   function close() {
     push(backLink);
+  }
+
+  async function setEmote(emoteReaction) {
+    if (!todayReading) {
+      notifications = [...notifications, { message: 'You can only set your feelings for today', type: 'error' }];
+      return;
+    }
+    emote = emoteReaction;
+    const emotes = [
+      'Nothing',
+      'Doubt',
+      'Thoughtful',
+      'Happy',
+      'Excited'
+    ];
+    document.querySelector('.'+emote).classList.remove('opacity-50');
+    emotes.splice(emotes.indexOf(emote), 1);
+    emotes.map((emoteElem) => {
+      document.querySelector('.'+emoteElem).classList.add('opacity-50');
+    })
+    await fetchData('postmeta', { name: 'emote', value: emote, id }, 'POST');
+    notifications = [...notifications, { message: `${emote} feeling saved`, type: 'success' }];
   }
 
   function updateSize(event) {
@@ -101,79 +133,51 @@
   <div class="w-full px-6 flex-1 flex items-center flex-col text-center gap-6">
     <img src={entry.image} alt="" class="h-64 rounded-xl" />
     <h2>{entry.title}</h2>
-    <p>{entry.snippet}</p>
-
-    <div data-value="" class="field flex flex-col items-center justify-between p-3.5 text-black bg-translucent gap-3 w-full rounded-2xl">
-      <label for="intention" class="label opacity-80 font-serif">Intention</label>
-      <div class="textarea-field w-full">
-        <textarea
-          disabled={relativeTime(entry.date) !== 'Today' || entry.fields.manifested}
-          required
-          type="text"
-          id="intention"
-          name="intention"
-          on:input={updateSize}
-          placeholder="None this day.">{entry.fields.intention ?? ''}</textarea>
-      </div>
+    <p>{entry.card_snippet}</p>
+    {#if entry.reading}
+    <div class="flex flex-col text-left gap-2">
+      {@html entry.reading.replace(/\n/g, '<br>')}
     </div>
-    {#if relativeTime(entry.date) === 'Today'}
-      {#if entry.fields.intention}
-        {#if entry.fields.manifested}
-          <button
-            type="button"
-            id="manifested"
-            disabled
-            class="w-max mx-auto transition-opacity origin-top duration-1000 bg-accent text-xl font-serif text-black rounded-xl px-6 py-3 inline-flex gap-2 justify-center items-center">
-            <img class="h-4" src="{star}" alt="" /> Manifested
-          </button>
-        {:else}
-          <button
-            type="button"
-            on:click={() => handleSubmit()}
-            id="manifested"
-            class="w-max mx-auto transition-opacity origin-top duration-1000 bg-accent text-xl font-serif text-black rounded-xl px-6 py-3">
-            Save New Intention
-          </button>
-          <button
-            type="button"
-            on:click={() => handleSubmit(true)}
-            id="manifested"
-            class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">
-            I Manifested This!
-          </button>
-        {/if}
-      {:else}
+    {/if}
+    <h3>How do you feel?</h3>
+    <div class="flex items-center gap-3 justify-center">
+      <button type="button" on:click={() => setEmote('Nothing')} class="Nothing emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2">
+        <img src={nothing} alt="" style={emote === 'Nothing' ? 'opacity: 100%' : 'opacity: 50%'} class="h-12" />
+        <div class="text-center text-sm opacity-80">Nothing</div>
+      </button>
+      <button type="button" on:click={() => setEmote('Doubt')} class="Doubt emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Doubt' ? 'opacity: 100%' : 'opacity: 50%'}>
+        <img src={doubt} alt="" class="h-12" />
+        <div class="text-center text-sm opacity-80">Doubt</div>
+      </button>
+      <button type="button" on:click={() => setEmote('Thoughtful')} class="Thoughtful emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Thoughtful' ? 'opacity: 100%' : 'opacity: 50%'}>
+        <img src={thoughtful} alt="" class="h-12" />
+        <div class="text-center text-sm opacity-80">Thoughtful</div>
+      </button>
+      <button type="button" on:click={() => setEmote('Happy')} class="Happy emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Happy' ? 'opacity: 100%' : 'opacity: 50%'}>
+        <img src={happy} alt="" class="h-12" />
+        <div class="text-center text-sm opacity-80">Happy</div>
+      </button>
+      <button type="button" on:click={() => setEmote('Excited')} class="Excited emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Excited' ? 'opacity: 100%' : 'opacity: 50%'}>
+        <img src={excited} alt="" class="h-12" />
+        <div class="text-center text-sm opacity-80">Excited</div>
+      </button>
+    </div>
+    {#if !entry.reading && todayReading}
+    <div id="get-guidance" class="transition-opacity  duration-1000 flex flex-col items-center gap-4">
+      <span class="text-sm items-center inline-flex justify-center gap-1 text-opacity-80">
+        <img src={pentacle} alt="Pentacle" class="w-4 h-4 inline-block" />
+        Personal guidance costs 1 pentacle
+      </span>
       <button
         type="button"
+        id="get-guidance-button"
         on:click={() => handleSubmit()}
-        class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">
-        Save Intention
+        class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white flex items-center gap-2 rounded-xl px-6 py-3">
+        Get Guidance 
+        <img src={pentacle} alt="Pentacle" class="w-5 h-5 inline-block"/>
       </button>
-      {/if}
-    {:else}
-      {#if entry.fields.manifested}
-        <button
-          type="button"
-          id="manifested"
-          disabled
-          class="w-max mx-auto transition-opacity origin-top duration-1000 bg-accent text-xl font-serif text-black rounded-xl px-6 py-3 inline-flex gap-2 justify-center items-center">
-          <img class="h-4" src="{star}" alt="" /> Manifested
-        </button>
-      {/if}
+    </div>
     {/if}
   </div>
   <div class="h-6 flex-shrink-0"></div>
 {/if}
-
-<style>
-  .close-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    font-size: 48px;
-    line-height: 1;
-    color: currentColor;
-    font-weight: 200;
-  }
-</style>

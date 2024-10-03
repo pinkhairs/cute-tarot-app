@@ -11,7 +11,7 @@
   }
 </script>
 
-<div class="z-[100] fixed left-1/2 -translate-x-1/2 top-2.5 flex flex-col gap-2">
+<div class="z-[100] fixed left-1/2 -translate-x-1/2 toasts flex flex-col gap-2">
 {#each notifications as toast}
   <Toast id={Date.now()} message={toast.message} type={toast.type}></Toast>
 {/each}
