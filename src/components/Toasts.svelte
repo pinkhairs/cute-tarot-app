@@ -6,7 +6,7 @@
     if (notifications.length > 0) {
       setTimeout(() => {
         notifications.shift();
-      }, 2000);
+      }, 20000);
     }
   }
 </script>

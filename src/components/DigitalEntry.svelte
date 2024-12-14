@@ -21,12 +21,13 @@
   let backLink;
   let emote;
   let reading;
+  let question;
 
   async function getReading() {
     loading = true;
     const pentacles = await fetchData('usermeta', { name: 'pentacles' }, 'POST');
     if (parseInt(pentacles) >= 3) {
-      const response = await fetchData('reading', { id, cards: entry.title, question: document.getElementById('question').value }, 'POST');
+      const response = await fetchData('reading', { id, cards: entry.title, question }, 'POST');
       reading = response.reading;
     } else {
       notifications = [...notifications, { message: 'You need at least 1 pentacle', type: 'error' }];
@@ -36,7 +37,7 @@
   }
 
   async function handleSubmit(event) {
-    const question = event.target.value;
+    question = event.target.value;
 
     if (!question) {
       return;
@@ -74,6 +75,10 @@
   function close() {
     push(backLink);
   }
+  
+  function handleCardClick(cardId) {
+    push('/reference-entry/' + cardId);
+  }
 
   function updateSize(event) {
     event.target.parentNode.dataset.value = event.target.value;
@@ -105,11 +110,15 @@
   }
 
   const debouncedHandleSubmit = debounce(handleSubmit, 0);
+
+  function goToYou() {
+    push('/you');
+  }
 </script>
 
 <Toasts {notifications} />
 {#if loading}
-  <Loader />
+  
 {:else if entry}
   <TitleBar title="Reading" subtitle={entry.date}>
     <div slot="left-action">
@@ -121,70 +130,35 @@
 
   <div class="w-full px-6 flex-1 flex items-center flex-col text-center gap-6">
     <div class="flex my-4 items-center justify-center gap-4">
-      <img src={entry.images[0]} alt="" class="h-36 rounded-xl" />
-      <img src={entry.images[1]} alt="" class="h-36 -mt-8 rounded-xl" />
-      <img src={entry.images[2]} alt="" class="h-36 rounded-xl" />
+      <button on:click={() => handleCardClick(entry.fields.card_1.post_name)} type="button">
+        <img src={entry.images[0]} alt="" class="h-36 rounded-xl" />
+      </button>
+      <button on:click={() => handleCardClick(entry.fields.card_2.post_name)} type="button">
+        <img src={entry.images[1]} alt="" class="h-36 -mt-8 rounded-xl" />
+      </button>
+      <button on:click={() => handleCardClick(entry.fields.card_3.post_name)} type="button">
+        <img src={entry.images[2]} alt="" class="h-36 rounded-xl" />
+      </button>
     </div>
     <h2>{entry.title}</h2>
-    <div class="text-center">{entry.snippet}</div>
+    <div class="text-center px-4">{entry.snippet}</div>
 
     <div class="field flex flex-col items-center justify-between p-3.5 text-black bg-translucent gap-3 w-full rounded-2xl">
-      <label for="question" class="label opacity-80 font-serif">Question {reading ? '' : '(saves automatically)'}</label>
-      <div id="fake-height" data-value={entry.fields.question} class="textarea-field w-full">
+      <label for="question" class="label opacity-80 font-serif">What's on your mind?</label>
+      <div id="fake-height" data-value={question} class="textarea-field w-full">
         <textarea
           required
           type="text"
           id="question"
           name="question"
+          bind:value={question}
           on:input={() => updateSize(event)}
           on:blur={() => debouncedHandleSubmit(event)}
           disabled={reading}
-          placeholder="Type here">{entry.fields.question ?? ''}</textarea>
+          placeholder="Let it flow"></textarea>
       </div>
     </div>
-    {#if reading}
-      <h2>Reading</h2>
-      <div class="text-left">
-        {@html reading.replace(/\n/g, "<br>")}
-      </div>
-    {/if}
-    <h3>How do you feel?</h3>
-    <div class="flex items-center gap-3 justify-center">
-      <button type="button" on:click={() => setEmote('Nothing')} class="Nothing emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2">
-        <img src={nothing} alt="" style={emote === 'Nothing' ? 'opacity: 100%' : 'opacity: 50%'} class="h-12" />
-        <div class="text-center text-sm opacity-80">Nothing</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Doubt')} class="Doubt emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Doubt' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={doubt} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Doubt</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Thoughtful')} class="Thoughtful emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Thoughtful' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={thoughtful} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Thoughtful</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Happy')} class="Happy emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Happy' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={happy} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Happy</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Excited')} class="Excited emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Excited' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={excited} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Excited</div>
-      </button>
-    </div>
-    {#if !reading}
-      <span class="text-sm items-center inline-flex justify-center gap-1 text-opacity-80">
-        <img src={pentacle} alt="Pentacle" class="w-4 h-4 inline-block" />
-        A personal reading costs 3 pentacles
-      </span>
-      <button
-        type="button"
-        id="reading"
-        on:click={() => getReading()}
-        class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl flex items-center gap-2 px-6 py-3">
-        Get Reading
-        <img src={pentacle} alt="Pentacle" class="w-5 h-5 inline-block" />
-      </button>
-    {/if}
+    <p class="px-4 text-sm">Your story matters! The more context you document here, the more likely you are to get badges for serendipity. <button type="button" class="border border-t-0 border-l-0 border-r-0 border-b-white border-opacity-40" on:click={goToYou}>Examples</button></p>
   </div>
   <div class="h-6 flex-shrink-0"></div>
 {/if}

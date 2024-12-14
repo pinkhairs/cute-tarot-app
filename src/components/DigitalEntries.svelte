@@ -110,7 +110,7 @@
       </ul>
 
     {#if isLoadingMore}
-      <Loader />
+      
     {/if}
     {#if hasMore}
       <div use:intersectionObserver></div>

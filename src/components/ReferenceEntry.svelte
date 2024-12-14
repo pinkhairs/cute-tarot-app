@@ -4,7 +4,7 @@
   import Toasts from '@/src/components/Toasts.svelte';
   import pentacle from '@/assets/pentacle.png';
   import fetchData from '@/src/fetchData.js';
-  import { params, push } from 'svelte-spa-router';
+  import { params, pop, push } from 'svelte-spa-router';
   import { onMount } from 'svelte';
   
   let entry;
@@ -27,14 +27,14 @@
   });
 
   function close() {
-    push('/reference');
+    pop();
   }
 
 </script>
 
 <Toasts {notifications} />
 {#if loading}
-  <Loader />
+  
 {:else if entry}
   <TitleBar title={entry.title} subtitle={entry.fields.snippet}>
     <div slot="left-action">

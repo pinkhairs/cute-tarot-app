@@ -60,27 +60,24 @@
     if (response.error) {
       notifications = [...notifications, { message: response.error, type: 'error' }];
     } else {
-      await Preferences.set({ key: 'first_name', value: response.first_name });
-      await Preferences.set({ key: 'last_name', value: response.last_name });
-      await Preferences.set({ key: 'email', value: response.email });
-
-      if (newAvatar) {
-        await Preferences.set({ key: 'avatar', value: response.avatar });
-      }
+      await Preferences.set({ key: 'first_name', value: first_name });
+      await Preferences.set({ key: 'last_name', value: last_name });
+      await Preferences.set({ key: 'email', value: email });
+    await Preferences.set({ key: 'avatar', value: response.avatar });
 
       document.getElementById('password').value = '';
       notifications = [...notifications, { message: 'Success! Your settings have been updated.', type: 'success' }];
     }
   }
 
-  function updateAvatar() {
+  async function updateAvatar() {
     avatar = URL.createObjectURL(document.getElementById('new_avatar').files[0]);
   }
 </script>
 
 <Toasts {notifications}></Toasts>
 {#if loading}
-  <Loader />
+  
 {:else}
   <TitleBar title="Settings">
     <div slot="left-action">

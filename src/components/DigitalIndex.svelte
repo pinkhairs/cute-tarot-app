@@ -78,7 +78,7 @@
 
 <Toasts {notifications}></Toasts>
 {#if loading}
-  <Loader />
+  
 {:else}
   <TitleBar title="Digital Tarot" subtitle="Think a question & pick 3 cards">
     <div slot="left-action">

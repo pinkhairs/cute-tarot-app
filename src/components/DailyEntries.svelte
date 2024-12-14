@@ -88,7 +88,7 @@
 <div class="w-full px-6 flex-1 flex items-start justify-center">
   <div class="flex-1">
     {#if loading}
-      <Loader />
+      
     {:else}
       <ul>
         {#each entries as entry}
@@ -118,7 +118,7 @@
       </ul>
 
       {#if isLoadingMore}
-        <Loader />
+        
       {/if}
     {/if}
 

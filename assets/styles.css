@@ -52,10 +52,11 @@ textarea {
 
 .toasts {
   top: calc(env(safe-area-inset-top) + 6);
+  width: 100%;
 }
 
 .toast {
-  @apply opacity-0 -translate-y-full mx-auto w-max transition-all duration-1000 p-4 text-center rounded-xl;
+  @apply opacity-0 -translate-y-full mx-auto max-w-max w-11/12 transition-all duration-1000 p-4 text-center rounded-xl;
 }
 
 .toast.info {
@@ -63,7 +64,7 @@ textarea {
 }
 
 .toast.error {
-  @apply bg-[#FFDEF6] text-black;
+  @apply bg-[#FFDEF6] text-black
 }
 
 .toast.success {

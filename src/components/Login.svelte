@@ -11,8 +11,6 @@
 
   const handleSubmit = async () => {
     const response = await fetchData('login', { email, password }, 'POST');
-    alert(JSON.stringify(response));
-    return;
 
     if (response.error) {
       notifications = [...notifications, { message: response.error, type: 'error' }];
