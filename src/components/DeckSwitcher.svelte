@@ -35,7 +35,7 @@
 </script>
 
 {#if loading}
-  <Loader />
+  
 {:else}
 <button class="flex h-full items-center justify-center" on:click={toggleDeck}>
   {#if deck === "Spoopy Tarot"}

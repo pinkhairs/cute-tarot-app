@@ -1,28 +1,25 @@
 <script>
-  import star from '@/assets/star.svg';
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { push, params, querystring } from 'svelte-spa-router';
   import TitleBar from '@/src/components/TitleBar.svelte';
   import Loader from '@/src/components/Loader.svelte';
   import Toasts from '@/src/components/Toasts.svelte';
   import fetchData from '@/src/fetchData.js';
   import pentacle from '@/assets/pentacle.png';
-  import nothing from '@/assets/nothing.svg';
-  import doubt from '@/assets/doubtful.svg';
-  import thoughtful from '@/assets/thoughtful.svg';
-  import happy from '@/assets/happy.svg';
-  import excited from '@/assets/excited.svg';
-  import { get } from 'svelte/store';
 
   let entry = null;
   let loading = true;
-  let error = null;
   let notifications = [];
   let id;
   let backLink;
   let emote;
   let todayReading;
   let guidance;
+  let intention;
+
+  $: if (guidance) {
+    console.log('Guidance updated:', guidance);
+  }
 
   async function handleSubmit() {
     if (!entry.reading) {
@@ -92,6 +89,10 @@
     event.target.parentNode.dataset.value = event.target.value;
   }
 
+  function goToYou() {
+    push('/you');
+  }
+
   function relativeTime(dateString) {
     const inputDate = new Date(dateString);
     const currentDate = new Date();
@@ -116,11 +117,15 @@
       return `${diffYears} years ago`;
     }
   }
+  
+  function handleCardClick(cardId) {
+    push('/reference-entry/' + cardId);
+  }
 </script>
 
 <Toasts {notifications} />
 {#if loading}
-  <Loader />
+  
 {:else if entry}
   <TitleBar title={relativeTime(entry.date)} subtitle={entry.date}>
     <div slot="left-action">
@@ -131,7 +136,9 @@
   </TitleBar>
 
   <div class="w-full px-6 flex-1 flex items-center flex-col text-center gap-6">
-    <img src={entry.image} alt="" class="h-64 rounded-xl" />
+    <button on:click={() => handleCardClick(entry.fields.card.post_name)} type="button">
+      <img src={entry.image} alt="" class="h-64 rounded-xl" />
+    </button>
     <h2>{entry.title}</h2>
     <p>{entry.card_snippet}</p>
     {#if entry.reading}
@@ -139,45 +146,21 @@
       {@html entry.reading.replace(/\n/g, '<br>')}
     </div>
     {/if}
-    <h3>How do you feel?</h3>
-    <div class="flex items-center gap-3 justify-center">
-      <button type="button" on:click={() => setEmote('Nothing')} class="Nothing emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2">
-        <img src={nothing} alt="" style={emote === 'Nothing' ? 'opacity: 100%' : 'opacity: 50%'} class="h-12" />
-        <div class="text-center text-sm opacity-80">Nothing</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Doubt')} class="Doubt emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Doubt' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={doubt} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Doubt</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Thoughtful')} class="Thoughtful emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Thoughtful' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={thoughtful} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Thoughtful</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Happy')} class="Happy emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Happy' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={happy} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Happy</div>
-      </button>
-      <button type="button" on:click={() => setEmote('Excited')} class="Excited emote flex transition-opacity duration-1000 items-center justify-center flex-col gap-2" style={emote === 'Excited' ? 'opacity: 100%' : 'opacity: 50%'}>
-        <img src={excited} alt="" class="h-12" />
-        <div class="text-center text-sm opacity-80">Excited</div>
-      </button>
+    <div class="field flex flex-col items-center justify-between p-3.5 text-black bg-translucent gap-3 w-full rounded-2xl">
+      <label for="intention" class="label opacity-80 font-serif">What's on your mind?</label>
+      <div id="fake-height" data-value={intention} class="textarea-field w-full">
+        <textarea
+          required
+          type="text"
+          id="intention"
+          name="intention"
+          bind:value={intention}
+          on:input={() => updateSize(event)}
+          on:blur={() => debouncedHandleSubmit(event)}
+          placeholder="Let it flow"></textarea>
+      </div>
     </div>
-    {#if !entry.reading && todayReading}
-    <div id="get-guidance" class="transition-opacity  duration-1000 flex flex-col items-center gap-4">
-      <span class="text-sm items-center inline-flex justify-center gap-1 text-opacity-80">
-        <img src={pentacle} alt="Pentacle" class="w-4 h-4 inline-block" />
-        Personal guidance costs 1 pentacle
-      </span>
-      <button
-        type="button"
-        id="get-guidance-button"
-        on:click={() => handleSubmit()}
-        class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white flex items-center gap-2 rounded-xl px-6 py-3">
-        Get Guidance 
-        <img src={pentacle} alt="Pentacle" class="w-5 h-5 inline-block"/>
-      </button>
-    </div>
-    {/if}
+    <p class="px-4 text-sm">Your story matters! The more context you document here, the more likely you are to get badges for serendipity. <button type="button" class="border border-t-0 border-l-0 border-r-0 border-b-white border-opacity-40" on:click={goToYou}>Examples</button></p>
   </div>
   <div class="h-6 flex-shrink-0"></div>
 {/if}

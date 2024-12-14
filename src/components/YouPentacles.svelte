@@ -24,7 +24,7 @@
 
 <Toasts {notifications}></Toasts>
 {#if loading}
-  <Loader />
+  
 {:else}
   <TitleBar title="Pentacles" subtitle="You get 1 free per daily reading">
     <div slot="left-action">

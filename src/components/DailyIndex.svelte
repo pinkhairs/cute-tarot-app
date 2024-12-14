@@ -145,9 +145,6 @@
     setTimeout(() => {
       getGuidanceButton.classList.remove('opacity-0');
     }, 3000);
-    setTimeout(() => {
-      notifications = [...notifications, { message: '+1 pentacle!', type: 'info' }];
-    }, 3777);
   }
 
   function handleDeckChange(event) {
@@ -162,7 +159,7 @@
 </script>
 
 {#if loading}
-  <Loader />
+  
 {:else}
 <Toasts {notifications}></Toasts>
   <TitleBar title="Today">

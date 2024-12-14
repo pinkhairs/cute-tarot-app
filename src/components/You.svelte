@@ -11,6 +11,7 @@
   let notifications = [];
   let loading = true;
   let pentaclesBalance = '...';
+  let week = [];
 
   onMount(() => {
     setup();
@@ -20,6 +21,7 @@
   async function setup() {
     const pentacles = await fetchData('usermeta', { name: 'pentacles' }, 'POST');
     pentaclesBalance = condenseNumber(parseInt(pentacles));
+    fetchWeek();
   }
 
   function condenseNumber(num) {
@@ -42,13 +44,56 @@
   function goToSettings() {
     push('/you-settings');
   }
+  
+  function handleCardClick(cardId) {
+    push('/reference-entry/' + cardId);
+  }
+
+  async function fetchWeek() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize today's date to the start of the day
+
+    week = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i); // Create the past 7 days
+        return {
+            date: date.toISOString().slice(0, 10),
+            weekday_name: date.toLocaleDateString(navigator.language || 'en-US', { weekday: 'short' }),
+            card_name: null,
+            card_image: null,
+            post_name: null,
+        };
+    }).reverse(); // Optional based on your display needs
+
+    try {
+        const historyData = await fetchData('history', { handle: 'reading', posts_per_page: 7, offset: 0 }, 'POST');
+        console.log("Fetched History Data:", historyData); // Log fetched data
+
+        historyData.forEach(entry => {
+            const entryDate = new Date(entry.timestamp * 1000); // Convert Unix timestamp to JavaScript Date object
+            const formattedDate = entryDate.toISOString().slice(0, 10);
+            console.log("Processing Date:", formattedDate); // Log each processed date
+            
+            const match = week.find(day => day.date === formattedDate);
+            if (match) {
+                console.log("Match Found:", match); // Log matched entry
+                match.card_name = entry.fields?.card?.post_title || null;
+                match.card_image = entry.image || null;
+                match.post_name = entry.fields?.card?.post_name || null;
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching week data:', error);
+    }
+}
+
 </script>
 
 <Toasts {notifications}></Toasts>
 {#if loading}
-  <Loader />
+  
 {:else}
-  <TitleBar title="You" subtitle="Pentacles and rewards">
+  <TitleBar title="Your Story" subtitle="Get badges for serendipity.">
     <div slot="left-action"></div>
     <div slot="right-action">
       <button on:click={goToSettings} class="close-button">
@@ -60,24 +105,6 @@
     </div>
   </TitleBar>
   <div class="px-6 flex flex-col gap-4">
-    <button on:click={goToPentacles} class="bg-brand text-white px-4 py-3 rounded-2xl flex justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <img src={pentacles} alt="Pentacle" class="w-16 h-16" />
-        <div class="text-left">
-          <p class="text-lg">Pentacles</p>
-          <h1>{pentaclesBalance}</h1>
-        </div>
-      </div>
-      <div>
-        <div class="border-accent border-2 rounded-xl text-white px-4 py-3">
-          Get More
-        </div>
-      </div>
-    </button>
-    <div class="mt-3 flex flex-col items-center justify-center gap-4">
-      <h2 class="text-center">Badges</h2>
-      <p class="text-center w-3/4">Earn badges by using features around the app</p>
-    </div>
     <div class="grid grid-cols-2 gap-[2px] rounded-xl overflow-hidden">
       <div class="flex px-2.5 py-3 flex-col items-center bg-translucent gap-2">
         <h1 class="font-['Madimi_One'] text-[#FFDEF6] bg-opacity-60 w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-2xl bg-black"><span class="inline-block relative left-[1px]">?</span></h1>
