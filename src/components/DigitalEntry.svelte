@@ -23,19 +23,6 @@
   let reading;
   let question;
 
-  async function getReading() {
-    loading = true;
-    const pentacles = await fetchData('usermeta', { name: 'pentacles' }, 'POST');
-    if (parseInt(pentacles) >= 3) {
-      const response = await fetchData('reading', { id, cards: entry.title, question }, 'POST');
-      reading = response.reading;
-    } else {
-      notifications = [...notifications, { message: 'You need at least 1 pentacle', type: 'error' }];
-    }
-
-    loading = false;
-  }
-
   async function handleSubmit(event) {
     question = event.target.value;
 
@@ -44,7 +31,7 @@
     }
     
     await fetchData('postmeta', { name: 'question', value: question, id }, 'POST');
-    notifications = [...notifications, { message: 'Question saved', type: 'success' }];
+    notifications = [...notifications, { message: 'Intention saved', type: 'success' }];
 
     entry = await fetchData('history', { handle: id, posts_per_page: 1 }, 'POST');
   }
@@ -64,6 +51,7 @@
       entry = await fetchData('history', { handle: id, posts_per_page: 1 }, 'POST');
       reading = entry.reading;
       emote = entry.fields.emote;
+      question = entry.fields.question;
     } catch (err) {
       notifications = [...notifications, { message: 'Failed to load entry.', type: 'error' }];
       error = err;

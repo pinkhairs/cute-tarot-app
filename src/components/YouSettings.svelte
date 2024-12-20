@@ -29,6 +29,14 @@
     push('/you');
   }
 
+function deleteAccount() {
+  if (confirm('Are you sure you want to delete your account? This is permanent and cannot be undone.')) {
+    fetchData('delete', {}, 'POST');
+    alert('Your account has been deleted.');
+    logOut();
+  }
+}
+
   async function logOut() {
     await Preferences.remove({ key: 'token' });
     await Preferences.remove({ key: 'email' });
@@ -109,18 +117,19 @@
       {:else}
         <div class="border-dashed border-2 font-sans text-lg border-[#B5BECE] py-2.5 mt-2 w-full rounded-xl">Upload</div>
       {/if}
-      <input id="new_avatar" on:input={updateAvatar} name="avatar" class="hidden" type="file" />
+      <input id="new_avatar" on:input={updateAvatar} name="avatar" class="hidden" type="file" accept=".jpg, .jpeg, .png, .heic" />
     </label>
   </div>
 
   <div class="field flex flex-col items-center justify-between p-4 text-black bg-translucent gap-3 w-full rounded-2xl">
     <label for="password" class="label opacity-80 font-serif">Password (only if changing)</label>
     <input type="password" id="password" name="password" placeholder="• • • • •" class="text-center focus:outline-none focus:bg-neutral transition-colors w-full rounded-xl p-2 bg-transparent" />
+    <button on:click={logOut} id="logout-button" class="text-brand font-bold text-lg" type="button">Log out</button>
   </div>
   
   <button on:click={updateSettings} id="account-button" type="submit" class="w-max mx-auto transition-opacity origin-top duration-1000 bg-brand text-xl font-serif text-white rounded-xl px-6 py-3">Save Information</button>
-  <div class="w-full mx-auto flex-col px-6 flex-1 flex items-center justify-start gap-6">
-    <button on:click={logOut} id="logout-button" class="text-brand font-bold text-lg" type="button">Log out</button>
+  <div class="w-full flex-col mx-auto px-6 flex-1 flex items-center justify-center gap-4">
+    <button on:click={deleteAccount} id="logout-button" class="text-[#f98888] font-bold text-sm" type="button">Delete account?</button>
   </div>
   <div class="h-6"></div>
   </div>

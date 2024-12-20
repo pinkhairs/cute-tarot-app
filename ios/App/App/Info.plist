@@ -46,12 +46,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
   <key>NSPhotoLibraryUsageDescription</key>
-  <string>This app uses access to the Photo Library to perform tarot readings with user permission.</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>This app does not require access to the microphone.</string>
+  <string>This app uses access to the Photo Library to allow avatar upload with user permission.</string>
   <key>NSCameraUsageDescription</key>
-  <string>This app uses access to the Camera to perform tarot readings with user permission.</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>This app uses access to the Photo Library to perform tarot readings with user permission.</string>
+  <string>This app uses access to the Camera to allow avatar upload with user permission.</string>
 </dict>
 </plist>

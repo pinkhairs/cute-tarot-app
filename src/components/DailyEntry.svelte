@@ -14,25 +14,21 @@
   let backLink;
   let emote;
   let todayReading;
-  let guidance;
   let intention;
 
-  $: if (guidance) {
-    console.log('Guidance updated:', guidance);
+  async function handleSubmit() {
+    await fetchData('postmeta', { name: 'intention', value: intention, id }, 'POST');
+    notifications = [...notifications, { message: 'Intention saved', type: 'success' }];
   }
 
-  async function handleSubmit() {
-    if (!entry.reading) {
-      loading = true;
-      const pentacles = await fetchData('usermeta', { name: 'pentacles' }, 'POST');
-      
-      if (parseInt(pentacles) >= 1) {
-        guidance = await fetchData('guidance', { id }, 'POST');
-      } else {
-        notifications = [...notifications, { message: 'You need at least 1 pentacle', type: 'error' }];
-      }
-    }
-    loading = false;
+  const debouncedHandleSubmit = debounce(handleSubmit, 1000);
+
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
   }
   
   onMount(() => {
@@ -47,15 +43,7 @@
 
   async function fetchEntry() {
     entry = await fetchData('history', { handle: id, posts_per_page: 1 }, 'POST');
-    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    if (entry.date === today) {
-      todayReading = true;
-    }
-    if (entry.reading) {
-      guidance = entry.reading;
-    }
-
-    emote = entry.fields.emote;
+    intention = entry.fields.intention;
     loading = false;
   }
 
@@ -141,11 +129,6 @@
     </button>
     <h2>{entry.title}</h2>
     <p>{entry.card_snippet}</p>
-    {#if entry.reading}
-    <div class="flex flex-col text-left gap-2">
-      {@html entry.reading.replace(/\n/g, '<br>')}
-    </div>
-    {/if}
     <div class="field flex flex-col items-center justify-between p-3.5 text-black bg-translucent gap-3 w-full rounded-2xl">
       <label for="intention" class="label opacity-80 font-serif">What's on your mind?</label>
       <div id="fake-height" data-value={intention} class="textarea-field w-full">
