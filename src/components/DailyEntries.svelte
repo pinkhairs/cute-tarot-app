@@ -87,9 +87,6 @@
 
 <div class="w-full px-6 flex-1 flex items-start justify-center">
   <div class="flex-1">
-    {#if loading}
-      
-    {:else}
       <ul>
         {#each entries as entry}
         <li class="flex pb-4 mb-4">
@@ -116,11 +113,6 @@
           </li>
         {/each}
       </ul>
-
-      {#if isLoadingMore}
-        
-      {/if}
-    {/if}
 
     {#if hasMore}
       <div use:intersectionObserver></div>

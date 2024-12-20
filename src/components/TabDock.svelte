@@ -1,9 +1,10 @@
 <script>
   import { onMount } from 'svelte';
-  import { location, push } from 'svelte-spa-router'; // Import the location store
+  import { location, push } from 'svelte-spa-router';
   import reference from '@/assets/reference.png';
   import calendar from '@/assets/calendar.png';
   import today from '@/assets/today.png';
+  import rewards from '@/assets/rewards.png';
   import { Preferences } from '@capacitor/preferences';
 
   let isIndex = false;
@@ -13,7 +14,7 @@
 
   const updateAvatar = async () => {
     const avatarPreference = await Preferences.get({ key: 'avatar' });
-    avatar = avatarPreference.value;
+    avatar = avatarPreference.value || rewards;
   };
   
   onMount(() => {

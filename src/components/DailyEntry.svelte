@@ -112,9 +112,7 @@
 </script>
 
 <Toasts {notifications} />
-{#if loading}
-  
-{:else if entry}
+{#if entry}
   <TitleBar title={relativeTime(entry.date)} subtitle={entry.date}>
     <div slot="left-action">
       <button on:click={close} class="close-button">&lt;</button>
