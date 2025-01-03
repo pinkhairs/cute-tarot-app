@@ -6,9 +6,10 @@
   import Toasts from '@/src/components/Toasts.svelte';
   import fetchData from '@/src/fetchData.js';
   import star from '@/assets/star.svg';
+  import { loading } from '@/src/store.js';
 
   let entries = [];
-  let loading = true;
+  let isLoading = true;
   let error = null;
   let notifications = [];
   let offset = 0;
@@ -50,7 +51,7 @@
 
   async function fetchEntries() {
     if (isLoadingMore || !hasMore) {
-      loading = false;
+      isLoading = false;
       return;
     }
     isLoadingMore = true;
@@ -66,7 +67,7 @@
       offset += newEntries.length;
     }
 
-    loading = false;
+    isLoading = false;
     isLoadingMore = false;
   }
 

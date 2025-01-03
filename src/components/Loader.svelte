@@ -1,22 +1,25 @@
 <script>
   import { fade } from 'svelte/transition';
-  export let activeRequests = 0;
-  let zIndex = 40; // Start with a high z-index
+  import { loading } from '@/src/store.js';
+
   let isVisible = true;
+  let hidden = false;
   let opacity = 1;
 
-  $: show = activeRequests > 0;
-
-  export const showLoadingScreen = () => {
-    activeRequests = activeRequests + 1;
-    isVisible = true; // Ensure it's visible when a request starts
-    zIndex = 39; // Reset z-index to 40 when visible
-    opacity = 1;
-  };
-
-  export const hideLoadingScreen = () => {
-    activeRequests = Math.max(0, activeRequests - 1);
-  };
+  loading.subscribe((value) => {
+    isVisible = value;
+    if (isVisible) {
+      opacity = 1;
+      hidden = false;
+    } else {
+      setTimeout(() => {
+        opacity = 0;
+      }, 0);
+      setTimeout(() => {
+        hidden = true;
+      }, 888);
+    }
+  });
 </script>
 
 <style>
@@ -35,11 +38,8 @@
 </style>
 
 <div 
-  class="bg-neutral dark:bg-black loading-screen" 
-  in:fade={{ delay: 0, duration: 444 }} 
-  out:fade={{ delay: 0, duration: 444 }} 
-  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;display: flex; align-items: center; justify-content: center; z-index: {zIndex}; opacity: {opacity}; transition: opacity 500ms;"
-  bind:this={isVisible}>
+  class="bg-neutral dark:bg-black loading-screen {hidden ? 'hidden' : 'flex'}" 
+  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;display: flex; z-index: {hidden ? '-1' : '40'}; align-items: center; justify-content: center; transition: opacity 1s ease; opacity: {opacity};">
   <div role="status">
     <svg class="dark:hidden animate-float" width="192" height="120" viewBox="0 0 192 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M96.2253 0C145.132 0 184.778 39.6463 184.778 88.5526H108.476C108.476 81.7869 102.991 76.3022 96.2253 76.3022C89.4596 76.3022 83.975 81.7869 83.975 88.5526H7.67273C7.67273 39.6463 47.3191 0 96.2253 0Z" fill="#FFDEF6"/>

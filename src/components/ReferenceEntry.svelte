@@ -50,5 +50,4 @@
       {@html entry.content}
     </div>
   </div>
-  <div class="h-6 flex-shrink-0"></div>
 {/if}

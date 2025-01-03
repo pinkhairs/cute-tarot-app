@@ -6,6 +6,7 @@
   import { push, replace } from 'svelte-spa-router';
   import { Preferences } from '@capacitor/preferences';
   import fetchData from '@/src/fetchData.js';
+  import { user, customAvatar } from '@/src/store.js';
 
   let notifications = [];
   let loading = true;
@@ -44,8 +45,10 @@ function deleteAccount() {
     await Preferences.remove({ key: 'last_name' });
     await Preferences.remove({ key: 'deck' });
     await Preferences.remove({ key: 'avatar' });
+    window.ls("setUserId", null);
+    user.set(false);
 
-    replace('/login');
+    replace('/signup-or-login?back_home=true');
   }
 
   async function updateSettings() {
@@ -71,7 +74,8 @@ function deleteAccount() {
       await Preferences.set({ key: 'first_name', value: first_name });
       await Preferences.set({ key: 'last_name', value: last_name });
       await Preferences.set({ key: 'email', value: email });
-    await Preferences.set({ key: 'avatar', value: response.avatar });
+      await Preferences.set({ key: 'avatar', value: response.avatar });
+      customAvatar.set(response.avatar);
 
       document.getElementById('password').value = '';
       notifications = [...notifications, { message: 'Success! Your settings have been updated.', type: 'success' }];
@@ -131,6 +135,5 @@ function deleteAccount() {
   <div class="w-full flex-col mx-auto px-6 flex-1 flex items-center justify-center gap-4">
     <button on:click={deleteAccount} id="logout-button" class="text-[#f98888] font-bold text-sm" type="button">Delete account?</button>
   </div>
-  <div class="h-6"></div>
   </div>
 {/if}

@@ -194,3 +194,8 @@ textarea {
 .card-meaning h2, .card-meaning h3 {
   display: none;
 }
+
+#content::after {
+  @apply pb-24 block;
+  content: '';
+}

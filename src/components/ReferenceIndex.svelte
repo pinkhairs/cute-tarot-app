@@ -4,6 +4,7 @@
   import TitleBar from '@/src/components/TitleBar.svelte';
   import { fade } from 'svelte/transition';
   import { push } from 'svelte-spa-router';
+  import { loading } from '@/src/store.js';
 
   let kawaii = [];
   let spoopy = [];
@@ -267,7 +268,7 @@
 
 <TitleBar title="Reference" />
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 opacity-{$loading ? 0 : 100}">
   <div class="flex w-full gap-1 px-6">
     {#each Array(10) as _, number}
       <button class="number-filter {selectedNumber === number ? 'bg-accent text-black' : ''}  flex-1 aspect-square flex items-center text-sm justify-center rounded-full font-['Madimi_One']" on:click={() => {
@@ -290,7 +291,7 @@
   </div>
 </div>
 
-<div class="overflow-x-hidden">
+<div class="flex flex-col gap-4 opacity-{$loading ? 0 : 100} overflow-x-hidden">
   <h2 class="px-6">Spoopy Tarot</h2>
   <div class="flex items-center justify-start gap-4 py-4 overflow-x-auto no-scrollbar px-6">
     {#each spoopy as card}

@@ -1,40 +1,16 @@
 <script>
   import { onMount } from 'svelte';
-  import { location, push } from 'svelte-spa-router';
+  import { push } from 'svelte-spa-router';
   import reference from '@/assets/reference.png';
   import calendar from '@/assets/calendar.png';
   import today from '@/assets/today.png';
   import rewards from '@/assets/rewards.png';
-  import { Preferences } from '@capacitor/preferences';
+  import key from '@/assets/key.png';
+  import { user, customAvatar } from '@/src/store.js';
 
-  let isIndex = false;
   let translateY;
   let zIndexForContainer = 'z-40';
-  let avatar;
-
-  const updateAvatar = async () => {
-    const avatarPreference = await Preferences.get({ key: 'avatar' });
-    avatar = avatarPreference.value || rewards;
-  };
-  
-  onMount(() => {
-    updateAvatar();
-  });
-
-  $: {
-    isIndex = $location === '/' || $location === '/digital' || $location === '/reference' || $location === '/you';
-    if (isIndex) {
-      setTimeout(() => {
-        zIndexForContainer = 'z-40';
-        translateY = 0;
-      }, 0);
-    } else {
-      setTimeout(() => {
-        zIndexForContainer = '-z-40';
-        translateY = '150%';
-      }, 0);
-    }
-  }
+  $: avatar = $user ? $customAvatar != 'false' && $customAvatar ? $customAvatar : rewards : key;
 </script>
 <div class="w-max {zIndexForContainer} fixed bottom-5 left-1/2 -translate-x-1/2">
   <nav
@@ -87,10 +63,10 @@
       <div class="flex items-center">
         <button
           id="avatar"
-          style="background-image: url({avatar})"
+          style="background-image: url({avatar});"
           class="rounded-2xl w-14 h-14 bg-cover bg-center bg-no-repeat"
           type="button"
-          on:click={() => push('/you')}
+          on:click={() => $user ? push('/you') : push('/signup-or-login')}
         ></button>
       </div>
     </div>

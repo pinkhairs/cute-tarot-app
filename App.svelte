@@ -11,8 +11,6 @@
   import DailyIndex from '@/src/components/DailyIndex.svelte';
   import DailyEntries from '@/src/components/DailyEntries.svelte';
   import DailyEntry from '@/src/components/DailyEntry.svelte';
-  import Signup from '@/src/components/Signup.svelte';
-  import Login from '@/src/components/Login.svelte';
   import DigitalIndex from '@/src/components/DigitalIndex.svelte';
   import DigitalEntries from '@/src/components/DigitalEntries.svelte';
   import DigitalEntry from '@/src/components/DigitalEntry.svelte';
@@ -21,14 +19,24 @@
   import You from '@/src/components/You.svelte';
   import YouPentacles from '@/src/components/YouPentacles.svelte';
   import YouSettings from '@/src/components/YouSettings.svelte';
+  import Interpretation from '@/src/components/Interpretation.svelte';
+  import SignupLogin from './src/components/SignupLogin.svelte';
+  import { user, customAvatar, loading } from '@/src/store.js';
 
   let notifications = [];
-  let loading = true;
-  $: user = null;
+  let validating = true;
+  let loggedIn = null;
+
+  user.subscribe((value) => {
+    loggedIn = value;
+    console.log('loggedIn', loggedIn);
+    if (typeof loggedIn === 'boolean') {
+      validating = false;
+    }
+  });
 
   const routes = {
-    '/signup': Signup,
-    '/login': Login,
+    '/signup-or-login': SignupLogin,
     '/': DailyIndex,
     '/daily-entries': DailyEntries,
     '/daily-entries/:id': DailyEntry,
@@ -37,82 +45,58 @@
     '/digital-entries/:id': DigitalEntry,
     '/reference': ReferenceIndex,
     '/reference-entry/:id': ReferenceEntry,
+    '/interpretation/:id': Interpretation,
     '/you': You,
     '/you-pentacles': YouPentacles,
     '/you-settings': YouSettings,
   };
-
-  async function validateUser() {
-    const token = (await Preferences.get({ key: 'token' })).value;
-    const email = (await Preferences.get({ key: 'email' })).value;
-
-    if (!token || !email) {
-      console.log('No token or email');
-      user = null;
-      if ($location !== '/signup' && $location !== '/login') {
-        push('/signup');
-      }
-      loading = false;
-      return;
+  
+  async function setup() {
+    customAvatar.set((await Preferences.get({ key: 'avatar' })).value);
+    if (!loggedIn && (await Preferences.get({ key: 'deck' })).value !== 'Spoopy Tarot' && (await Preferences.get({ key: 'deck' })).value !== 'Kawaii Tarot') {
+      await Preferences.set({ key: 'deck', value: 'Spoopy Tarot' });
     }
-
-    const response = await fetchData('validate', { token, email }, 'POST');
-    
-    if (response.error) {
-      user = null;
-      if ($location !== '/signup' && $location !== '/login') {
-        push('/signup');
+    validate();
+  }
+ 
+  async function validate() {
+    if ((await Preferences.get({ key: 'token' })).value) {
+      const response = await fetchData('validate', { token: (await Preferences.get({key: 'token'})).value, email: (await Preferences.get({key: 'email'})).value }, 'POST');
+      if (response.token) {
+        await Preferences.set({ key: 'token', value: response.token });
+        user.set(true);
+        window.ls("setUserId", (await Preferences.get({ key: 'email' })).value);
+        return true;
+      } else {
+        user.set(false);
+        await Preferences.remove({ key: 'token' });
       }
     } else {
-      user = response;
-      await Preferences.set({ key: 'token', value: user.token });
-      if ($location.includes('/signup') || $location.includes('/login')) {
-        replace('/');
-      }
+      user.set(false);
     }
-    loading = false;
   }
 
   onMount(() => {
-    validateUser();
+    setup();
+    loading.set(false);
   });
-
-  $: if ($location) {
-    loading = true;
-    validateUser();
-  }
-
-  $: if (!loading) {
-    if (!user) {
-      if ($location !== '/signup' && $location !== '/login') {
-        push('/signup');
-      }
-    }
-  }
 </script>
-
-{#if loading}
-  <Loader />
-{:else}
-  {#key user}
-    <Toasts {notifications} />
-    <div class="h-6 lg:h-8 flex-shrink-0"></div>
-    <div id="content" class="flex-1 h-full w-full mx-auto max-w-2xl flex flex-col gap-8 relative z-30">
-      <Router {routes} />
-    </div>
-    {#if user}
-      <TabDock />
-    {:else}
-      <div
-        id="background"
-        class="bg-cover dark:hidden bg-no-repeat bg-center fixed top-0 left-0 w-full h-full z-20"
-        style="background-image: url({lightBg});"
-      ></div>
-      <div
-        id="background"
-        class="bg-cover hidden dark:block opacity-[0.35] bg-no-repeat bg-center fixed top-0 left-0 w-full h-full z-20"
-        style="background-image: url({darkBg});">
-      </div>
-    {/if}
-  {/key}
+<Loader />
+<Toasts {notifications} />
+<div class="h-6 lg:h-8 flex-shrink-0"></div>
+<div id="content" class="flex-1 h-full w-full mx-auto max-w-2xl flex flex-col gap-8 relative z-30">
+  <Router {routes} />
+</div>
+<TabDock />
+{#if $location == '/signup-or-login'}
+  <div
+    id="background"
+    class="bg-cover dark:hidden bg-no-repeat bg-center fixed top-0 left-0 w-full h-full z-20"
+    style="background-image: url({lightBg});"
+  ></div>
+  <div
+    id="background"
+    class="bg-cover hidden dark:block opacity-[0.35] bg-no-repeat bg-center fixed top-0 left-0 w-full h-full z-20"
+    style="background-image: url({darkBg});">
+  </div>
 {/if}

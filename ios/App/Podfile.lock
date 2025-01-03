@@ -1,17 +1,26 @@
 PODS:
-  - Capacitor (6.1.2):
+  - Capacitor (6.2.0):
     - CapacitorCordova
-  - CapacitorCordova (6.1.2)
-  - CapacitorPreferences (6.0.2):
+  - CapacitorCordova (6.2.0)
+  - CapacitorPreferences (6.0.3):
     - Capacitor
-  - CordovaPlugins (6.1.2):
-    - CapacitorCordova
+  - PurchasesHybridCommon (13.13.0):
+    - RevenueCat (= 5.14.0)
+  - RevenueCat (5.14.0)
+  - RevenuecatPurchasesCapacitor (9.0.9):
+    - Capacitor
+    - PurchasesHybridCommon (= 13.13.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
-  - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
+  - "RevenuecatPurchasesCapacitor (from `../../node_modules/@revenuecat/purchases-capacitor`)"
+
+SPEC REPOS:
+  trunk:
+    - PurchasesHybridCommon
+    - RevenueCat
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -20,15 +29,17 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorPreferences:
     :path: "../../node_modules/@capacitor/preferences"
-  CordovaPlugins:
-    :path: "../capacitor-cordova-ios-plugins"
+  RevenuecatPurchasesCapacitor:
+    :path: "../../node_modules/@revenuecat/purchases-capacitor"
 
 SPEC CHECKSUMS:
-  Capacitor: 679f9673fdf30597493a6362a5d5bf233d46abc2
-  CapacitorCordova: f48c89f96c319101cd2f0ce8a2b7449b5fb8b3dd
-  CapacitorPreferences: e8284bf740cf8c6d3f25409af3c01df87dfeb5a1
-  CordovaPlugins: 584b5df0e1bde7be088e132f0efb476ab8f8bcfa
+  Capacitor: 1f3c7b9802d958cd8c4eb63895fff85dff2e1eea
+  CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
+  CapacitorPreferences: 9f9935bce493977183511362131a93f7b260191a
+  PurchasesHybridCommon: a712dcce0d81fa39dada521292408816146ca58c
+  RevenueCat: 34f4147c8d26d2f3c691be4e3c9f033698e557f2
+  RevenuecatPurchasesCapacitor: b8fdd2675aea72e8d52b88a8de5a4f0e5fc6d0e6
 
-PODFILE CHECKSUM: 3b12b0d5ea83fd62f5af80f1bb5aa9f84cbede51
+PODFILE CHECKSUM: dc8102fc6c34d0149e675561dff9ed9be01cb9b6
 
 COCOAPODS: 1.13.0

@@ -2,31 +2,37 @@
   import { Preferences } from '@capacitor/preferences';
   import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
-  import Loader from '@/src/components/Loader.svelte';
   import fetchData from '@/src/fetchData.js';
-  import { querystring } from 'svelte-spa-router';
-
-  let loading = false;
+  import { loading, user } from '@/src/store.js';
+  import { get } from 'svelte/store';
 
   const dispatch = createEventDispatcher();
   let deck = 'Spoopy Tarot';
 
   async function toggleDeck() {
-    loading = true;
+    loading.set(true);
     deck = deck === "Spoopy Tarot" ? "Kawaii Tarot" : "Spoopy Tarot";
-    await fetchData('usermeta', { name: 'deck', value: deck }, 'POST');
+    if ($user) {
+      await fetchData('usermeta', { name: 'deck', value: deck }, 'POST');
+    }
+    
     await Preferences.set({
       key: 'deck',
       value: deck
     });
+    window.ls('track', {
+      event: 'Switch to '+deck,
+      channel: 'preferences',
+      icon: '🃏',
+    });
     dispatch('deckChange', { deck });
-    loading = false;
+    loading.set(false);
   }
 
   async function loadInitialDeck() {
     const { value } = await Preferences.get({ key: 'deck' });
     deck = value || "Spoopy Tarot";
-    dispatch('deckChange', { deck });  // Optionally dispatch on load
+    dispatch('deckChange', { deck });
   }
 
   onMount(() => {
@@ -34,9 +40,6 @@
   });
 </script>
 
-{#if loading}
-  
-{:else}
 <button class="flex h-full items-center justify-center" on:click={toggleDeck}>
   {#if deck === "Spoopy Tarot"}
   <svg width="35" height="32" viewBox="0 0 35 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,4 +51,3 @@
     </svg>
   {/if}
 </button>
-{/if}
